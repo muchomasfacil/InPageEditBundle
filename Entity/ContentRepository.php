@@ -24,6 +24,7 @@ class ContentRepository extends EntityRepository
 
     public function findOrCreateIfNotExist($handler, $content, $is_collection = false, $collection_length = null, $custom = array())
     {
+        
         $params_default = $this->content_definitions['default'];
 
         $params_by_content = array();
