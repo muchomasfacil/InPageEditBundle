@@ -1,0 +1,10 @@
+{% for entry in content.content %}
+{% spaceless %}
+
+{% for file in entry.getFileListAsArray() %}
+    <img src="{{ file }}" />
+{% endfor %}
+
+{% endspaceless %}
+{% endfor %}
+

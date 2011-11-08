@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>MuchoMasFacilInPageEditBundle Demo</title>
+{% block stylesheets %}
+        <link type="text/css" href="{{ asset('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css') }}" rel="stylesheet" />
+        <link rel="stylesheet" href="{{ asset('js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css') }}" id="theme">
+        <link type="text/css" href="{{ asset('bundles/muchomasfacilinpageedit/css/mmf_ie.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+        <script type="text/javascript" src="{{ asset('https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/jquery-ui-fix-4727.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/malsup/jquery.blockUI.js') }}"></script>
+        <!--<script type="text/javascript" src="{{ asset('js/malsup/jquery.form.js') }}"></script>-->
+        <script type="text/javascript" src="{{ asset('js/malsup/jquery.taconite.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/malsup/jquery.form.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('/ckeditor/adapters/jquery.js') }}"></script>
+        <script src="{{ asset('js/plupload/plupload.full.js') }}"></script>
+        <script src="{{ asset('js/plupload/jquery.ui.plupload/jquery.ui.plupload.js') }}"></script>
+        <script src="{{ asset('js/plupload/i18n/' ~ app.getSession().getLocale() ~ '.js') }}"></script>
+        <script src="{{ path('mmf_ie_static', {'template': 'mmf_ie', '_format': 'js'}) }}" type="text/javascript"></script>
+        <script type="text/javascript">
+        $.taconite.debug = true;
+        </script>
+
+{% endblock %}
+    </head>
+    <body>
+
+    {{ 'logged in as' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}
+
+        <p>{{ 'logged in as' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }} <strong>{{ app.user ? app.user.username : 'Anonymous' }}</strong> - <a href="{{ path('_demo_logout') }}"> {{ 'logout' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}</a></p>
+
+        {% block body %}{% endblock %}
+    </body>
+</html>
+

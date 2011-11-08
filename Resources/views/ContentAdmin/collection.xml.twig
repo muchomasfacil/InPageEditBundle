@@ -1,0 +1,64 @@
+<taconite>
+{% set dialog_id = 'ie_' ~ content.handler | replace({'-': '_'}) ~ '_dialog' %}
+
+{% include bundle_name ~ ':' ~ controller_name ~ ':Includes/reload_container.html.twig' %}
+
+{% include bundle_name ~ ':' ~ controller_name ~ ':Includes/open_ui_dialog.html.twig' %}
+
+    <replaceContent select="#{{ dialog_id }}"><![CDATA[
+
+{% include bundle_name ~ ':' ~ controller_name ~ ':Includes/flash.html.twig' %}
+
+    <a title="{{ 'Add entry here on top' | trans({}, (bundle_name | lower)) }}" class="mmf-ie-button-add-on-top" href="javascript:void(0)" onclick="mmf_ie_ajax('{{ path( 'mmf_ie_content_collection_add_item', {'url_safe_encoded_params': url_safe_encoded_params, 'content_order': 0 }) }}', undefined, '#{{ dialog_id }}')">{{ 'Add entry here on top' | trans({}, (bundle_name | lower)) }}</a>
+    <a title="{{ 'Delete all entries' | trans({}, (bundle_name | lower)) }}" class="mmf-ie-button-delete-all" href="javascript:void(0)" onclick="if (confirm('{{ 'Are you sure?' | trans({}, (bundle_name | lower)) }}')) mmf_ie_ajax('{{ path( 'mmf_ie_content_collection_delete_item', { 'url_safe_encoded_params': url_safe_encoded_params, 'content_order': 'all' }) }}', undefined, '#{{ dialog_id }}')">{{ 'Delete all entries' | trans({}, (bundle_name | lower)) }}</a>
+    <ul id="{{ dialog_id }}-ul-sortable" class="mmf-ie-ul-sortable">
+    {% for key, entry in content.getContent() %}
+	    <li id="mmf-ie-li-sortable_{{ key }}" class="ui-state-default mmf-ie-li-sortable">
+            <a title="{{ 'To move this entry just drag & drop this icon' | trans({}, (bundle_name | lower)) }}" class="mmf-ie-button-move" href="javascript:void(0)">{{ 'Move' | trans({}, (bundle_name | lower)) }}</a>
+            <a title="{{ 'Delete this entry' | trans({}, (bundle_name | lower)) }}" class="mmf-ie-button-delete" href="javascript:void(0)" onclick="if (confirm('{{ 'Are you sure?' | trans({}, (bundle_name | lower)) }}')) mmf_ie_ajax('{{ path( 'mmf_ie_content_collection_delete_item', { 'url_safe_encoded_params': url_safe_encoded_params, 'content_order': key }) }}', undefined, '#{{ dialog_id }}')">{{ 'Delete' | trans({}, (bundle_name | lower)) }}</a>
+            <a title="{{ 'Add a new entry just below this one' | trans({}, (bundle_name | lower)) }}" class="mmf-ie-button-add" href="javascript:void(0)" onclick="mmf_ie_ajax('{{ path( 'mmf_ie_content_collection_add_item', { 'url_safe_encoded_params': url_safe_encoded_params, 'content_order': key+1 }) }}', undefined, '#{{ dialog_id }}')">{{ 'Add entry just below' | trans({}, (bundle_name | lower)) }}</a>
+            <a title="{{ 'Edit this entry' | trans({}, (bundle_name | lower)) }}" class="mmf-ie-button-edit" href="javascript:void(0)" onclick="mmf_ie_ajax('{{ path( 'mmf_ie_content_item_edit', { 'url_safe_encoded_params': url_safe_encoded_params, 'content_order': key}) }}', undefined, '#{{ dialog_id }}')" >{{ 'Edit' | trans({}, (bundle_name | lower)) }}</a>
+            &nbsp;
+            {{ entry | raw }}
+	    </li>
+    {% endfor %}
+    </ul>
+
+    ]]>
+    </replaceContent>
+
+    <eval><![CDATA[
+
+$( "#{{ dialog_id }}" ).dialog('option', {
+    buttons: {
+{% if false %} {#% if is_granted(content.getAdminRoles()) %#}
+          '{{ 'Advanced options' | trans({}, (bundle_name | lower)) }}': function () {
+              mmf_ie_ajax('{#{ path( 'mmf_ie_admin_form', { 'handler': content.handler,  'container_id': container_id, }) }#}', undefined, '#{{ dialog_id }}');
+          },
+{% endif %}
+    }
+});
+
+$( "#{{ dialog_id }}-ul-sortable" ).sortable({
+	placeholder: "ui-state-highlight",
+	forcePlaceholderSize: true,
+	handle: ".mmf-ie-button-move",
+	update : function (event, ui) {
+        //alert('{{ path( 'mmf_ie_content_collection_sort', { 'url_safe_encoded_params': url_safe_encoded_params, 'reload_container' : 'true' }) }}?' + $(this).sortable('serialize') );
+        mmf_ie_ajax('{{ path( 'mmf_ie_content_collection_sort', { 'url_safe_encoded_params': url_safe_encoded_params, 'reload_container' : 'true' }) }}', $(this).sortable('serialize'), '#{{ dialog_id }}');
+    }
+});
+
+
+
+$( ".mmf-ie-button-move").button({ text: false, icons: { primary: "ui-icon-arrow-4-diag" } });
+$( ".mmf-ie-button-delete").button({ text: false, icons: { primary: "ui-icon-trash" } });
+$( ".mmf-ie-button-edit").button({ text: false, icons: { primary: "ui-icon-pencil" } });
+$( ".mmf-ie-button-add").button({ text: false, icons: { primary: "ui-icon-plus" } });
+
+$( ".mmf-ie-button-add-on-top").button({ icons: { primary: "ui-icon-plus" } });
+$( ".mmf-ie-button-delete-all").button({ icons: { primary: "ui-icon-trash" } });
+
+    ]]>
+    </eval>
+</taconite>

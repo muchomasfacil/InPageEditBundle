@@ -1,0 +1,43 @@
+{% extends "MuchoMasFacilInPageEditBundle::demo_layout.html.twig" %}
+
+{% block body %}
+
+<h1>InPageEditBundle use examples</h1>
+
+<h2>In page Foo entity edition</h2>
+{% if foos|length <= 0 %}
+<p>{{ 'No records found' }}</p>
+{% else %}
+<ul>
+    {% for foo in foos %}
+        <li>{% render "MuchoMasFacilInPageEditBundle:EntityAdmin:renderObject" with {'object': foo} %}</li>
+    {% endfor %}
+    </ul>
+
+    <ul>
+    {% for foo in foos %}
+        {% render "MuchoMasFacilInPageEditBundle:EntityAdmin:renderObjectWithContainer" with {'object': foo, 'container_html_tag': 'li', 'container_html_attributes': 'class="la-clase-que-sea" style="color: red"'} %}
+    {% endfor %}
+        </ul>
+
+{% endif %}
+
+
+{#% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContent" with {'content': contents['plain-text-example']} %#}
+<h2>Plain text</h2>
+{% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['plain-text-example'], 'container_html_tag': 'h1', 'container_html_attributes': 'style="color: red"'} %}
+<h2>Collection of plain text</h2>
+{% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['plain-text-collection-example']} %}
+<h2>Rich text</h2>
+{% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['rich-text-example']} %}
+<h2>Collection of Custom rich text</h2>
+{% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['custom-rich-text-collection-example']} %}
+<h2>Mixed rich text edition</h2>
+{% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['rich-text-header-and-custom-rich-text-example']} %}
+<h2>Image list example</h2>
+{% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['image-example']} %}
+<h2>Advanced image collection</h2>
+{% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['advanced-image-example']} %}
+
+{% endblock %}
+

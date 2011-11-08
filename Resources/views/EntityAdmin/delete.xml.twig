@@ -1,0 +1,52 @@
+<taconite>
+{% set dialog_id = 'ie__dialog__' ~ uids|join('__') %}
+
+<eval><![CDATA[
+  $('#{{ container_id }}').remove();
+]]>
+</eval>
+
+
+{% if action_if_success == 'close' %}
+
+                    <eval><![CDATA[
+                ${{ dialog_id }}.dialog('close');
+                    ]]>
+                    </eval>
+
+{% elseif action_if_success == 'list' %}
+
+                    <eval><![CDATA[
+                mmf_iec_ajax('{#{ path( 'mmf_iec_collection', { 'handler': content.handler,  'content_container_id': content_container_id, }) }#}', undefined, '#{{ dialog_id }}');
+                    ]]>
+                    </eval>
+
+{% else %}
+
+                {% include bundle_name ~ ':' ~ controller_name ~ ':Includes/open_ui_dialog.html.twig' %}
+
+    <replaceContent select="#{{ dialog_id }}"><![CDATA[
+
+{% include bundle_name ~ ':EntityAdmin:Includes/flash.html.twig' %}
+
+    ]]>
+    </replaceContent>
+
+
+                    <eval><![CDATA[
+
+
+
+    $( "#{{ dialog_id }}" ).dialog('option',
+    {
+        buttons: {
+            '{{ 'List' | trans({}, (bundle_name | lower)) }}': function () {
+              alert('Enlazando con list en caso de content');
+            }
+        }//buttons
+    }).dialog('open');
+                ]]>
+                </eval>
+
+{% endif %}
+</taconite>

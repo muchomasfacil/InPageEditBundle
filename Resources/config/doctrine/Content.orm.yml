@@ -1,0 +1,23 @@
+MuchoMasFacil\InPageEditBundle\Entity\Content:
+    type: entity
+    repositoryClass: MuchoMasFacil\InPageEditBundle\Entity\ContentRepository
+    table: null
+    id:
+        handler:
+            type: string
+            length: 255
+            id: true
+            generator:
+                strategy: NONE
+    fields:
+        yml_params: {type: text}
+        editor_roles: {type: text}
+        admin_roles: {type:text}
+        entity_class: {type: string, length: 255}
+        render_template: {type: string, length: 255}
+        is_collection: {type: boolean}
+        collection_length: {type: integer, nullable: true}
+        content: {type: array, nullable: true}
+    lifecycleCallbacks: {}
+        #prePersist: [ doStuffOnPrePersist, doOtherStuffOnPrePersistToo ]
+

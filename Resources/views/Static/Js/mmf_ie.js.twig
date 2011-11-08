@@ -1,0 +1,105 @@
+//makes use of jquery.blockUI.js
+function mmf_ie_block(settings, blockUI_target)
+{
+    if(blockUI_target){
+        $(blockUI_target).block(settings);
+    }
+    else{
+        $.blockUI(settings);
+    }
+}
+
+//makes use of jquery.blockUI.js
+function mmf_ie_unblock(blockUI_target)
+{
+    if(blockUI_target){
+        $(blockUI_target).unblock();
+    }
+    else{
+        $.unblockUI();
+    }
+}
+
+function mmf_ie_load(load_target, url, data)
+{
+    mmf_ie_block({
+            message: '<p><img width="10px" src="{{ asset('bundles/muchomasfacilinpageedit/images/busy.gif') }}" /> {{ 'Loading' | trans({}, (bundle_name | lower)) }}...</p>',
+            css: { backgroundColor: '#fff', font: '10px bold Arial, Helvetica, sans-serif' },
+            overlayCSS: {backgroundColor: '#555'}
+    }, load_target);
+
+    $(load_target).load( url, data, function(responseText, textStatus, XMLHttpRequest) {
+        if (textStatus == "error") {
+            alert('{{ 'Error making an Ajax call' |  trans({}, (bundle_name | lower)) }}'+ ': '+ XMLHttpRequest.status + " " + XMLHttpRequest.statusText);
+        }
+    });
+
+    mmf_ie_unblock(load_target);
+}
+
+function mmf_ie_ajax(url, data, blockUI_target)
+{
+    mmf_ie_block({
+            message: '<p><img width="10px" src="{{ asset('bundles/muchomasfacilinpageedit/images/busy.gif') }}" /> {{ 'Loading' | trans({}, (bundle_name | lower)) }}...</p>',
+            css: { backgroundColor: '#fff', font: '10px bold Arial, Helvetica, sans-serif' },
+            overlayCSS: {backgroundColor: '#555'}
+        }, blockUI_target);
+    if (data){
+        settings = { data: data, type: 'POST'};
+    }
+    else {
+        settings = { data: data, type: 'GET'};
+    }
+    $.ajax(url, settings).fail(function (jqXHR, textStatus, errorThrown) {alert('{{ 'Error making an ajax call' | trans({}, (bundle_name | lower)) }}: '+ errorThrown )});
+    mmf_ie_unblock(blockUI_target);
+}
+
+function mmf_ie_submit(form_id, blockUI_target)
+{
+    mmf_ie_block({
+            message: '<p><img width="10px" src="{{ asset('bundles/muchomasfacilinpageedit/images/busy.gif') }}" /> {{ 'Loading' | trans({}, (bundle_name | lower)) }}...</p>',
+            css: { backgroundColor: '#fff', font: '10px bold Arial, Helvetica, sans-serif' },
+            overlayCSS: {backgroundColor: '#555'}
+        }, blockUI_target);
+    $(form_id).submit();
+    mmf_ie_unblock(blockUI_target);
+}
+
+$(document).ready(function(){
+
+    $('[data-mmf-ie-edit-url]')
+        .addClass('mmf-ie-editable')
+        //.hover(
+            //function () {$(this).addClass('mmf-ie-editable-hover');}
+            //,function () {$(this).removeClass('mmf-ie-editable-hover');}
+        //)//closes hover
+        .dblclick(function(){
+            mmf_ie_ajax($(this).attr('data-mmf-ie-edit-url'), undefined , '#' + $(this).attr('id'));
+            //alert($(this).attr('id'))
+        })
+    ;
+
+    /*var $mmf_ie_menu = $('<div id="mmf-ie-div-menu" class="mmf-ie-menu"><button id="mmf-ie-button-cache-clear">{{ 'Cache clear' | trans( {}, (bundle_name | lower) ) }}</button><button id="mmf-ie-button-logout">{{ 'Logout' | trans( {}, (bundle_name | lower) ) }}</button></div>');
+    $('body').prepend($mmf_ie_menu);
+
+    $('#mmf-ie-button-cache-clear').button({
+        icons: {
+            primary: "ui-icon-gear",
+        }
+        })
+    .click(function() {
+        mmf_ie_ajax('{{ path('mmf_ie_cache_clear') }}');
+        });
+
+    $('#mmf-ie-button-logout').button({
+        icons: {primary: "ui-icon-gear"}
+        })
+    .click(function() {
+        if (confirm('{{ 'Are you sure?' | trans( {}, (bundle_name | lower)) }}')) document.location='{{ path('logout') }}';
+        });
+*/
+
+
+
+});//closes $(document).ready ...
+

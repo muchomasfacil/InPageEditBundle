@@ -1,0 +1,14 @@
+{% for entry in content.content %}
+{% spaceless %}
+
+{% if entry.link %}
+    <a href="{{ entry.link }}">
+{% endif %}
+    <img src="{{ entry.url }}" alt="{{ entry.label }}" title="{{ entry.label }}" />
+{% if entry.link %}
+    </a>
+{% endif %}
+
+{% endspaceless %}
+{% endfor %}
+
