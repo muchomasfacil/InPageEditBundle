@@ -21,5 +21,6 @@
 	    font: 11px 'Lucida Grande', Verdana, Helvetica, sans-serif;	color: #6A6969;}
     .mmf-ie-form input:focus, .mmf-ie-form select:focus, .mmf-ie-form textarea:focus {color: #19465D; background: #EEF8FB;}
 
-.mmf-ie-menu {position: fixed; top:0px; left:0px}
+#mmf-ie-menu-button {position: fixed; top:5px; left:5px}
+#mmf-ie-menu {display: none}
 

@@ -79,6 +79,22 @@ $(document).ready(function(){
         })
     ;
 
+    $( "#mmf-ie-menu").dialog({
+        autoOpen: false,
+	    modal: true
+    });
+    
+    $('#mmf-ie-menu-button').button({
+            icons: {
+                primary: "ui-icon-gear",
+                secondary: "ui-icon-triangle-1-s"
+            },
+            text: false
+    })
+    .click(function(){
+        $( "#mmf-ie-menu" ).dialog( "open" );	
+    })
+    ;
     /*var $mmf_ie_menu = $('<div id="mmf-ie-div-menu" class="mmf-ie-menu"><button id="mmf-ie-button-cache-clear">{{ 'Cache clear' | trans( {}, (bundle_name | lower) ) }}</button><button id="mmf-ie-button-logout">{{ 'Logout' | trans( {}, (bundle_name | lower) ) }}</button></div>');
     $('body').prepend($mmf_ie_menu);
 

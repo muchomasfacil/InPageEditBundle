@@ -1,2 +1,51 @@
 No records found: No se encontraron registros
+#validation
+#This value should not be blank: Este valor no puede quedar vacío
+#blockUi
+Loading: Cargando
+#buttons
+List: Listado
+Save: Salvar
+Save and list: Salvar y listado
+Save and close: Salvar y cerrar
+#general
+Error making an ajax call: Error realizando llamada Ajax
+Are you sure?: ¿Está seguro?
+#collectionAction
+Add entry here on top: Añadir entrada aquí arriba
+Delete all entries: Borrar todas las entradas
+To move this entry just drag & drop this icon: Para mover esta entrada, arrastre este icono
+Delete this entry: Borrar esta entrada
+Add a new entry just below this one: Añadir una entrada justo debajo
+Edit this entry: Editar esta entrada
+Move: Mover
+Delete: Borrar
+Add entry just below: Añadir entrada justo debajo
+Edit: Editar
+#sortCollectionAction
+The entry was moved successfully: La entrada se movió correctamente
+#addSingleContentAction
+The new entry was created successfully: La nueva entrada se creó correctamente
+There was a problem creating the new entry: Se produjo un problema al crear la nueva entrada
+Overpassed maximum number of items for this content: Se sobrepasó el máximo numero de items para esta entrada
+#deleteContentAction
+The entry was deleted successfully: La entrada se eliminó correctamente
+The entry did not exist. Nothing deleted: La entrada no existe. No se borró nada
+All entries were deleted successfully: Todas las entradas se eliminaron correctamente
+#EditorFormAction
+The entry was saved successfully: La entrada se salvó correctamente
+Correct form data: Corrija la información del formulario
+#AdminFormAction
+Editor form: Formulario de editor
+Advanced options: Opciones avanzadas
+Only edit here if you know what you are doing: Edita aquí sólo si sabes lo que estás haciendo
+Back: Volver
+#menu
+Menu: Menú
+Cache clear: Limpiar caché
+Cache cleared: Limpiada caché
+Unable to write in the cache directory: No se puede escribir en el directorio de cache
+Cache deleted succesfully: La cache se borró correctamente
+Logout: Salir de la sesión
+#forms
 

@@ -55,6 +55,7 @@ parameters:
 
     mucho_mas_facil_in_page_edit.ckeditor_options:
         default: |
+            config.forcePasteAsPlainText = true;
             config.toolbar = 'Default';
             config.toolbar_Default =
             [
@@ -62,10 +63,13 @@ parameters:
             ];
 
         full: |
+            config.forcePasteAsPlainText = true;
             config.toolbar = 'Full';
         basic: |
+            config.forcePasteAsPlainText = true;
             config.toolbar = 'Basic';
         custom: |
+            config.forcePasteAsPlainText = true;
             config.toolbar = 'Custom';
             config.toolbar_Custom =
             [

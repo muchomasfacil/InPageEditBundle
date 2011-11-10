@@ -23,13 +23,23 @@
         <script src="{{ asset('js/plupload/i18n/' ~ app.getSession().getLocale() ~ '.js') }}"></script>
         <script src="{{ path('mmf_ie_static', {'template': 'mmf_ie', '_format': 'js'}) }}" type="text/javascript"></script>
         <script type="text/javascript">
-        $.taconite.debug = true;
+        $.taconite.debug = false;
         </script>
 
 {% endblock %}
     </head>
     <body>
-
+{% block menu %}
+<a id="mmf-ie-menu-button">{{ 'Menu' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}</a>
+<div id="mmf-ie-menu" title="lo que sea">
+    <h3>Admin options</h3>
+    <ul>
+    <!--mmf_ie_ajax(url)-->
+      <li><a href="javascript:void(0)" onclick="mmf_ie_ajax('{{ path ('mmf_ie_cache_clear') }}')">{{ 'Cache clear' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}</li>
+      <li><a href="{{ path ('logout') }}">{{ 'Logout' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}</li>
+    </ul>
+</div>
+{% endblock %}
     {{ 'logged in as' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}
 
         <p>{{ 'logged in as' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }} <strong>{{ app.user ? app.user.username : 'Anonymous' }}</strong> - <a href="{{ path('_demo_logout') }}"> {{ 'logout' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}</a></p>

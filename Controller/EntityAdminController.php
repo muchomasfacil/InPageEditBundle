@@ -325,5 +325,23 @@ class EntityAdminController extends ContainerAware
         return  new RedirectResponse($route);
 
     }
+    
+    public function cacheClearAction()
+    {
+        $realCacheDir = $this->container->get('kernel')->getCacheDir();
+        $oldCacheDir  = $realCacheDir.'_old';
+
+        if (!is_writable($realCacheDir)) {
+            $alert = $this->trans('Unable to write in the cache directory'). ': '.$realCacheDir;
+        }
+        else {
+            rename($realCacheDir, $oldCacheDir);
+            $this->container->get('filesystem')->remove($oldCacheDir);
+            $alert = $this->trans('Cache deleted succesfully');
+        }
+
+        if (isset($alert)) $this->render_vars['alert'] = $alert;
+        return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__, 'xml'), $this->render_vars);
+    }
 
 }
