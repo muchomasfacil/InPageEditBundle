@@ -1,0 +1,12 @@
+<ul>
+{% for entry in content.content %} {# content(Content Entity).content(content field)#}
+<li{% for key, val in  entry.getParsedAttributes() %} {{ key }}="{{ val }}"{% endfor %}>{% spaceless %}
+    {% if entry.uri %}
+        <a{% for key, val in  entry.getParsedLinkAttributes() %} {{ key }}="{{ val }}"{% endfor %} href="{{ entry.uri }}">{{ entry.label }}</a>
+    {% else %}
+        <span{% for key, val in  entry.getParsedLabelAttributes() %} {{ key }}="{{ val }}"{% endfor %}>{{ entry.label }}</span>
+    {% endif %}
+{% endspaceless %}</li>
+
+{% endfor %}
+</ul>

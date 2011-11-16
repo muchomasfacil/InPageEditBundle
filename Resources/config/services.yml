@@ -43,15 +43,25 @@ parameters:
 
         plain_text_header_and_custom_rich_text:
             entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\PlainTextHeaderAndCustomRichText
-            render_template: 'MuchoMasFacilInPageEditBundle:RenderContent:PlainTextHeaderAndCustomRichText.html.twig'
+            render_template: MuchoMasFacilInPageEditBundle:RenderContent:PlainTextHeaderAndCustomRichText.html.twig
 
         image:
             entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\Image
-            render_template: 'MuchoMasFacilInPageEditBundle:RenderContent:Image.html.twig'
+            render_template: MuchoMasFacilInPageEditBundle:RenderContent:Image.html.twig
 
         advanced_image:
             entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\AdvancedImage
-            render_template: 'MuchoMasFacilInPageEditBundle:RenderContent:AdvancedImage.html.twig'
+            render_template: MuchoMasFacilInPageEditBundle:RenderContent:AdvancedImage.html.twig
+
+        one_level_menu:
+            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\MenuItem
+            render_template: MuchoMasFacilInPageEditBundle:RenderContent:OneLevelMenu.html.twig
+            is_collection: true
+
+        one_level_basic_menu:
+            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\BasicMenuItem
+            render_template: MuchoMasFacilInPageEditBundle:RenderContent:OneLevelBasicMenu.html.twig
+            is_collection: true
 
     mucho_mas_facil_in_page_edit.ckeditor_options:
         default: |

@@ -9,7 +9,7 @@ class DemoController extends Controller
 
     public function removeContent($handler)
     {
-        if (false) {
+        if (true) {
             $em = $this->getDoctrine()->getEntityManager($this->container->getParameter('mucho_mas_facil_in_page_edit.content_orm'));
             $content = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->find($handler);
             if ($content) {
@@ -39,6 +39,11 @@ class DemoController extends Controller
         $contents = array();
 
         $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->setContentDefinitions($this->container->getParameter('mucho_mas_facil_in_page_edit.content_definitions'));
+
+        $handler = 'one-level-menu-example';
+        $this->removeContent($handler);
+        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'one_level_menu', true);
+
 
         $handler = 'plain-text-example';
         $this->removeContent($handler);

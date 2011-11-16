@@ -22,6 +22,16 @@ class ContentRepository extends EntityRepository
         $this->content_definitions = $content_definitions;
     }
 
+    public function remove($handler)
+    {
+        $em = $this->getEntityManager();
+        $content = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->find($handler);
+        if ($content) {
+            $em->remove($content);
+            $em->flush();
+        }
+    }
+
     public function findOrCreateIfNotExist($handler, $content, $is_collection = false, $collection_length = null, $custom = array())
     {
         
