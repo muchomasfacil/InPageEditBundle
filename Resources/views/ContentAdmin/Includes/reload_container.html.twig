@@ -1,6 +1,6 @@
 {% if reload_container %}
     <eval><![CDATA[
-    mmf_ie_load('#{{ container_id }}', '{{ path( 'mmf_ie_content_render' , {'handler': content.handler, 'render_template': render_template}) }}');
+    mmf_ie_load('#{{ container_id }}', '{{ path( 'mmf_ie_content_render' , {'handler': content.handler, 'render_template': render_template, 'url_safe_encoded_custom_params': url_safe_encoded_custom_params}) }}');
     ]]>
     </eval>
 {% endif %}

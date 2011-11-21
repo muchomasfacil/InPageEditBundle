@@ -105,8 +105,8 @@ class EntityAdminController extends ContainerAware
 //------------------------------------------------------------------------------
 //actions for object admin
 //------------------------------------------------------------------------------
-
-    public function renderAction($url_safe_encoded_params) //this one has an associated route mmf_ie_entity_render
+    //this one has an associated route mmf_ie_entity_render
+    public function renderAction($url_safe_encoded_params) 
     {
         $url_safe_encoder = new UrlSafeEncoder();
         $params = $url_safe_encoder->decode($url_safe_encoded_params);

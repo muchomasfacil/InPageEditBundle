@@ -18,7 +18,8 @@
 
 
 <h2>One level menu</h2>
-{% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['one-level-menu-example']} %}
+{% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['one-level-menu-example'], 'custom_params': {'selected_index': 1} } %}
+{#
 <h2>Plain text</h2>
 {% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['plain-text-example'], 'container_html_tag': 'h1', 'container_html_attributes': 'style="color: red"'} %}
 <h2>Collection of plain text</h2>
@@ -33,6 +34,6 @@
 {% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['image-example']} %}
 <h2>Advanced image collection</h2>
 {% render "MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentWithContainer" with {'content': contents['advanced-image-example']} %}
-
+#}
 {% endblock %}
 

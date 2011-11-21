@@ -9,7 +9,7 @@ class DemoController extends Controller
 
     public function removeContent($handler)
     {
-        if (true) {
+        if (false) {
             $em = $this->getDoctrine()->getEntityManager($this->container->getParameter('mucho_mas_facil_in_page_edit.content_orm'));
             $content = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->find($handler);
             if ($content) {

@@ -47,26 +47,35 @@ class ContentAdminController extends ContainerAware
 //------------------------------------------------------------------------------
 //actions
 //------------------------------------------------------------------------------
-
-    public function renderContentByHandlerAction($handler, $render_template = null) //this one has an associated route mmf_ie_content_render
+    //this one has an associated route mmf_ie_content_render
+    public function renderContentByHandlerAction($handler, $render_template = null, $url_safe_encoded_custom_params = null) 
     {
         $content = $this->findContentByHandler($handler);
+        if (!is_null($url_safe_encoded_custom_params)) {
+            $url_safe_encoder = new UrlSafeEncoder();
+            $custom_params = $url_safe_encoder->decode($url_safe_encoded_custom_params);
+        }
+        else {
+            $custom_params = null;
+        }
         $this->render_vars['content'] = $content;
         $this->render_vars['render_template'] = $render_template;
+        $this->render_vars['custom_params'] = $custom_params;
         $forward_action = $this->render_vars['bundle_name'] . ':' . $this->render_vars['controller_name'] . ':' . 'renderContent';
         return $this->container->get('http_kernel')->forward($forward_action, $this->render_vars);
     }
 
-    public function renderContentAction($content, $render_template = null)
+    public function renderContentAction($content, $render_template = null, $custom_params = null)
     {
         if (is_null($render_template)) {
             $render_template = $content->getRenderTemplate();
         }
         $this->render_vars['content'] = $content;
+        $this->render_vars['custom_params'] = $custom_params;
         return $this->container->get('templating')->renderResponse($render_template, $this->render_vars);
     }
 
-    public function renderContentWithContainerAction($content, $render_template = null, $container_html_tag = 'div', $container_html_attributes = '')
+    public function renderContentWithContainerAction($content, $render_template = null, $container_html_tag = 'div', $container_html_attributes = '', $custom_params = null)
     {
         $container_id = $container_html_tag . '-' . $content->getHandler();
         if (is_null($render_template)) {
@@ -75,9 +84,10 @@ class ContentAdminController extends ContainerAware
         if (!is_null($this->container->get('security.context')->getToken())) {
             if ((true === $this->container->get('security.context')->isGranted($content->getEditorRolesAsArray())) || (true === $this->container->get('security.context')->isGranted($content->getAdminRolesAsArray()))) {
                 $params = array(
-                    'render_template' => $render_template
-                    ,'handler' => $content->getHandler()
-                    ,'container_id' => $container_id
+                    'render_template'   => $render_template
+                    ,'handler'          => $content->getHandler()
+                    ,'container_id'     => $container_id
+                    ,'custom_params'    => $custom_params
                 );
                 $url_safe_encoder = new UrlSafeEncoder();
                 $container_html_attributes .= ' data-mmf-ie-edit-url="'.$this->container->get('router')->generate('mmf_ie_content_edit', array('url_safe_encoded_params' => $url_safe_encoder->encode($params))).'"';
@@ -89,6 +99,7 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['container_html_tag'] = $container_html_tag;
         $this->render_vars['container_html_attributes'] = $container_html_attributes;
         $this->render_vars['container_id'] = $container_id;
+        $this->render_vars['custom_params'] = $custom_params;
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__), $this->render_vars);
     }
 
@@ -121,7 +132,6 @@ class ContentAdminController extends ContainerAware
         $url_safe_encoder = new UrlSafeEncoder();
         $params = $url_safe_encoder->decode($url_safe_encoded_params);
         extract($params);
-
         $content = $this->findContentByHandler($handler);
 
         if (false === $this->container->get('security.context')->isGranted($content->getEditorRolesAsArray())) {
@@ -133,7 +143,8 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['content'] = $content;
         $this->render_vars['render_template'] = $render_template;
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
-
+        $this->render_vars['url_safe_encoded_custom_params'] = $url_safe_encoder->encode($custom_params);
+        
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__, 'xml'), $this->render_vars);
     }
 
@@ -186,6 +197,7 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['container_id'] = $container_id;
         $this->render_vars['reload_container'] = $reload_container;
         $this->render_vars['content'] = $content;
+        $this->render_vars['url_safe_encoded_custom_params'] = $url_safe_encoder->encode($custom_params);
 
         $this->render_vars['render_template'] = $render_template;
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
@@ -234,6 +246,7 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['container_id'] = $container_id;
         $this->render_vars['reload_container'] = $reload_container;
         $this->render_vars['content'] = $content;
+        $this->render_vars['url_safe_encoded_custom_params'] = $url_safe_encoder->encode($custom_params);
 
         $this->render_vars['render_template'] = $render_template;
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
@@ -246,7 +259,7 @@ class ContentAdminController extends ContainerAware
         $url_safe_encoder = new UrlSafeEncoder();
         $params = $url_safe_encoder->decode($url_safe_encoded_params);
         extract($params);
-
+        //die(print_r($params));
         $content = $this->findContentByHandler($handler);
 
         if (false === $this->container->get('security.context')->isGranted($content->getEditorRolesAsArray())) {
@@ -271,6 +284,7 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['container_id'] = $container_id;
         $this->render_vars['reload_container'] = $reload_container;
         $this->render_vars['content'] = $content;
+        $this->render_vars['url_safe_encoded_custom_params'] = $url_safe_encoder->encode($custom_params);
 
         $this->render_vars['render_template'] = $render_template;
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
@@ -343,6 +357,8 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['container_id'] = $container_id;
         $this->render_vars['reload_container'] = (isset($reload_container))? $reload_container: false;
         $this->render_vars['content'] = $content;
+        $this->render_vars['url_safe_encoded_custom_params'] = $url_safe_encoder->encode($custom_params);
+        
         $this->render_vars['render_template'] = $render_template;
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
 
