@@ -1,0 +1,15 @@
+MuchoMasFacil\InPageEditBundle\Entity\Foo:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        text: {type: string, length: 255}
+        multi_line_text: {type: string, length: 255, nullable: true}
+        file_list: {type: text, nullable: true}
+        file: {type: string, length: 255, nullable: true}
+    lifecycleCallbacks: {}
+
