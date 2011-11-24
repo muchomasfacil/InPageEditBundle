@@ -4,8 +4,16 @@ namespace MuchoMasFacil\InPageEditBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use MuchoMasFacil\InPageEditBundle\Util\LoremIpsumGenerator;
+
 class Foo
 {
+    public function loremIpsum()
+    {
+        $lorem_ipsum = new LoremIpsumGenerator(20); //words per paragraph
+        $this->setText(trim($lorem_ipsum->getContent(rand(4,10), 'txt', false)));
+        $this->setMultiLineText(trim($lorem_ipsum->getContent(rand(21,42), 'txt', false)));
+    }
     /**
      * @var integer $id
      */

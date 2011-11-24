@@ -24,11 +24,9 @@ class Image
         return explode(',', preg_replace('/\s*/m', '', $this->getFileList()));
     }
 
-    public function getLoremIpsum()
+    public function loremIpsum()
     {
-        $entry = new self;
-        $entry->setFileList('http://www.muchomasfacil.com/images/logo.png, http://www.muchomasfacil.com/images/logo.png');
-        return $entry;
+        $this->setFileList('http://www.muchomasfacil.com/images/logo.png, http://www.muchomasfacil.com/images/logo.png');
     }
 
     public function __toString()

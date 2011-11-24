@@ -21,8 +21,13 @@ class DemoController extends Controller
 
     public function indexAction()
     {
-        $entity_em = $this->getDoctrine()->getEntityManager('mmf_ie');
+        $entity_em = $this->getDoctrine()->getEntityManagerForClass('MuchoMasFacil\InPageEditBundle\Entity\Foo'); 
+
         $repository = $entity_em->getRepository('MuchoMasFacilInPageEditBundle:Foo');
+
+        //$q = $entity_em->createQuery('delete from MuchoMasFacilInPageEditBundle:Foo');
+        //$numDeleted = $q->execute();
+        
         $foos = $repository->findAll();
         if (count($foos)<=0) {
             for ($a=0; $a < 6; $a++) {
@@ -34,9 +39,9 @@ class DemoController extends Controller
             $foos = $repository->findAll();
         }
 
-        $em = $this->getDoctrine()->getEntityManager($this->container->getParameter('mucho_mas_facil_in_page_edit.content_orm'));
-
         $contents = array();
+
+        /*$em = $this->getDoctrine()->getEntityManagerForClass('MuchoMasFacil\InPageEditBundle\Entity\Content'); 
 
         $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->setContentDefinitions($this->container->getParameter('mucho_mas_facil_in_page_edit.content_definitions'));
 
@@ -73,7 +78,7 @@ class DemoController extends Controller
         $handler = 'advanced-image-example';
         $this->removeContent($handler);
         $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'advanced_image', true, 3);
-
+*/
         return $this->render('MuchoMasFacilInPageEditBundle:Demo:index.html.twig', array('contents' => $contents, 'foos' => $foos));
     }
 

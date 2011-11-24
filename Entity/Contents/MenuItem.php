@@ -49,17 +49,15 @@ class MenuItem
       return $text;
     }
 
-    public function getLoremIpsum()
+    public function loremIpsum()
     {
         $lorem_ipsum = new LoremIpsumGenerator(); //words per paragraph
-        $entry = new self;
-        $entry->setUid(uniqid ('menu-item-'));
-        $entry->setLabel(trim($lorem_ipsum->getContent(rand(1, 3), 'txt', false)));
-        $entry->setUri($this->slugify($entry->getLabel()));
-        $entry->setYmlAttributes('{}');
-        $entry->setYmlLinkAttributes('{}');
-        $entry->setYmlLabelAttributes('{}');
-        return $entry;
+        $this->setUid(uniqid ('menu-item-'));
+        $this->setLabel(trim($lorem_ipsum->getContent(rand(1, 3), 'txt', false)));
+        $this->setUri($this->slugify($this->getLabel()));
+        $this->setYmlAttributes('{}');
+        $this->setYmlLinkAttributes('{}');
+        $this->setYmlLabelAttributes('{}');
     }
 
     public function __toString()

@@ -11,13 +11,10 @@ class PlainText
 //Custom code
 //------------------------------------------------------------------------------
 
-    public function getLoremIpsum()
+    public function loremIpsum()
     {
         $lorem_ipsum = new LoremIpsumGenerator();
-        $number_of_words_to_lorem_ipssum = rand(5, 10);
-        $entry = new self;
-        $entry->setContent(trim($lorem_ipsum->getContent($number_of_words_to_lorem_ipssum, 'txt')));
-        return $entry;
+        $this->setContent(trim($lorem_ipsum->getContent(rand(5, 10), 'txt')));
     }
 
     public function __toString()

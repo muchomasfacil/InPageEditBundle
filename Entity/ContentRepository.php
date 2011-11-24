@@ -93,9 +93,9 @@ class ContentRepository extends EntityRepository
                 $content_content = array();
                 for ( $a = 0; $a < $number_of_items_to_lorem_impsum ; $a++ ) {
                     $object = new $entity_class();
-                    $content_content[] = $object->getLoremIpsum();
+                    $object->loremIpsum();
                 }
-                $content->setContent($content_content);
+                $content->setContent($object);
             }
 
             $em->persist($content);

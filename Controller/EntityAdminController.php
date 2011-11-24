@@ -32,24 +32,27 @@ class EntityAdminController extends ContainerAware
 
     private function extendedFind($entity_class, $uids)
     {
-        $em = $this->getEntityManagerForEntity($entity_class);
+        $em = $this->container->get('doctrine')->getEntityManagerForClass($entity_class);
         $content = $em->getRepository($entity_class)->findOneBy($uids);
 
         return $content;
-    }
-
-    private function getEntityManagerForEntity($entity_class = '')
-    {
-        $entity_custom_params = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');
-        $orm = (isset($entity_custom_params[$entity_class]['orm']))? $entity_custom_params[$entity_class]['orm'] : $entity_custom_params['default']['orm'];        
-        return $this->container->get('doctrine')->getEntityManager($orm);
     }
 
     private function getAllowedRolesForEntity($entity_class = '')
     {
         $entity_custom_params = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');        
         $allowed_roles = (isset($entity_custom_params[$entity_class]['editor_roles']))? $entity_custom_params[$entity_class]['editor_roles'] : $entity_custom_params['default']['editor_roles'];
-        return explode(',', preg_replace('/\s*/m', '', $allowed_roles ));
+        return $this->rolesToArray($allowed_roles);
+    }
+    
+    private function rolesToArray($roles)
+    {
+        if (!is_array($roles)) {
+            return explode(',', preg_replace('/\s*/m', '', $roles ));
+        }
+        else {
+            return $roles;
+        }
     }
     
     private function rmdir_recursive($filepath)
@@ -72,15 +75,17 @@ class EntityAdminController extends ContainerAware
         return @unlink($filepath);
     }
     
-    private function getFormTypeClass($entity_class)
+    private function guessFormTypeClass($entity_class)
     {
-        $type_class = str_replace('\\Entity\\', '\\Form\\', $entity_class).'Type';
-        $entity_custom_params = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');
-        if ((isset($entity_custom_params[$entity_class]['form_template'])) && (class_exists($entity_custom_params[$entity_class]['form_template']))) {
-            $type_class = $entity_custom_params[$entity_class]['form_template'];
-        }
-        return $type_class;
+        return  str_replace('\\Entity\\', '\\Form\\', $entity_class).'Type';
     }
+
+    private function guessRenderTemplate($entity_class)
+    {
+        $parts = explode ( '\\' , $entity_class );        
+        return  $parts[0].$parts[1].':EntityRender:'.$parts[count($parts)-1].'.html.twig';
+    }
+
 
     private function guessMmfFileManagerPostfix($form_name = '', $uids_as_string = '', $input_id = '')
     {
@@ -112,91 +117,140 @@ class EntityAdminController extends ContainerAware
         $params = $url_safe_encoder->decode($url_safe_encoded_params);
         $object = $this->extendedFind($params['entity_class'], $params['uids']);
 
-        return $this->renderObjectAction($object, $params['render_template']);
+        return $this->renderObjectAction($object, $params['render_template'], $params['render_params'] );
     }
 
-    public function renderObjectAction($object, $render_template = null)
+    public function renderObjectAction($object, $render_template, $render_params)
     {
-        if (!$render_template) {
-            $parts = explode('\\', get_class($object));
-            //we suppose the template is {bundlename}:Render:{class_name}
-            $render_template = $parts[0] . $parts[1] . ':Render:' . $parts[count($parts) - 1] . '.html.twig';
-        }
-
         $this->render_vars['object'] = $object;
+        $this->render_vars['render_params'] = $render_params;
 
         return $this->container->get('templating')->renderResponse($render_template, $this->render_vars);
     }
 
-    public function renderObjectWithContainerAction($object, $render_template = null,  $container_html_tag = 'div', $container_html_attributes = '')
+    public function renderObjectWithContainerAction($object, $render_action = null, $render_template = null, $form_template = null, $render_params = array(), $container_html_tag = 'div', $container_html_attributes = '')
     {
-        //$session = $this->container->get('request')->getSession();
-        $em = $this->getEntityManagerForEntity(get_class($object));
-        $metadata = $em->getMetadataFactory()->getMetadataFor(get_class($object));
-        $uids = $metadata->getIdentifierValues($object);
-        $container_id = $container_html_tag . '__' . implode('__', $uids);
-        if (!is_null($this->container->get('security.context')->getToken())) {
-            if (true === $this->container->get('security.context')->isGranted($this->getAllowedRolesForEntity(get_class($object)))) {
-                $params = array(
-                    'render_template' => $render_template
-                    ,'entity_class' => get_class($object)
-                    ,'uids' => $uids
-                    ,'container_id' => $container_id
-                );
-                $url_safe_encoder = new UrlSafeEncoder();
-                $container_html_attributes .= ' data-mmf-ie-edit-url="'.$this->container->get('router')->generate('mmf_ie_edit', array('url_safe_encoded_params' => $url_safe_encoder->encode($params))).'"';
+        $entity_class = get_class($object);
+        $entity_custom_params = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');        
+        $params = $entity_custom_params['default'];
+        $params['render_template'] = $this->guessRenderTemplate($entity_class);
+        if (isset($entity_custom_params[$entity_class])) {
+          $params = array_merge($params, $entity_custom_params[$entity_class]);
+        }               
+        foreach (compact('render_action', 'render_template', 'form_template') as $key => $val) {
+            if ($val) {
+                $params[$key] = $val;
             }
         }
+
+        $em = $this->container->get('doctrine')->getEntityManagerForClass($entity_class); 
+        $metadata = $em->getMetadataFactory()->getMetadataFor($entity_class);
+        $uids = $metadata->getIdentifierValues($object);
+        $container_id = $container_html_tag . '__' . implode('__', $uids);
+
+        if (!is_null($this->container->get('security.context')->getToken())) {
+            if (true === $this->container->get('security.context')->isGranted($this->getAllowedRolesForEntity($entity_class))) {
+                //render_action, render_template, render_params, entity_class, uids, container_id, form_template
+                $params_to_encode = $params;
+                unset($params_to_encode['editor_roles']); //to avoid security hole
+                $params_to_encode['render_params'] = $render_params;
+                $params_to_encode['entity_class'] = $entity_class;
+                $params_to_encode['uids'] = $uids;
+                $params_to_encode['container_id'] = $container_id;
+                $url_safe_encoder = new UrlSafeEncoder();
+                $container_html_attributes .= ' data-mmf-ie-edit-url="'.$this->container->get('router')->generate('mmf_ie_edit', array('url_safe_encoded_params' => $url_safe_encoder->encode($params_to_encode))).'"';
+            }
+        }
+
         $this->render_vars['object'] = $object;
-        $this->render_vars['render_template'] = $render_template;
+        $this->render_vars['render_action'] = $params['render_action'];        
+        $this->render_vars['render_template'] = $params['render_template'];
+        $this->render_vars['render_params'] = $render_params;        
         $this->render_vars['container_html_tag'] = $container_html_tag;
         $this->render_vars['container_html_attributes'] = $container_html_attributes;
         $this->render_vars['container_id'] = $container_id;
-
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__), $this->render_vars);
+    }
+
+    public function addAction($entity_class)
+    {
+        if (false === $this->container->get('security.context')->isGranted($this->getAllowedRolesForEntity($entity_class))) {
+            throw new AccessDeniedException();
+        }
+        
+        $object = new $entity_class();
+        $object->loremIpsum();
+        $em = $this->container->get('doctrine')->getEntityManagerForClass($entity_class);
+        $em->persist($object);
+        $em->flush();
+        
+        $metadata = $em->getMetadataFactory()->getMetadataFor($entity_class);
+        $uids = $metadata->getIdentifierValues($object);
+
+        //render_action, render_template, render_params, entity_class, uids, container_id, form_template
+        $entity_custom_params = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');        
+        $params = $entity_custom_params['default'];
+        $params['render_template'] = $this->guessRenderTemplate($entity_class);
+        if (isset($entity_custom_params[$entity_class])) {
+          $params = array_merge($params, $entity_custom_params[$entity_class]);
+        }    
+
+        $params_to_encode = $params;
+        unset($params_to_encode['editor_roles']); //to avoid security hole
+        $params_to_encode['render_params'] = array();
+        $params_to_encode['entity_class'] = $entity_class;
+        $params_to_encode['uids'] = $uids;
+        $params_to_encode['container_id'] = null;
+
+        $url_safe_encoder = new UrlSafeEncoder();
+
+        $forward_action = $this->render_vars['bundle_name'] . ':' . $this->render_vars['controller_name'] . ':' . 'edit';
+        $this->render_vars['url_safe_encoded_params'] = $url_safe_encoder->encode($params_to_encode);
+        //$uri = $this->container->get('router')->generate('mmf_ie_edit', $this->render_vars);
+        //return new RedirectResponse($uri);
+        return $this->container->get('http_kernel')->forward($forward_action, $this->render_vars);
     }
 
     public function editAction($url_safe_encoded_params, $action_if_success = false)
     {
         $url_safe_encoder = new UrlSafeEncoder();
         $params = $url_safe_encoder->decode($url_safe_encoded_params);
-
-        $entity_class = $params['entity_class'];
-        $uids = $params['uids'];
-        $render_template = $params['render_template'];
-        $container_id = $params['container_id'];
-
-        $object = $this->extendedFind($entity_class, $uids);
-
-        if (false === $this->container->get('security.context')->isGranted($this->getAllowedRolesForEntity(get_class($object)))) {
+        //print_r($params);
+        //die();
+        extract($params);
+        if (false === $this->container->get('security.context')->isGranted($this->getAllowedRolesForEntity($entity_class))) {
             throw new AccessDeniedException();
         }
-
+        //render_action, render_template, render_params, entity_class, uids, container_id, form_template
+        $object = $this->extendedFind($entity_class, $uids);
 
         //$logger = $this->get('logger')->info('hola' . get_class($single_content));
-        $type_class = $this->getFormTypeClass($entity_class);
+        $type_class = $this->guessFormTypeClass($entity_class);
 
         $request = $this->container->get('request');
         $form = $this->container->get('form.factory')->create(new $type_class(), $object);
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
             if ($form->isValid()) {
-                $em = $this->getEntityManagerForEntity($entity_class);
+                $em = $this->container->get('doctrine')->getEntityManagerForClass($entity_class);
                 $em->persist($object);
                 $em->flush();
                 $flash_messages[] = array('highlight' => $this->trans('The entry was SAVED successfully'));
-                $reload_container = true;
+                if (!is_null($container_id)) {
+                    $reload_container = true;
+                }
             }
             else{
                 $flash_messages[] = array('error' => $this->trans('Correct form data'));
                 $action_if_success = false;
             }
-        }
+        }//end is post
 
         //if (isset($flash_messages)) $this->get('session')->setFlash('flash_messages', $flash_messages);
         if (isset($flash_messages)) $this->render_vars['flash_messages'] = $flash_messages;
         $this->render_vars['form'] = $form->createView();
         $this->render_vars['form_name'] = $form->getName();
+        $this->render_vars['form_template'] = $form_template;
 
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
         $this->render_vars['container_id'] = $container_id;
@@ -208,7 +262,12 @@ class EntityAdminController extends ContainerAware
         $this->render_vars['reload_container'] = (isset($reload_container))? $reload_container: false;
         $this->render_vars['object'] = $object;
 
+        $this->render_vars['render_action'] = $render_action;
         $this->render_vars['render_template'] = $render_template;
+        $this->render_vars['render_params'] = $render_params;
+        
+        $this->render_vars['params'] = $params;
+        
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__, 'xml'), $this->render_vars);
     }
 
@@ -216,20 +275,15 @@ class EntityAdminController extends ContainerAware
     {
         $url_safe_encoder = new UrlSafeEncoder();
         $params = $url_safe_encoder->decode($url_safe_encoded_params);
+        extract($params);
 
-        $entity_class = $params['entity_class'];
-
-        $uids = $params['uids'];
-        $render_template = $params['render_template'];
-        $container_id = $params['container_id'];
-
-        $object = $this->extendedFind($entity_class, $uids);
-
-        if (false === $this->container->get('security.context')->isGranted($this->getAllowedRolesForEntity(get_class($object)))) {
+        if (false === $this->container->get('security.context')->isGranted($this->getAllowedRolesForEntity($entity_class))) {
             throw new AccessDeniedException();
         }
 
-        $em = $this->getEntityManagerForEntity($entity_class);
+        $object = $this->extendedFind($entity_class, $uids);
+
+        $em = $this->container->get('doctrine')->getEntityManagerForClass($entity_class);
 
         if ($object) {
             $em->remove($object);
@@ -237,7 +291,7 @@ class EntityAdminController extends ContainerAware
         }
 
         //now remove associated mmf_fm dir if exists
-        $form_class = $this->getFormTypeClass($entity_class);
+        $form_class = $this->guessFormTypeClass($entity_class);
         $temp_form = new $form_class();
         $form_name = $temp_form->getName();
         $full_target_path = $_SERVER['DOCUMENT_ROOT']. '/uploads'. $this->guessMmfFileManagerPostfix($form_name, $this->getUidsAsString($uids));
@@ -251,6 +305,7 @@ class EntityAdminController extends ContainerAware
         $this->render_vars['container_id'] = $container_id;
 
         $this->render_vars['uids'] = $uids;
+        $this->render_vars['uids_as_string'] = $this->getUidsAsString($uids);
 
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__, 'xml'), $this->render_vars);
     }

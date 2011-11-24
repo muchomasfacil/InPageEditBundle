@@ -44,15 +44,12 @@ class AdvancedImage
     }
 
 
-    public function getLoremIpsum()
+    public function loremIpsum()
     {
         $lorem_ipsum = new LoremIpsumGenerator(50); //words per paragraph
-        $number_of_words_to_lorem_ipssum = rand(1, 4);
-        $entry = new self;
-        $entry->setUrl('http://www.muchomasfacil.com/images/logo.png');
-        $entry->setLabel(trim($lorem_ipsum->getContent($number_of_words_to_lorem_ipssum, 'txt', false)));
-        $entry->setLink('http://www.muchomasfacil.com');
-        return $entry;
+        $this->setUrl('http://www.muchomasfacil.com/images/logo.png');
+        $this->setLabel(trim($lorem_ipsum->getContent(rand(1, 4), 'txt', false)));
+        $this->setLink('http://www.muchomasfacil.com');
     }
 
     public function __toString()

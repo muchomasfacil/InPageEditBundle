@@ -6,8 +6,8 @@ Loading: Cargando
 #buttons
 List: Listado
 Save: Salvar
-Save and list: Salvar y listado
-Save and close: Salvar y cerrar
+Save & list: Salvar y listado
+Save & close: Salvar y cerrar
 #general
 Error making an ajax call: Error realizando llamada Ajax
 Are you sure?: ¿Está seguro?
@@ -20,6 +20,7 @@ Add a new entry just below this one: Añadir una entrada justo debajo
 Edit this entry: Editar esta entrada
 Move: Mover
 Delete: Borrar
+Delete & close: Borrar y cerrar 
 Add entry just below: Añadir entrada justo debajo
 Edit: Editar
 #sortCollectionAction
@@ -29,11 +30,11 @@ The new entry was created successfully: La nueva entrada se creó correctamente
 There was a problem creating the new entry: Se produjo un problema al crear la nueva entrada
 Overpassed maximum number of items for this content: Se sobrepasó el máximo numero de items para esta entrada
 #deleteContentAction
-The entry was deleted successfully: La entrada se eliminó correctamente
+The entry was DELETED successfully: La entrada se ELIMINÓ correctamente
 The entry did not exist. Nothing deleted: La entrada no existe. No se borró nada
 All entries were deleted successfully: Todas las entradas se eliminaron correctamente
 #EditorFormAction
-The entry was saved successfully: La entrada se salvó correctamente
+The entry was SAVED successfully: La entrada se SALVÓ correctamente
 Correct form data: Corrija la información del formulario
 #AdminFormAction
 Editor form: Formulario de editor

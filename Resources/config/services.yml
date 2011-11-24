@@ -2,18 +2,18 @@ parameters:
 
     mucho_mas_facil_in_page_edit.entity_custom_params:
         default:
-            yml_params: '{}'
-            editor_roles: ROLE_USER
-            form_template: ~ # by default str_replace('\\Entity\\', '\\Form\\', $entity_class).'Type';
-            orm: default
-        'MuchoMasFacil\InPageEditBundle\Entity\Foo':
-            orm: mmf_ie
+            editor_roles: ROLE_USER #this one cannot be customized in renderWithContainer
+            
+            render_action: MuchoMasFacilInPageEditBundle:EntityAdmin:renderObject
+            render_template: ~ # (guessing from class_name) MuchoMasFacilInPageEditBundle:EntityRender:Foo
+            form_template: MuchoMasFacilInPageEditBundle:EntityAdmin:Includes/form_template.html.twig
 
+        MuchoMasFacil\InPageEditBundle\Entity\Foo: ~
+            
     mucho_mas_facil_in_page_edit.content_orm: mmf_ie
 
     mucho_mas_facil_in_page_edit.content_definitions:
         default:
-            yml_params: '{}'
             editor_roles: ROLE_USER
             admin_roles: ROLE_ADMIN
             is_collection: false
@@ -21,46 +21,36 @@ parameters:
             lorem_ipsum_items_in_collection: 5
 
         plain_text:
-            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\PlainText                       
-            render_template: MuchoMasFacilInPageEditBundle:RenderContent:PlainText.html.twig
+            entity_class: MuchoMasFacilInPageEditBundle:PlainText                       
             lorem_ipsum_items_in_collection: 2
 
         multi_line_plain_text:
-            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\MultiLinePlainText
-            render_template: MuchoMasFacilInPageEditBundle:RenderContent:MultilinePlainText.html.twig
+            entity_class: MuchoMasFacilInPageEditBundle:MultiLinePlainText
 
         rich_text:
-            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\RichText
-            render_template: MuchoMasFacilInPageEditBundle:RenderContent:RichText.html.twig
+            entity_class: MuchoMasFacilInPageEditBundle:RichText
 
         custom_rich_text:
-            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\CustomRichText
-            render_template: MuchoMasFacilInPageEditBundle:RenderContent:CustomRichText.html.twig
+            entity_class: MuchoMasFacilInPageEditBundle:CustomRichText
 
         rich_text_header_and_custom_rich_text:
-            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\RichTextHeaderAndCustomRichText
-            render_template: 'MuchoMasFacilInPageEditBundle:RenderContent:RichTextHeaderAndCustomRichText.html.twig'
+            entity_class: MuchoMasFacilInPageEditBundle:RichTextHeaderAndCustomRichText
 
         plain_text_header_and_custom_rich_text:
-            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\PlainTextHeaderAndCustomRichText
-            render_template: MuchoMasFacilInPageEditBundle:RenderContent:PlainTextHeaderAndCustomRichText.html.twig
+            entity_class: MuchoMasFacilInPageEditBundle:PlainTextHeaderAndCustomRichText
 
         image:
-            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\Image
-            render_template: MuchoMasFacilInPageEditBundle:RenderContent:Image.html.twig
+            entity_class: MuchoMasFacilInPageEditBundle:Image
 
         advanced_image:
-            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\AdvancedImage
-            render_template: MuchoMasFacilInPageEditBundle:RenderContent:AdvancedImage.html.twig
+            entity_class: MuchoMasFacilInPageEditBundle:AdvancedImage
 
         one_level_menu:
-            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\MenuItem
-            render_template: MuchoMasFacilInPageEditBundle:RenderContent:OneLevelMenu.html.twig
+            entity_class: MuchoMasFacilInPageEditBundle:MenuItem
             is_collection: true
 
         one_level_basic_menu:
-            entity_class: MuchoMasFacil\InPageEditBundle\Entity\Contents\BasicMenuItem
-            render_template: MuchoMasFacilInPageEditBundle:RenderContent:OneLevelBasicMenu.html.twig
+            entity_class: MuchoMasFacilInPageEditBundle:BasicMenuItem
             is_collection: true
 
     mucho_mas_facil_in_page_edit.ckeditor_options:

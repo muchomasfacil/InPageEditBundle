@@ -1,23 +1,17 @@
 <taconite>
-{% set dialog_id = 'ie__dialog__' ~ uids|join('__') %}
+{% set dialog_id = 'ie__dialog__' ~ uids_as_string %}
 
+{% if container_id %}
 <eval><![CDATA[
   $('#{{ container_id }}').remove();
 ]]>
 </eval>
-
+{% endif %}
 
 {% if action_if_success == 'close' %}
 
                     <eval><![CDATA[
                 ${{ dialog_id }}.dialog('close');
-                    ]]>
-                    </eval>
-
-{% elseif action_if_success == 'list' %}
-
-                    <eval><![CDATA[
-                mmf_iec_ajax('{#{ path( 'mmf_iec_collection', { 'handler': content.handler,  'content_container_id': content_container_id, }) }#}', undefined, '#{{ dialog_id }}');
                     ]]>
                     </eval>
 
@@ -40,9 +34,9 @@
     $( "#{{ dialog_id }}" ).dialog('option',
     {
         buttons: {
-            '{{ 'List' | trans({}, (bundle_name | lower)) }}': function () {
-              alert('Enlazando con list en caso de content');
-            }
+            //'{{ 'List' | trans({}, (bundle_name | lower)) }}': function () {
+            //  alert('Enlazando con list en caso de content');
+            //}
         }//buttons
     }).dialog('open');
                 ]]>

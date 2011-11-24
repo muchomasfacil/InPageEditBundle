@@ -12,6 +12,10 @@ mmf_ie_edit:
     pattern:  /mmf_ie_edit/{url_safe_encoded_params}/{action_if_success}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:edit, action_if_success: false }
 
+mmf_ie_add:
+    pattern:  /mmf_ie_add/{entity_class}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:add, entity_class: '' }
+
 mmf_ie_delete:
     pattern:  /mmf_ie_delete/{url_safe_encoded_params}/{action_if_success}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:delete, action_if_success: false }

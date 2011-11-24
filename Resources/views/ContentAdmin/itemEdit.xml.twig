@@ -44,7 +44,7 @@
                 mmf_ie_submit("#{{ form_id }}", "#{{ dialog_id }}" );
             },
 {% if content.isCollection %}
-          '{{ 'Save and list' | trans({}, (bundle_name | lower)) }}': function () {
+          '{{ 'Save & list' | trans({}, (bundle_name | lower)) }}': function () {
                 $("#{{ form_id }}").ajaxForm({
                   dataType: "xml"
                   , url: "{{ path('mmf_ie_content_item_edit', {'url_safe_encoded_params': url_safe_encoded_params, 'content_order': content_order, 'action_if_success': 'list'  }) }}"
@@ -53,7 +53,7 @@
                 mmf_ie_submit("#{{ form_id }}", "#{{ dialog_id }}" );
           },
 {% endif %}
-          '{{ 'Save and close' | trans({}, (bundle_name | lower)) }}': function () {
+          '{{ 'Save & close' | trans({}, (bundle_name | lower)) }}': function () {
                 $("#{{ form_id }}").ajaxForm({
                   dataType: "xml"
                   , url: "{{ path('mmf_ie_content_item_edit', {'url_safe_encoded_params': url_safe_encoded_params, 'content_order': content_order, 'action_if_success': 'close'  }) }}"

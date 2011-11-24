@@ -10,13 +10,11 @@ class RichTextHeaderAndCustomRichText
 //------------------------------------------------------------------------------
 //Custom code
 //------------------------------------------------------------------------------
-    public function getLoremIpsum()
+    public function loremIpsum()
     {
         $lorem_ipsum = new LoremIpsumGenerator(50); //words per paragraph
-        $entry = new self;
-        $entry->setHeader(trim($lorem_ipsum->getContent(rand(1, 10), 'html')));
-        $entry->setContent(trim($lorem_ipsum->getContent(rand(60, 260), 'html')));
-        return $entry;
+        $this->setContent(trim($lorem_ipsum->getContent(rand(1, 10), 'html')));        
+        $this->setContent(trim($lorem_ipsum->getContent(rand(60, 2600), 'html')));
     }
 
     public function __toString()

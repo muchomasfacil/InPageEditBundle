@@ -4,6 +4,7 @@ namespace MuchoMasFacil\InPageEditBundle\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+Symfony\Component\HttpFoundation\RedirectResponse;
 
 use MuchoMasFacil\InPageEditBundle\Util\UrlSafeEncoder;
 use MuchoMasFacil\InPageEditBundle\Entity\Content as Content;
