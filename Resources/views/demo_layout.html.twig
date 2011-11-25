@@ -31,12 +31,12 @@
     <body>
 {% block menu %}
 <a id="mmf-ie-menu-button">{{ 'Menu' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}</a>
-<div id="mmf-ie-menu" title="lo que sea">
+<div id="mmf-ie-menu">
     <h3>Admin options</h3>
     <ul>
     <!--mmf_ie_ajax(url)-->
-      <li><a href="javascript:void(0)" onclick="mmf_ie_ajax('{{ path ('mmf_ie_cache_clear') }}')">{{ 'Cache clear' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}</li>
-      <li><a href="{{ path ('logout') }}">{{ 'Logout' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}</li>
+      <li><a href="javascript:void(0)" onclick="mmf_ie_ajax('{{ path ('mmf_ie_cache_clear') }}')">{{ 'Cache clear' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}</a></li>
+      <li><a href="{{ path ('logout') }}">{{ 'Logout' | trans( {}, ('MuchoMasFacilInPageEditBundle' | lower)) }}</a></li>
     </ul>
 </div>
 {% endblock %}

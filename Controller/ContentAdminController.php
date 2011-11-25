@@ -4,10 +4,9 @@ namespace MuchoMasFacil\InPageEditBundle\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-Symfony\Component\HttpFoundation\RedirectResponse;
 
 use MuchoMasFacil\InPageEditBundle\Util\UrlSafeEncoder;
-use MuchoMasFacil\InPageEditBundle\Entity\Content as Content;
+//use MuchoMasFacil\InPageEditBundle\Entity\Content as Content;
 
 class ContentAdminController extends ContainerAware
 {
@@ -34,22 +33,23 @@ class ContentAdminController extends ContainerAware
 
     private function findContentByHandler($handler)
     {
-        $em = $this->getEntityManagerForContent();
+        $em = $this->container->get('doctrine')->getEntityManagerForClass('Content');
         $content = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->find($handler);
 
         return $content;
     }
 
-    private function getEntityManagerForContent()
+    private function guessContentRenderTemplate($entity_class)
     {
-        return $this->container->get('doctrine')->getEntityManager($this->container->getParameter('mucho_mas_facil_in_page_edit.content_orm'));
+        $parts = explode ( '\\' , $entity_class );        
+        return  $parts[0].$parts[1].':RenderContent:'.$parts[count($parts)-1].'.html.twig';
     }
 
 //------------------------------------------------------------------------------
 //actions
 //------------------------------------------------------------------------------
     //this one has an associated route mmf_ie_content_render
-    public function renderContentByHandlerAction($handler, $render_template = null, $url_safe_encoded_custom_params = null) 
+    public function renderAction($url_safe_encoded_params) 
     {
         $content = $this->findContentByHandler($handler);
         if (!is_null($url_safe_encoded_custom_params)) {
@@ -66,43 +66,47 @@ class ContentAdminController extends ContainerAware
         return $this->container->get('http_kernel')->forward($forward_action, $this->render_vars);
     }
 
-    public function renderContentAction($content, $render_template = null, $custom_params = null)
+    public function renderContentAction($content, $render_template, $render_params)
     {
-        if (is_null($render_template)) {
-            $render_template = $content->getRenderTemplate();
-        }
         $this->render_vars['content'] = $content;
-        $this->render_vars['custom_params'] = $custom_params;
+        $this->render_vars['render_params'] = $render_params;
         return $this->container->get('templating')->renderResponse($render_template, $this->render_vars);
     }
 
-    public function renderContentWithContainerAction($content, $render_template = null, $container_html_tag = 'div', $container_html_attributes = '', $custom_params = null)
+
+    public function renderContentWithContainerAction($content, $render_action = 'MuchoMasFacilInPageEditBundle:ContentAdmin:renderContent', $render_template = null, $form_template = 'MuchoMasFacilInPageEditBundle:ContentAdmin:Includes/form_template.html.twig', $render_params = array(), $container_html_tag = 'div', $container_html_attributes = '')    
     {
-        $container_id = $container_html_tag . '-' . $content->getHandler();
-        if (is_null($render_template)) {
-            $render_template = $content->getRenderTemplate();
+        $content_entity_class = $content->getContentEntityClass();
+        $content_definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.content_definitions');        
+        
+        if (!$render_template) {
+            $render_template = $this->guessContentRenderTemplate($content_entity_class);
         }
+
+        $container_id = $container_html_tag . '_' . $content->getHandler();
+
         if (!is_null($this->container->get('security.context')->getToken())) {
-            if ((true === $this->container->get('security.context')->isGranted($content->getEditorRolesAsArray())) || (true === $this->container->get('security.context')->isGranted($content->getAdminRolesAsArray()))) {
-                $params = array(
-                    'render_template'   => $render_template
-                    ,'handler'          => $content->getHandler()
-                    ,'container_id'     => $container_id
-                    ,'custom_params'    => $custom_params
-                );
+            if (true === $this->container->get('security.context')->isGranted($content->getEditorRolesAsArray())) {
+                //the params are: render_action, render_template, form_template, render_params, handler, container_id
+                $params_to_encode['render_action'] = $render_action;
+                $params_to_encode['render_template'] = $render_template;
+                $params_to_encode['form_template'] = $form_template;
+                $params_to_encode['render_params'] = $render_params;
+                $params_to_encode['handler'] = $content->getHandler();
+                $params_to_encode['container_id'] = $container_id;
                 $url_safe_encoder = new UrlSafeEncoder();
-                $container_html_attributes .= ' data-mmf-ie-edit-url="'.$this->container->get('router')->generate('mmf_ie_content_edit', array('url_safe_encoded_params' => $url_safe_encoder->encode($params))).'"';
+                $container_html_attributes .= ' data-mmf-ie-edit-url="'.$this->container->get('router')->generate('mmf_ie_content_edit', array('url_safe_encoded_params' => $url_safe_encoder->encode($params_to_encode))).'"';
             }
         }
 
         $this->render_vars['content'] = $content;
+        $this->render_vars['render_action'] = $render_action;        
         $this->render_vars['render_template'] = $render_template;
+        $this->render_vars['render_params'] = $render_params;        
         $this->render_vars['container_html_tag'] = $container_html_tag;
         $this->render_vars['container_html_attributes'] = $container_html_attributes;
         $this->render_vars['container_id'] = $container_id;
-        $this->render_vars['custom_params'] = $custom_params;
-        return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__), $this->render_vars);
-    }
+        return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__), $this->render_vars);    }
 
     public function contentEditAction($url_safe_encoded_params)
     {
@@ -142,9 +146,10 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['container_id'] = $container_id;
         $this->render_vars['reload_container'] = $reload_container;
         $this->render_vars['content'] = $content;
+        $this->render_vars['render_action'] = $render_action;
         $this->render_vars['render_template'] = $render_template;
+        $this->render_vars['render_params'] = $render_params;
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
-        $this->render_vars['url_safe_encoded_custom_params'] = $url_safe_encoder->encode($custom_params);
         
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__, 'xml'), $this->render_vars);
     }

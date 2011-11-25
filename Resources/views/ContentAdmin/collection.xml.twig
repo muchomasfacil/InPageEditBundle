@@ -31,11 +31,6 @@
 
 $( "#{{ dialog_id }}" ).dialog('option', {
     buttons: {
-{% if false %} {#% if is_granted(content.getAdminRoles()) %#}
-          '{{ 'Advanced options' | trans({}, (bundle_name | lower)) }}': function () {
-              mmf_ie_ajax('{#{ path( 'mmf_ie_admin_form', { 'handler': content.handler,  'container_id': container_id, }) }#}', undefined, '#{{ dialog_id }}');
-          },
-{% endif %}
     }
 });
 

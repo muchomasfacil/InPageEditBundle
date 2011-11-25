@@ -11,19 +11,9 @@ class Content
 //------------------------------------------------------------------------------
 //Custom code
 //------------------------------------------------------------------------------
-    public function getParsedParams()
-    {
-      return Yaml::parse($this->getYmlParams());
-    }
-
     public function getEditorRolesAsArray()
     {
         return explode(',', preg_replace('/\s*/m', '', $this->getEditorRoles() ));
-    }
-
-    public function getAdminRolesAsArray()
-    {
-        return explode(',', preg_replace('/\s*/m', '', $this->getAdminRoles() ));
     }
 //------------------------------------------------------------------------------
 
@@ -33,9 +23,9 @@ class Content
     private $handler;
 
     /**
-     * @var text $yml_params
+     * @var string $content_entity_class
      */
-    private $yml_params;
+    private $content_entity_class;
 
     /**
      * @var text $editor_roles
@@ -43,30 +33,14 @@ class Content
     private $editor_roles;
 
     /**
-     * @var text $admin_roles
-     */
-    private $admin_roles;
-
-    /**
-     * @var string $entity_class
-     */
-    private $entity_class;
-
-    /**
-     * @var string $render_template
-     */
-    private $render_template;
-
-    /**
      * @var boolean $is_collection
      */
     private $is_collection;
 
     /**
-     * @var integer $collection_length
+     * @var integer $max_collection_length
      */
-    private $collection_length;
-
+    private $max_collection_length;
 
     /**
      * @var array $content
@@ -87,7 +61,7 @@ class Content
     /**
      * Get handler
      *
-     * @return string
+     * @return string 
      */
     public function getHandler()
     {
@@ -95,25 +69,24 @@ class Content
     }
 
     /**
-     * Set yml_params
+     * Set content_entity_class
      *
-     * @param text $ymlParams
+     * @param string $contentEntityClass
      */
-    public function setYmlParams($ymlParams)
+    public function setContentEntityClass($contentEntityClass)
     {
-        $this->yml_params = $ymlParams;
+        $this->content_entity_class = $contentEntityClass;
     }
 
     /**
-     * Get yml_params
+     * Get content_entity_class
      *
-     * @return text
+     * @return string 
      */
-    public function getYmlParams()
+    public function getContentEntityClass()
     {
-        return $this->yml_params;
+        return $this->content_entity_class;
     }
-
 
     /**
      * Set editor_roles
@@ -128,73 +101,11 @@ class Content
     /**
      * Get editor_roles
      *
-     * @return text
+     * @return text 
      */
     public function getEditorRoles()
     {
         return $this->editor_roles;
-    }
-
-
-        /**
-     * Set admin_roles
-     *
-     * @param text $adminRoles
-     */
-    public function setAdminRoles($adminRoles)
-    {
-        $this->admin_roles = $adminRoles;
-    }
-
-    /**
-     * Get admin_roles
-     *
-     * @return text
-     */
-    public function getAdminRoles()
-    {
-        return $this->admin_roles;
-    }
-
-
-    /**
-     * Set entity_class
-     *
-     * @param string $entityClass
-     */
-    public function setEntityClass($entityClass)
-    {
-        $this->entity_class = $entityClass;
-    }
-
-    /**
-     * Get entity_class
-     *
-     * @return string
-     */
-    public function getEntityClass()
-    {
-        return $this->entity_class;
-    }
-
-    /**
-     * Set render_template
-     *
-     * @param string $renderTemplate
-     */
-    public function setRenderTemplate($renderTemplate)
-    {
-        $this->render_template = $renderTemplate;
-    }
-
-    /**
-     * Get render_template
-     *
-     * @return string
-     */
-    public function getRenderTemplate()
-    {
-        return $this->render_template;
     }
 
     /**
@@ -210,7 +121,7 @@ class Content
     /**
      * Get is_collection
      *
-     * @return boolean
+     * @return boolean 
      */
     public function getIsCollection()
     {
@@ -218,23 +129,23 @@ class Content
     }
 
     /**
-     * Set collection_length
+     * Set max_collection_length
      *
-     * @param integer $collectionLength
+     * @param integer $maxCollectionLength
      */
-    public function setCollectionLength($collectionLength)
+    public function setMaxCollectionLength($maxCollectionLength)
     {
-        $this->collection_length = $collectionLength;
+        $this->max_collection_length = $maxCollectionLength;
     }
 
     /**
-     * Get collection_length
+     * Get max_collection_length
      *
-     * @return integer
+     * @return integer 
      */
-    public function getCollectionLength()
+    public function getMaxCollectionLength()
     {
-        return $this->collection_length;
+        return $this->max_collection_length;
     }
 
     /**
@@ -250,11 +161,10 @@ class Content
     /**
      * Get content
      *
-     * @return array
+     * @return array 
      */
     public function getContent()
     {
         return $this->content;
     }
-
 }

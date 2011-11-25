@@ -4,7 +4,7 @@ namespace MuchoMasFacil\InPageEditBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * ContentRepository
@@ -16,7 +16,7 @@ class ContentRepository extends EntityRepository
 {
 
     private $content_definitions = array();
-
+    
     public function setContentDefinitions($content_definitions)
     {
         $this->content_definitions = $content_definitions;
@@ -32,72 +32,63 @@ class ContentRepository extends EntityRepository
         }
     }
 
-    public function findOrCreateIfNotExist($handler, $content, $is_collection = false, $collection_length = null, $custom = array())
+    public function removeAndCreate($handler, $content_definition_or_entity_class, $is_collection = null, $max_collection_length = null, $editor_roles = null)
     {
-        
-        $params_default = $this->content_definitions['default'];
-
-        $params_by_content = array();
-        if (isset($this->content_definitions[$content])) {
-            $params_by_content = $this->content_definitions[$content];
-        }
-
-        $params = array_merge($params_default, $params_by_content, $custom);
-
+        $this->remove($handler);
+        return $this->findOrCreateIfNotExist($handler, $content_definition_or_entity_class, $is_collection, $max_collection_length, $editor_roles);
+    }
+    
+    public function findOrCreateIfNotExist($handler, $content_definition_or_entity_class, $is_collection = null, $max_collection_length = null, $editor_roles = null)
+    {
         $em = $this->getEntityManager();
+
         $content = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->find($handler);
-
+        
         if (!$content){
-            $entity_class = $params['entity_class'];
-            $content = new \MuchoMasFacil\InPageEditBundle\Entity\Content();
-            //set handler
-            $content->setHandler($handler);
-            //set params from defaults
-            $content->setYmlParams($params['yml_params']);
-            $content->setEditorRoles($params['editor_roles']);
-            $content->setAdminRoles($params['admin_roles']);
-            $content->setEntityClass($entity_class);
-            $content->setRenderTemplate($params['render_template']);
-
-            //set is_collection
-            $content->setIsCollection($is_collection);
-
-            //set collection_length
-            $content->setCollectionLength($collection_length);
-
-            //set content
-            if (isset($params['content']))    {
-                if (!is_array($params['content'])) {
-                    if ($params['content'] instanceof $entity_class) {
-                        $content->setContent(array($params['content']));
-                    }
-                }
-                else {
-                    $params_content_has_error = false;
-                    foreach ($params['content'] as $object) {
-                        if (!($object instanceof $entity_class)) {
-                            $params_content_has_error = true;
-                        }
-                    }
-                    if (!$params_content_has_error) {
-                        $content->setContent($params['content']);
-                    }
-                }
-
+            //get params
+            $params = $this->content_definitions['default'];
+            
+            if (isset($this->content_definitions[$content_definition_or_entity_class])) {
+                $params_by_content_definition = $this->content_definitions[$content_definition_or_entity_class];
+                $params = array_merge($params, $params_by_content_definition);
             }
             else {
-                $number_of_items_to_lorem_impsum = $params['lorem_ipsum_items_in_collection'];
-                if (!$content->getIsCollection())  {
-                    $number_of_items_to_lorem_impsum = 1;
-                }
-                $content_content = array();
-                for ( $a = 0; $a < $number_of_items_to_lorem_impsum ; $a++ ) {
-                    $object = new $entity_class();
-                    $object->loremIpsum();
-                }
-                $content->setContent($object);
+                $params['content_entity_class'] = $content_definition_or_entity_class;
             }
 
+            $content_entity_class = $params['content_entity_class'];
+            
+            if (!class_exists($content_entity_class)) {
+                throw new \Exception($content_definition_or_entity_class.' is not a content_definition in your config files neither a valid entity class');        
+            }
+            
+            foreach (compact('is_collection', 'max_collection_length', 'editorRoles') as $key => $val) {
+                if ($val) {
+                    $params[$key] = $val;
+                }
+            }
+
+            //create content from params        
+            $content = new \MuchoMasFacil\InPageEditBundle\Entity\Content();
+            $content->setHandler($handler);
+            $content->setContentEntityClass($content_entity_class);
+            $content->setEditorRoles($params['editor_roles']);            
+            $content->setIsCollection($params['is_collection']);
+            $content->setMaxCollectionLength($params['max_collection_length']);
+
+            //create content.content
+            $number_of_items_to_lorem_impsum = $params['lorem_ipsum_items_in_collection'];
+            if (!$content->getIsCollection())  {
+                $number_of_items_to_lorem_impsum = 1;
+            }
+            $content_content = array();
+            for ( $a = 0; $a < $number_of_items_to_lorem_impsum ; $a++ ) {
+                $object = new $content_entity_class();
+                $object->loremIpsum();
+                $content_content[] = $object;
+            }
+            $content->setContent($content_content);
+            //save it
             $em->persist($content);
             $em->flush();
 

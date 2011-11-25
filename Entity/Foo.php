@@ -130,4 +130,3 @@ class Foo
         return $this->file;
     }
 }
-

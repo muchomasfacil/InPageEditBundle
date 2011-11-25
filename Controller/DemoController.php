@@ -21,6 +21,7 @@ class DemoController extends Controller
 
     public function indexAction()
     {
+    /*
         $entity_em = $this->getDoctrine()->getEntityManagerForClass('MuchoMasFacil\InPageEditBundle\Entity\Foo'); 
 
         $repository = $entity_em->getRepository('MuchoMasFacilInPageEditBundle:Foo');
@@ -38,47 +39,40 @@ class DemoController extends Controller
             $entity_em->flush();
             $foos = $repository->findAll();
         }
-
+    */$foos = '';
+        
         $contents = array();
 
-        /*$em = $this->getDoctrine()->getEntityManagerForClass('MuchoMasFacil\InPageEditBundle\Entity\Content'); 
+        $em = $this->getDoctrine()->getEntityManagerForClass('MuchoMasFacil\InPageEditBundle\Entity\Content'); 
 
         $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->setContentDefinitions($this->container->getParameter('mucho_mas_facil_in_page_edit.content_definitions'));
 
+        //removeAndCreate //findOrCreateIfNotExist
+
         $handler = 'one-level-menu-example';
-        $this->removeContent($handler);
-        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'one_level_menu', true);
-
-
+        //$contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->removeAndCreate($handler, 'one_level_menu', true);
+        
         $handler = 'plain-text-example';
-        $this->removeContent($handler);
-        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'plain_text');
+        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->removeAndCreate($handler, 'plain_text');
 
         $handler = 'plain-text-collection-example';
-        $this->removeContent($handler);
-        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'plain_text', true);
-
+        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->removeAndCreate($handler, 'plain_text', true);
 
         $handler = 'rich-text-example';
-        $this->removeContent($handler);
-        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'rich_text');
+        //$contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'rich_text');
 
         $handler = 'custom-rich-text-collection-example';
-        $this->removeContent($handler);
-        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'custom_rich_text', true, 5);
+        //$contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'custom_rich_text', true, 5);
 
         $handler = 'rich-text-header-and-custom-rich-text-example';
-        $this->removeContent($handler);
-        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'rich_text_header_and_custom_rich_text');
+        //$contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'rich_text_header_and_custom_rich_text');
 
         $handler = 'image-example';
-        $this->removeContent($handler);
-        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'image');
+        //$contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'image');
 
         $handler = 'advanced-image-example';
-        $this->removeContent($handler);
-        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'advanced_image', true, 3);
-*/
+        //$contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'advanced_image', true, 3);
+
         return $this->render('MuchoMasFacilInPageEditBundle:Demo:index.html.twig', array('contents' => $contents, 'foos' => $foos));
     }
 

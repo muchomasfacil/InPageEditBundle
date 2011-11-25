@@ -24,8 +24,8 @@ mmf_ie_delete:
 # Routes for entity editing
 #-------------------------------------------------------------------------------
 mmf_ie_content_render:
-    pattern:  /mmf_ie_content_render/{handler}/{render_template}/{url_safe_encoded_custom_params}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ContentAdmin:renderContentByHandler, render_template: ~ , url_safe_encoded_custom_params: ''}
+    pattern:  /mmf_ie_content_render/{url_safe_encoded_params}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ContentAdmin:render}
 
 mmf_ie_content_edit:
     pattern:  /mmf_ie_content_edit/{url_safe_encoded_params}/{action_if_success}

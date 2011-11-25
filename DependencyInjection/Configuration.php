@@ -36,11 +36,11 @@ class Configuration implements ConfigurationInterface
             ->end()
         ;
 
-        $rootNode
+        /*$rootNode
             ->children()
                 ->scalarNode('content_orm')->end()
             ->end()
-        ;
+        ;*/
 
         $rootNode
             ->children()
@@ -48,14 +48,14 @@ class Configuration implements ConfigurationInterface
                 ->useAttributeAsKey('name')
                 ->prototype('array')
                     ->children()
-                        ->scalarNode('yml_params')->end()
+                        ->scalarNode('content_entity_class')->isRequired()->end()                   
                         ->scalarNode('editor_roles')->end()
-                        ->scalarNode('admin_roles')->end()
-                        ->scalarNode('entity_class')->end()
-                        ->scalarNode('render_template')->end()
                         ->booleanNode('is_collection')->end()
-                        ->scalarNode('collection_length')->end()
+                        ->scalarNode('max_collection_length')->end()
                         ->scalarNode('lorem_ipsum_items_in_collection')->end()
+                        ->scalarNode('render_action')->end()
+                        ->scalarNode('render_template')->end()
+                        ->scalarNode('form_template')->end()
                     ->end()
                 ->end()
             ->end()

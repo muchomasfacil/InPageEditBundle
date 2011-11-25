@@ -83,7 +83,7 @@ class EntityAdminController extends ContainerAware
     private function guessRenderTemplate($entity_class)
     {
         $parts = explode ( '\\' , $entity_class );        
-        return  $parts[0].$parts[1].':EntityRender:'.$parts[count($parts)-1].'.html.twig';
+        return  $parts[0].$parts[1].':RenderEntity:'.$parts[count($parts)-1].'.html.twig';
     }
 
 
@@ -150,8 +150,8 @@ class EntityAdminController extends ContainerAware
 
         if (!is_null($this->container->get('security.context')->getToken())) {
             if (true === $this->container->get('security.context')->isGranted($this->getAllowedRolesForEntity($entity_class))) {
-                //render_action, render_template, render_params, entity_class, uids, container_id, form_template
-                $params_to_encode = $params;
+                //the params are: render_action, render_template, form_template, render_params, entity_class, uids, container_id
+                $params_to_encode = $params; //here comes: render_action, render_template, form_template
                 unset($params_to_encode['editor_roles']); //to avoid security hole
                 $params_to_encode['render_params'] = $render_params;
                 $params_to_encode['entity_class'] = $entity_class;

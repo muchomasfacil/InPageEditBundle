@@ -10,14 +10,10 @@ MuchoMasFacil\InPageEditBundle\Entity\Content:
             generator:
                 strategy: NONE
     fields:
-        yml_params: {type: text}
+        content_entity_class: {type: string, length: 255}
         editor_roles: {type: text}
-        admin_roles: {type:text}
-        entity_class: {type: string, length: 255}
-        render_template: {type: string, length: 255}
         is_collection: {type: boolean}
-        collection_length: {type: integer, nullable: true}
+        max_collection_length: {type: integer, nullable: true}
         content: {type: array, nullable: true}
     lifecycleCallbacks: {}
         #prePersist: [ doStuffOnPrePersist, doOtherStuffOnPrePersistToo ]
-
