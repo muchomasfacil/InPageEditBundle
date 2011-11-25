@@ -31,9 +31,14 @@ class ContentAdminController extends ContainerAware
       return $this->container->get('translator')->trans($translatable, $params, strtolower($this->render_vars['bundle_name']));
     }
 
+    private function getEntityManagerForContent()
+    {
+      return $this->container->get('doctrine')->getEntityManagerForClass('MuchoMasFacil\InPageEditBundle\Entity\Content');
+    }
+
     private function findContentByHandler($handler)
     {
-        $em = $this->container->get('doctrine')->getEntityManagerForClass('Content');
+        $em = $this->getEntityManagerForContent();
         $content = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->find($handler);
 
         return $content;
