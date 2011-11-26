@@ -128,7 +128,7 @@ class EntityAdminController extends ContainerAware
         return $this->container->get('templating')->renderResponse($render_template, $this->render_vars);
     }
 
-    public function renderObjectWithContainerAction($object, $render_action = null, $render_template = null, $form_template = null, $render_params = array(), $container_html_tag = 'div', $container_html_attributes = '')
+    public function renderObjectWithContainerAction($object, $render_action = null, $render_template = null, $form_template = null, $form_type_class = null, $render_params = array(), $container_html_tag = 'div', $container_html_attributes = '')
     {
         $entity_class = get_class($object);
         $entity_custom_params = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');        
@@ -173,8 +173,27 @@ class EntityAdminController extends ContainerAware
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__), $this->render_vars);
     }
 
-    public function addAction($entity_class, $form_template = null, $form_type_class = null )
+    public function getAddRouteAction($entity_class, $render_action = 'hola', $render_template = null, $form_template = null, $form_type_class = null,$render_params = array(), $container_id = null)
     {
+        if (!$form_type_class) {
+            $form_type_class = $this->guessFormTypeClass($entity_class);
+        }
+        if (!$form_template) {
+            $form_template = 'MuchoMasFacilInPageEditBundle:EntityAdmin:Includes/form_template.html.twig';
+        }
+        $params = compact('entity_class', 'render_action' , 'render_template' , 'form_template' , 'form_type_class' , 'render_params', 'container_id');        
+                
+        $url_safe_encoder = new UrlSafeEncoder();
+        $this->render_vars['url_safe_encoded_params'] = $url_safe_encoder->encode($params);
+        return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__), $this->render_vars);
+    }
+
+    public function addAction($url_safe_encoded_params)
+    {
+        $url_safe_encoder = new UrlSafeEncoder();
+        $params = $url_safe_encoder->decode($url_safe_encoded_params);
+        extract($params);
+        
         if (false === $this->container->get('security.context')->isGranted($this->getAllowedRolesForEntity($entity_class))) {
             throw new AccessDeniedException();
         }
@@ -188,22 +207,8 @@ class EntityAdminController extends ContainerAware
         $metadata = $em->getMetadataFactory()->getMetadataFor($entity_class);
         $uids = $metadata->getIdentifierValues($object);
 
-        //render_action, render_template, render_params, entity_class, uids, container_id, form_template
-        $entity_custom_params = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');        
-        $params = $entity_custom_params['default'];
-        $params['render_template'] = $this->guessRenderTemplate($entity_class);
-        $params['form_type_class'] = ($form_type_class)? $form_type_class: $this->guessFormTypeClass($entity_class); 
-        if ($form_template){
-            $params['form_template'] = $form_template;
-        } 
         $params_to_encode = $params;
-        unset($params_to_encode['editor_roles']); //to avoid security hole
-        $params_to_encode['render_params'] = array();
-        $params_to_encode['entity_class'] = $entity_class;
         $params_to_encode['uids'] = $uids;
-        $params_to_encode['container_id'] = null;
-
-        $url_safe_encoder = new UrlSafeEncoder();
 
         $forward_action = $this->render_vars['bundle_name'] . ':' . $this->render_vars['controller_name'] . ':' . 'edit';
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoder->encode($params_to_encode);
@@ -225,7 +230,6 @@ class EntityAdminController extends ContainerAware
         //render_action, render_template, render_params, entity_class, uids, container_id, form_template
         $object = $this->extendedFind($entity_class, $uids);
         //$logger = $this->get('logger')->info('hola' . get_class($single_content));
-
         $request = $this->container->get('request');
         $form = $this->container->get('form.factory')->create(new $form_type_class(), $object);
         if ($request->getMethod() == 'POST') {

@@ -5,8 +5,9 @@
 <h1>InPageEditBundle use examples</h1>
 
 
+
 <h2>In page Foo entity edition</h2>
-<a href="javascript:void(0)" onclick="mmf_ie_ajax('{{ path('mmf_ie_add', {'entity_class': 'MuchoMasFacil\\InPageEditBundle\\Entity\\Foo'}) }}')">New Foo entry</a>
+<a href="javascript:void(0)" onclick="mmf_ie_ajax('{% spaceless %}{% render "MuchoMasFacilInPageEditBundle:EntityAdmin:getAddRoute" with {'entity_class': 'MuchoMasFacil\\InPageEditBundle\\Entity\\Foo' } %}{% endspaceless %}')">New Foo entry</a>
 {% if foos|length <= 0 %}
 <p>{{ 'No records found' }}</p>
 {% else %}

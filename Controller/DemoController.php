@@ -7,18 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class DemoController extends Controller
 {
 
-    public function removeContent($handler)
-    {
-        if (false) {
-            $em = $this->getDoctrine()->getEntityManager($this->container->getParameter('mucho_mas_facil_in_page_edit.content_orm'));
-            $content = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->find($handler);
-            if ($content) {
-                $em->remove($content);
-                $em->flush();
-            }
-        }
-    }
-
     public function indexAction()
     {    
         $entity_em = $this->getDoctrine()->getEntityManagerForClass('MuchoMasFacil\InPageEditBundle\Entity\Foo'); 
@@ -27,7 +15,7 @@ class DemoController extends Controller
 
         //$q = $entity_em->createQuery('delete from MuchoMasFacilInPageEditBundle:Foo');
         //$numDeleted = $q->execute();
-        
+        $foos =array();
         $foos = $repository->findAll();
         if (count($foos)<=0) {
             for ($a=0; $a < 6; $a++) {
