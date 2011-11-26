@@ -134,7 +134,7 @@ class EntityAdminController extends ContainerAware
         $entity_custom_params = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');        
         $params = $entity_custom_params['default'];
         $params['render_template'] = $this->guessRenderTemplate($entity_class);
-        $params['form_type_class'] = str_replace('\\Entity\\', '\\Form\\', $entity_class).'Type';        
+        $params['form_type_class'] = $this->guessFormTypeClass($entity_class);
         if (isset($entity_custom_params[$entity_class])) {
           $params = array_merge($params, $entity_custom_params[$entity_class]);
         }               
@@ -173,7 +173,7 @@ class EntityAdminController extends ContainerAware
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__), $this->render_vars);
     }
 
-    public function addAction($entity_class)
+    public function addAction($entity_class, $form_template = null, $form_type_class = null )
     {
         if (false === $this->container->get('security.context')->isGranted($this->getAllowedRolesForEntity($entity_class))) {
             throw new AccessDeniedException();
@@ -192,10 +192,10 @@ class EntityAdminController extends ContainerAware
         $entity_custom_params = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');        
         $params = $entity_custom_params['default'];
         $params['render_template'] = $this->guessRenderTemplate($entity_class);
-        if (isset($entity_custom_params[$entity_class])) {
-          $params = array_merge($params, $entity_custom_params[$entity_class]);
-        }    
-
+        $params['form_type_class'] = ($form_type_class)? $form_type_class: $this->guessFormTypeClass($entity_class); 
+        if ($form_template){
+            $params['form_template'] = $form_template;
+        } 
         $params_to_encode = $params;
         unset($params_to_encode['editor_roles']); //to avoid security hole
         $params_to_encode['render_params'] = array();

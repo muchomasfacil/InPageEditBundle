@@ -13,8 +13,8 @@ mmf_ie_edit:
     defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:edit, action_if_success: false }
 
 mmf_ie_add:
-    pattern:  /mmf_ie_add/{entity_class}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:add, entity_class: '' }
+    pattern:  /mmf_ie_add/{entity_class}/{form_type_class}/{form_template}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:add, form_type_class: false, form_template: false }
 
 mmf_ie_delete:
     pattern:  /mmf_ie_delete/{url_safe_encoded_params}/{action_if_success}
