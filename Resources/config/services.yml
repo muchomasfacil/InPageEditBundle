@@ -6,8 +6,9 @@ parameters:
             #those below can be customized in renderWithContainerAction call
             render_action: MuchoMasFacilInPageEditBundle:EntityAdmin:renderObject
             render_template: ~ # (guessed from class_name) [bundle_name]:EntityRender:[last part of entity class name]
+            form_type_class: ~ # (guessed from class_name, replacing Entity by Form
             form_template: MuchoMasFacilInPageEditBundle:EntityAdmin:Includes/form_template.html.twig
-
+            
         MuchoMasFacil\InPageEditBundle\Entity\Foo: ~          
 
     mucho_mas_facil_in_page_edit.content_definitions:

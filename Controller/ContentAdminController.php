@@ -56,17 +56,15 @@ class ContentAdminController extends ContainerAware
     //this one has an associated route mmf_ie_content_render
     public function renderAction($url_safe_encoded_params) 
     {
+        $url_safe_encoder = new UrlSafeEncoder();
+        $params = $url_safe_encoder->decode($url_safe_encoded_params);
+        extract($params);
+            
         $content = $this->findContentByHandler($handler);
-        if (!is_null($url_safe_encoded_custom_params)) {
-            $url_safe_encoder = new UrlSafeEncoder();
-            $custom_params = $url_safe_encoder->decode($url_safe_encoded_custom_params);
-        }
-        else {
-            $custom_params = null;
-        }
+               
         $this->render_vars['content'] = $content;
         $this->render_vars['render_template'] = $render_template;
-        $this->render_vars['custom_params'] = $custom_params;
+        $this->render_vars['render_params'] = $render_params;
         $forward_action = $this->render_vars['bundle_name'] . ':' . $this->render_vars['controller_name'] . ':' . 'renderContent';
         return $this->container->get('http_kernel')->forward($forward_action, $this->render_vars);
     }
@@ -79,7 +77,7 @@ class ContentAdminController extends ContainerAware
     }
 
 
-    public function renderContentWithContainerAction($content, $render_action = 'MuchoMasFacilInPageEditBundle:ContentAdmin:renderContent', $render_template = null, $form_template = 'MuchoMasFacilInPageEditBundle:ContentAdmin:Includes/form_template.html.twig', $render_params = array(), $container_html_tag = 'div', $container_html_attributes = '')    
+    public function renderContentWithContainerAction($content, $render_action = 'MuchoMasFacilInPageEditBundle:ContentAdmin:renderContent', $render_template = null, $form_template = 'MuchoMasFacilInPageEditBundle:ContentAdmin:Includes/form_template.html.twig', $form_type_class = null, $render_params = array(), $container_html_tag = 'div', $container_html_attributes = '')    
     {
         $content_entity_class = $content->getContentEntityClass();
         $content_definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.content_definitions');        
@@ -87,6 +85,11 @@ class ContentAdminController extends ContainerAware
         if (!$render_template) {
             $render_template = $this->guessContentRenderTemplate($content_entity_class);
         }
+
+        if (!$form_type_class) {
+            $form_type_class = str_replace('\\Entity\\', '\\Form\\', $content_entity_class).'Type';
+        }
+
 
         $container_id = $container_html_tag . '_' . $content->getHandler();
 
@@ -97,6 +100,7 @@ class ContentAdminController extends ContainerAware
                 $params_to_encode['render_template'] = $render_template;
                 $params_to_encode['form_template'] = $form_template;
                 $params_to_encode['render_params'] = $render_params;
+                $params_to_encode['form_type_class'] = $form_type_class;
                 $params_to_encode['handler'] = $content->getHandler();
                 $params_to_encode['container_id'] = $container_id;
                 $url_safe_encoder = new UrlSafeEncoder();
@@ -142,6 +146,7 @@ class ContentAdminController extends ContainerAware
         $url_safe_encoder = new UrlSafeEncoder();
         $params = $url_safe_encoder->decode($url_safe_encoded_params);
         extract($params);
+        
         $content = $this->findContentByHandler($handler);
 
         if (false === $this->container->get('security.context')->isGranted($content->getEditorRolesAsArray())) {
@@ -151,9 +156,6 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['container_id'] = $container_id;
         $this->render_vars['reload_container'] = $reload_container;
         $this->render_vars['content'] = $content;
-        $this->render_vars['render_action'] = $render_action;
-        $this->render_vars['render_template'] = $render_template;
-        $this->render_vars['render_params'] = $render_params;
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
         
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__, 'xml'), $this->render_vars);
@@ -174,22 +176,22 @@ class ContentAdminController extends ContainerAware
         try
         {
             $content_content = $content->getContent();
-            if ((!is_null($content->getCollectionLength())) && (count($content_content) >= $content->getCollectionLength())) {
-                $flash_messages[] = array('error' => $this->trans('Overpassed maximum number of items for this content'). ': '.$content->getCollectionLength());
+            if ((!is_null($content->getMaxCollectionLength())) && (count($content_content) >= $content->getMaxCollectionLength())) {
+                $flash_messages[] = array('error' => $this->trans('Overpassed maximum number of items for this content'). ': '.$content->getMaxCollectionLength());
                 $reload_container = false;
             }
             else{
-                $class_name = $content->getEntityClass();
+                $class_name = $content->getContentEntityClass();
                 $new_entry = new $class_name();
+                $new_entry->loremIpsum();
                 if (isset($content_content[$content_order])){
-                    $content_to_insert[] = $new_entry->getLoremIpsum();
+                    $content_to_insert[] = $new_entry;
                     $content_to_insert[] = $content_content[$content_order];
                     array_splice($content_content, $content_order, 1, $content_to_insert);
                 }
                 else
                 {
-                    $content_to_insert = $new_entry->getLoremIpsum();
-                    $content_content[] =  $content_to_insert;
+                    $content_content[] =  $new_entry;
                 }
                 $reload_container = true;
                 $content->setContent(array_values($content_content));
@@ -208,11 +210,8 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['container_id'] = $container_id;
         $this->render_vars['reload_container'] = $reload_container;
         $this->render_vars['content'] = $content;
-        $this->render_vars['url_safe_encoded_custom_params'] = $url_safe_encoder->encode($custom_params);
-
-        $this->render_vars['render_template'] = $render_template;
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
-
+        
         return $this->container->get('templating')->renderResponse($this->render_vars['bundle_name'] . ':' . $this->render_vars['controller_name'] . ':collection.xml.twig', $this->render_vars);
     }
 
@@ -257,9 +256,6 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['container_id'] = $container_id;
         $this->render_vars['reload_container'] = $reload_container;
         $this->render_vars['content'] = $content;
-        $this->render_vars['url_safe_encoded_custom_params'] = $url_safe_encoder->encode($custom_params);
-
-        $this->render_vars['render_template'] = $render_template;
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
 
         return $this->container->get('templating')->renderResponse($this->render_vars['bundle_name'] . ':' . $this->render_vars['controller_name'] . ':collection.xml.twig', $this->render_vars);
@@ -289,15 +285,12 @@ class ContentAdminController extends ContainerAware
         $em->persist($content);
         $em->flush();
 
-        $flash_messages[] = array('highlight' => $this->trans('The entry was moved successfully'));
+        $flash_messages[] = array('highlight' => $this->trans('The entry was MOVED successfully'));
 
         if (isset($flash_messages)) $this->render_vars['flash_messages'] = $flash_messages;
         $this->render_vars['container_id'] = $container_id;
         $this->render_vars['reload_container'] = $reload_container;
         $this->render_vars['content'] = $content;
-        $this->render_vars['url_safe_encoded_custom_params'] = $url_safe_encoder->encode($custom_params);
-
-        $this->render_vars['render_template'] = $render_template;
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
 
         return $this->container->get('templating')->renderResponse($this->render_vars['bundle_name'] . ':' . $this->render_vars['controller_name'] . ':collection.xml.twig', $this->render_vars);
@@ -316,22 +309,16 @@ class ContentAdminController extends ContainerAware
             throw new AccessDeniedException();
         }
 
-        $entity_class = $content->getEntityClass();
+        $entity_class = $content->getContentEntityClass();
         $content_content = $content->getContent();
         if (!isset($content_content[$content_order]))
         {
-
             $content_content[$content_order] = new $entity_class();
         }
         $single_content = $content_content[$content_order];
-        //$logger = $this->get('logger')->info('hola' . get_class($single_content));
-        $type_class = str_replace('\\Entity\\', '\\Form\\', $entity_class).'Type';
-        $entity_custom_params = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');
-        if ((isset($entity_custom_params[$entity_class]['form_template'])) && (class_exists($entity_custom_params[$entity_class]['form_template']))) {
-            $type_class = $entity_custom_params[$entity_class]['form_template'];
-        }
+        //$logger = $this->get('logger')->info('hola' . get_class($single_content));       
 
-        $form = $this->container->get('form.factory')->create(new $type_class(), $single_content);
+        $form = $this->container->get('form.factory')->create(new $form_type_class(), $single_content);
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
             if ($form->isValid()) {
@@ -345,7 +332,7 @@ class ContentAdminController extends ContainerAware
                 $em->persist($content);
                 $em->flush();
 
-                $flash_messages[] = array('highlight' => $this->trans('The entry was saved successfully'));
+                $flash_messages[] = array('highlight' => $this->trans('The entry was SAVED successfully'));
                 $reload_container = true;
             }
             else{
@@ -368,9 +355,6 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['container_id'] = $container_id;
         $this->render_vars['reload_container'] = (isset($reload_container))? $reload_container: false;
         $this->render_vars['content'] = $content;
-        $this->render_vars['url_safe_encoded_custom_params'] = $url_safe_encoder->encode($custom_params);
-        
-        $this->render_vars['render_template'] = $render_template;
         $this->render_vars['url_safe_encoded_params'] = $url_safe_encoded_params;
 
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__, 'xml'), $this->render_vars);

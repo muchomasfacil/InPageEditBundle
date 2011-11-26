@@ -134,10 +134,11 @@ class EntityAdminController extends ContainerAware
         $entity_custom_params = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');        
         $params = $entity_custom_params['default'];
         $params['render_template'] = $this->guessRenderTemplate($entity_class);
+        $params['form_type_class'] = str_replace('\\Entity\\', '\\Form\\', $entity_class).'Type';        
         if (isset($entity_custom_params[$entity_class])) {
           $params = array_merge($params, $entity_custom_params[$entity_class]);
         }               
-        foreach (compact('render_action', 'render_template', 'form_template') as $key => $val) {
+        foreach (compact('render_action', 'render_template', 'form_template', 'form_type_class') as $key => $val) {
             if ($val) {
                 $params[$key] = $val;
             }
@@ -150,7 +151,7 @@ class EntityAdminController extends ContainerAware
 
         if (!is_null($this->container->get('security.context')->getToken())) {
             if (true === $this->container->get('security.context')->isGranted($this->getAllowedRolesForEntity($entity_class))) {
-                //the params are: render_action, render_template, form_template, render_params, entity_class, uids, container_id
+                //the params are: render_action, render_template, form_template, form_type_class, render_params, entity_class, uids, container_id
                 $params_to_encode = $params; //here comes: render_action, render_template, form_template
                 unset($params_to_encode['editor_roles']); //to avoid security hole
                 $params_to_encode['render_params'] = $render_params;
@@ -223,12 +224,10 @@ class EntityAdminController extends ContainerAware
         }
         //render_action, render_template, render_params, entity_class, uids, container_id, form_template
         $object = $this->extendedFind($entity_class, $uids);
-
         //$logger = $this->get('logger')->info('hola' . get_class($single_content));
-        $type_class = $this->guessFormTypeClass($entity_class);
 
         $request = $this->container->get('request');
-        $form = $this->container->get('form.factory')->create(new $type_class(), $object);
+        $form = $this->container->get('form.factory')->create(new $form_type_class(), $object);
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
             if ($form->isValid()) {
@@ -291,8 +290,7 @@ class EntityAdminController extends ContainerAware
         }
 
         //now remove associated mmf_fm dir if exists
-        $form_class = $this->guessFormTypeClass($entity_class);
-        $temp_form = new $form_class();
+        $temp_form = new $form_type_class();
         $form_name = $temp_form->getName();
         $full_target_path = $_SERVER['DOCUMENT_ROOT']. '/uploads'. $this->guessMmfFileManagerPostfix($form_name, $this->getUidsAsString($uids));
         $this->rmdir_recursive($full_target_path); 

@@ -20,8 +20,7 @@ class DemoController extends Controller
     }
 
     public function indexAction()
-    {
-    /*
+    {    
         $entity_em = $this->getDoctrine()->getEntityManagerForClass('MuchoMasFacil\InPageEditBundle\Entity\Foo'); 
 
         $repository = $entity_em->getRepository('MuchoMasFacilInPageEditBundle:Foo');
@@ -39,7 +38,6 @@ class DemoController extends Controller
             $entity_em->flush();
             $foos = $repository->findAll();
         }
-    */$foos = '';
         
         $contents = array();
 
@@ -53,7 +51,7 @@ class DemoController extends Controller
         //$contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->removeAndCreate($handler, 'one_level_menu', true);
         
         $handler = 'plain-text-example';
-        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->removeAndCreate($handler, 'plain_text');
+        $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->findOrCreateIfNotExist($handler, 'plain_text');
 
         $handler = 'plain-text-collection-example';
         $contents[$handler] = $em->getRepository('MuchoMasFacilInPageEditBundle:Content')->removeAndCreate($handler, 'plain_text', true);
