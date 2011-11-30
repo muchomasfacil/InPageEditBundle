@@ -16,7 +16,6 @@ class RichText
         $this->setContent(trim($lorem_ipsum->getContent(rand(2, 10), 'html')));
     }
 
-
     public function __toString()
     {
         $cut_in = 60;
