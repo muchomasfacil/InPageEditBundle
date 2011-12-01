@@ -4,7 +4,7 @@ namespace MuchoMasFacil\InPageEditBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+//use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * ContentRepository
