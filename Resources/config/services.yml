@@ -58,7 +58,7 @@ parameters:
             config.toolbar = 'Default';
             config.toolbar_Default =
             [
-                ['Bold', 'Italic', 'Underline', '-', 'Link', 'Unlink','-','About']
+                ['Bold', 'Italic', 'Underline', '-', 'Link', 'Unlink','-','NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','About']
             ];
 
         full: |
