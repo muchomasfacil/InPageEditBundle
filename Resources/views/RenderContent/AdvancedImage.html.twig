@@ -4,7 +4,8 @@
 {% if entry.link %}
     <a href="{{ entry.link }}">
 {% endif %}
-    <img src="{{ entry.url }}" alt="{{ entry.label }}" title="{{ entry.label }}" />
+    <img src="{{ entry.img_url }}" alt="{{ entry.label }}" title="{{ entry.label }}" />
+    {{ entry.content }}
 {% if entry.link %}
     </a>
 {% endif %}

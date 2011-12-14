@@ -7,20 +7,22 @@ use MuchoMasFacil\InPageEditBundle\Util\LoremIpsumGenerator;
 class AdvancedImage
 {
 
-    private $url;
+    private $img_url;
 
     private $label;
+    
+    private $content;
 
     private $link;
 
-    public function setUrl($url)
+    public function setImgUrl($img_url)
     {
-        $this->url = $url;
+        $this->img_url = $img_url;
     }
 
-    public function getUrl()
+    public function getImgUrl()
     {
-        return $this->url;
+        return $this->img_url;
     }
 
     public function setLabel($label)
@@ -32,6 +34,17 @@ class AdvancedImage
     {
         return $this->label;
     }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
 
     public function setLink($link)
     {
@@ -47,8 +60,9 @@ class AdvancedImage
     public function loremIpsum()
     {
         $lorem_ipsum = new LoremIpsumGenerator(50); //words per paragraph
-        $this->setUrl('http://www.muchomasfacil.com/images/logo.png');
+        $this->setImgUrl('http://www.muchomasfacil.com/images/logo.png');
         $this->setLabel(trim($lorem_ipsum->getContent(rand(1, 4), 'txt', false)));
+        $this->setContent(trim($lorem_ipsum->getContent(rand(5, 10), 'html', false)));
         $this->setLink('http://www.muchomasfacil.com');
     }
 

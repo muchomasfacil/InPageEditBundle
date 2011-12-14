@@ -53,6 +53,14 @@ class ContentAdminController extends ContainerAware
 //------------------------------------------------------------------------------
 //actions
 //------------------------------------------------------------------------------
+    public function unencodeAction($url_safe_encoded_params) 
+    {
+        $url_safe_encoder = new UrlSafeEncoder();
+        $params = $url_safe_encoder->decode($url_safe_encoded_params);
+        $this->render_vars['params'] = print_r($params, true);
+        return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__), $this->render_vars);
+    }
+    
     //this one has an associated route mmf_ie_content_render
     public function renderAction($url_safe_encoded_params) 
     {
@@ -65,7 +73,12 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['content'] = $content;
         $this->render_vars['render_template'] = $render_template;
         $this->render_vars['render_params'] = $render_params;
-        $forward_action = $this->render_vars['bundle_name'] . ':' . $this->render_vars['controller_name'] . ':' . 'renderContent';
+        if ($render_action) {
+            $forward_action = $render_action;
+        }
+        else {
+            $forward_action = $this->render_vars['bundle_name'] . ':' . $this->render_vars['controller_name'] . ':' . 'renderContent';
+        }
         return $this->container->get('http_kernel')->forward($forward_action, $this->render_vars);
     }
 
@@ -116,6 +129,8 @@ class ContentAdminController extends ContainerAware
         $this->render_vars['container_html_attributes'] = $container_html_attributes;
         $this->render_vars['container_id'] = $container_id;
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults(__FUNCTION__), $this->render_vars);    }
+
+//end of render actions
 
     public function contentEditAction($url_safe_encoded_params)
     {
@@ -234,7 +249,7 @@ class ContentAdminController extends ContainerAware
             if (isset($content_content[$content_order])){
                 unset($content_content[$content_order]);
                 $content->setContent(array_values($content_content));
-                $flash_messages[] = array('highlight' => $this->trans('The entry was deleted successfully'));
+                $flash_messages[] = array('highlight' => $this->trans('The entry was DELETED successfully'));
                 $reload_container = true;
             }
             else{
