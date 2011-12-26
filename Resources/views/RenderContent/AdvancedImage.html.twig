@@ -1,15 +1,15 @@
 {% for entry in content.content %}
 {% spaceless %}
-
+<div>
 {% if entry.link %}
     <a href="{{ entry.link }}">
 {% endif %}
-    <img src="{{ entry.img_url }}" alt="{{ entry.label }}" title="{{ entry.label }}" />
-    {{ entry.content }}
+    <img src="{{ entry.imgUrl }}" alt="{{ entry.label }}" title="{{ entry.label }}" />
+    {{ entry.content | raw }}
 {% if entry.link %}
     </a>
 {% endif %}
-
+</div>
 {% endspaceless %}
 {% endfor %}
 
