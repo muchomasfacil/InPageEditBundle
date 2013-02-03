@@ -1,0 +1,50 @@
+{
+    "name": "muchomasfacil/in-page-edit-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony2 fast in page edit for entities and common contents",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Alvaro Marcos",
+            "email": "alvaro@muchomasfacil.com"
+        }
+    ],
+
+    "repositories": [
+        {
+            "type": "package",
+            "package": 
+                {
+                    "version": "master", 
+                    "name": "twitter/bootstrap",
+                    "source": 
+                        {
+                            "url": "https://github.com/twitter/bootstrap.git",
+                            "type": "git",
+                            "reference": "master"
+                        },
+                    "dist": 
+                        {
+                            "url": "https://github.com/twitter/bootstrap/zipball/master",
+                            "type": "zip"
+                        }
+                }
+        }
+    ],
+
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/symfony": ">=2.1,<2.3-dev",
+        "fzaninotto/faker": "dev-master",
+        "stof/doctrine-extensions-bundle": "dev-master",
+        "mopa/bootstrap-bundle": "dev-master",
+        "twitter/bootstrap": "master"       
+    },
+
+    "autoload": {
+        "psr-0": { "MuchoMasFacil\\InPageEditBundle": "" }
+    },
+
+    "target-dir": "MuchoMasFacil/InPageEditBundle"
+}
