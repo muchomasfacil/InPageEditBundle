@@ -3,4 +3,5 @@ app/console doctrine:schema:drop --force
 app/console doctrine:schema:create
 
 - hacer que los plugins de malsup vengan desde github con composer
+- poder seleccionar y fijar, independientemente del locale, en qué idioma utilizamos el plugin
 - uploads con ajax... (malsup form plugin)

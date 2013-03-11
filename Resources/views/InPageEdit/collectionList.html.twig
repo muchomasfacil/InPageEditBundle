@@ -9,12 +9,12 @@
       <li><a class="btn btn-mini" href="#"><i class="icon-edit"></i></a></li>
       <li><a class="btn btn-mini" href="#"><i class="icon-plus"></i></a></li>      
     </ul>-->
-    <a class="btn btn-mini"            data-ipe-action="move"   data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'edit_collection.icon_move_title'  |trans}}"><i class="icon-move"></i></a>
-    <a class="btn btn-mini btn-danger" data-ipe-action="delete" data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'edit_collection.icon_trash_title' |trans}}"><i class="icon-trash"></i></a>
-    <a class="btn btn-mini"            data-ipe-action="add"    data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'edit_collection.icon_plus_title'  |trans}}"><i class="icon-plus"></i></a>
-    <a class="btn btn-mini"            data-ipe-action="edit"   data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'edit_collection.icon_edit_title'  |trans}}"><i class="icon-edit"></i></a>
+    <a class="btn btn-mini"            data-ipe-action="move"   data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_move_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-move"></i></a>
+    <a class="btn btn-mini btn-danger" data-ipe-action="delete" data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_trash_title' |trans({}, 'mmf_ipe')}}"><i class="icon-trash"></i></a>
+    <a class="btn btn-mini"            data-ipe-action="add"    data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i></a>
+    <a class="btn btn-mini"            data-ipe-action="edit"   data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_edit_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-edit"></i></a>
     http://badonkatrunc.com/
-    {{ result }}
+    {{ has__to_string_method ? result : result.id }}
   </li>
 {% endfor %}  
 </ul>
@@ -28,7 +28,7 @@ $(function() {
                 alert('move');
                 break;
             case 'delete':
-                if (confirm('{{ 'delete_confirmation'|trans }}')) {
+                if (confirm('{{ 'delete_confirmation'  |trans({}, 'mmf_ipe')}}')) {
                     ipe_load_in_dialog (Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': '{{ data_ipe_hash }}', 'uid': $(this).attr('data-ipe-uid')}));  
                 }
                 break;

@@ -40,23 +40,6 @@ class InPageEditController extends ContainerAware
     //no associated route. Will always be called from twig templates
     public function renderAction($find_by = null, $entity_class_or_definition = null, $preloaded_result = null, $render_template = null, $create_if_not_found = false, $render_with_container = true, $params = array())
     {  
-
-        //some magic to allow preload of contents for for example a pagination for entities
-        //we make sure $find_by $entity_class.. and $preloaded result are correlationated
-        //TODO CHECK IT WORKS
-        if($preloaded_result) { 
-            if (!is_array($preloaded_result)) { //it is a single entity we guess $entity_class_or_definition as a class and corresponding find_by            
-                $entity_class_or_definition = get_class($preload_single_entity); //so, it is an entity not a definition
-                $em = $this->container->get('doctrine')->getManager($entity_class_or_definition); 
-                $metadata = $em->getMetadataFactory()->getMetadataFor($entity_class_or_definition);
-                $find_by = $metadata->getIdentifierValues($preload_single_entity);
-            }
-            else { //it is a collection so find_by and $entity_class_or_definition must be set
-                if ((is_null($find_by)) || (is_null($entity_class_or_definition))) {
-                    throw new \Exception('Calling renderWithContainerAction with $preloaded_result as a collection but either $find_by or $entity_class_or_definition are null');                
-                }
-            }
-        }
         //$param_definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');    
         $param_definitions = array(
         'default' => array(
@@ -76,10 +59,28 @@ class InPageEditController extends ContainerAware
             , 'container_html_attributes' => ''
             )
         );
+
+        //some magic to allow preload of contents for for example a pagination for entities
+        //we make sure $find_by $entity_class.. and $preloaded result are correlationated
+        //TODO CHECK IT WORKS
+        if($preloaded_result) { 
+            if (!is_array($preloaded_result)) { //it is a single entity we guess $entity_class_or_definition as a class and corresponding find_by            
+                $entity_class_or_definition = get_class($preloaded_result); //so, it is an entity not a definition
+                $em = $this->container->get('doctrine')->getManager($entity_class_or_definition); 
+                $metadata = $em->getMetadataFactory()->getMetadataFor($entity_class_or_definition);
+                $find_by = $metadata->getIdentifierValues($preloaded_result);
+            }
+            else { //it is a collection so find_by and $entity_class_or_definition must be set
+                if ((is_null($find_by)) || (is_null($entity_class_or_definition))) {
+                    throw new \Exception($this->trans('controller.renderAction.exception_1'));                
+                }
+            }
+        }
+
         //let us get params mergin passed as parameters with those coming from configuration
         if (!class_exists($entity_class_or_definition)) { //it must be a definition
             if (!isset($param_definitions[$entity_class_or_definition])) {
-                throw new \Exception($entity_class_or_definition . ' must either be a valid entity or a definition in mucho_mas_facil_in_page_edit.definitions configuration');                
+                throw new \Exception($this->trans('controller.renderAction.exception_2'));                
             }                
             $params = array_merge($param_definitions['default'], $param_definitions[$entity_class_or_definition], $params);
         }
@@ -123,8 +124,8 @@ class InPageEditController extends ContainerAware
                     $locale = ($params['faker_locale'])? $params['faker_locale'] : $this->container->get('request')->getLocale();
                     $results = $rep->fake($locale, $number_of_entities,array_merge($params['faker_custom_column_formatters'], $params['find_by']), $params['faker_custom_modifiers'], $params['faker_generate_id'] );        
                 }
-                else {
-                    throw new \Exception('Nothing found for ' . $params['entity_class'] . ' searching by ' . implode(' -- ', $params['find_by']));                
+                else {                    
+                    throw new \Exception($this->trans('controller.not_found_exception', array('%entity_class%' => $params['entity_class'] ,'%find_by%' => (( !is_null($params['find_by'])  && is_array($params['find_by']) ) ? implode(' -- ', $params['find_by']) : 'null'))));
                 }
             }        
         }
@@ -165,13 +166,13 @@ class InPageEditController extends ContainerAware
         if (is_null($id)) {
             $entity = $rep->findOneBy($params['find_by']);
             if (!$entity) {
-                throw new \Exception('Nothing found for ' . $params['entity_class'] . ' searching by ');                
+                throw new \Exception($this->trans('controller.not_found_exception', array('%entity_class%' => $params['entity_class'] ,'%find_by%' => (( !is_null($params['find_by'])  && is_array($params['find_by']) ) ? implode(' -- ', $params['find_by']) : 'null'))));
             }
         }
         else {
             $entity = $rep->find($id);    
             if (!$entity) {
-                throw new \Exception('Nothing found for ' . $params['entity_class'] . ' searching by ' . implode(' -- ', $params['find_by']));
+                throw new \Exception($this->trans('controller.not_found_exception', array('%entity_class%' => $params['entity_class'] ,'%find_by%' => $id)));
             }
         }
         //die(get_class($entity));
@@ -185,11 +186,11 @@ class InPageEditController extends ContainerAware
             if ($form->isValid()) {
                 $em->persist($entity);
                 $em->flush();
-                $this->render_vars['flashes'][] = array('type' => 'success', 'message' => 'The entry was properly SAVED', 'close' => true, 'use_raw' => false);
+                $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.editAction.entry_saved'), 'close' => true, 'use_raw' => true);
                 //$this->render_vars['advanced_flashes'][] = array();
             }
             else {
-                $this->render_vars['flashes'][] = array('type' => 'success', 'error' => 'Please fix ERRORS in form', 'close' => true, 'use_raw' => false);
+                $this->render_vars['flashes'][] = array('type' => 'success', 'error' => $this->trans('controller.editAction.form_errors'), 'close' => true, 'use_raw' => true);
             }
         } 
         $this->render_vars['form'] = $form->createView();
@@ -204,12 +205,15 @@ class InPageEditController extends ContainerAware
         $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);
         //var_dump($params);
         $rep = $this->container->get('doctrine')->getRepository($params['entity_class']);        
+        $this->render_vars['has__to_string_method'] = (method_exists(new $params['entity_class'](), '__toString'))? true : false;
+        if (!$this->render_vars['has__to_string_method']) {
+            $this->render_vars['flashes'][] = array('type' => 'warning', 'message' => $this->trans('controller.collectionListAction.to_string_not_defined', array('%entity_class%' => $params['entity_class'])), 'close' => true, 'use_raw' => false);
+        }
         $this->render_vars['results'] = $rep->findBy($params['find_by']);
         $this->render_vars['data_ipe_hash'] = $ipe_hash;
-        //$this->render_vars['flashes'][] = array('type' => 'error', 'message' => 'my first error', 'close' => true, 'use_raw' => false);
-        //$this->render_vars['advanced_flashes'][] = array('type' => 'error', 'heading' => 'header', 'message' => 'my first error', 'close' => true, 'use_raw' => false);
+        $this->render_vars['params'] = $params;
+        //$this->render_vars['advanced_flashes'][] = array('type' => 'error', 'heading' => 'header', 'message' => 'my first error', 'close' => true, 'use_raw' => false);        
         
-        //return new Response('collection '. $ipe_hash. ' ' . $this->getTemplateNameByDefaults( __FUNCTION__));
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults( __FUNCTION__) , $this->render_vars);
     }
 
@@ -223,7 +227,7 @@ class InPageEditController extends ContainerAware
         }
         $em->remove($entity);
         $em->flush();
-        $this->render_vars['flashes'][] = array('type' => 'success', 'message' => 'The entry was properly DELETED'. $uid, 'close' => true, 'use_raw' => false);
+        $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionDeleteItemAction.entry_deleted'), 'close' => true, 'use_raw' => true);
         //$this->render_vars['advanced_flashes'][] = array('type' => 'error', 'heading' => 'header', 'message' => 'my first error', 'close' => true, 'use_raw' => false);
         
         //return new Response('collection '. $ipe_hash. ' ' . $this->getTemplateNameByDefaults( __FUNCTION__));
@@ -241,7 +245,7 @@ class InPageEditController extends ContainerAware
 
     private function trans($translatable, $params = array())
     {
-      return $this->container->get('translator')->trans($translatable, $params, strtolower($this->render_vars['bundle_name']));
+      return $this->container->get('translator')->trans($translatable, $params, 'mmf_ipe');
     }   
 
     private function forward($controller, array $path = array(), array $query = array())

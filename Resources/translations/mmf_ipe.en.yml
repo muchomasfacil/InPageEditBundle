@@ -1,0 +1,19 @@
+controller:
+    renderAction:
+        exception_1: Calling renderWithContainerAction with $preloaded_result as a collection but either $find_by or $entity_class_or_definition are null
+        exception_2: entity_class_or_definition param must either be a valid entity or a definition in MuchoMasFacilInPageEditBundle configuration
+    editAction:
+        entry_saved: The entry was properly <strong>SAVED</strong>
+        form_errors: Please fix <strong>ERRORS</strong> in form
+    collectionDeleteItemAction:
+        entry_deleted: The entry was properly <strong>DELETED</strong>    
+    collectionListAction:
+        to_string_not_defined: You should define a __toString() method in %entity_class%
+    #now shared messages
+    not_found_exception: Nothing found for searching by %find_by%
+collectionList:
+  icon_move_title: Drag here to sort
+  icon_trash_title: Delete item
+  icon_plus_title: Add item below
+  icon_edit_title: Edit item
+delete_confirmation: Are you sure you want to delete this item?
