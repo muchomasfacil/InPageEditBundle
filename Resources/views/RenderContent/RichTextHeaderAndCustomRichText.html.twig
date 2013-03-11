@@ -1,6 +1,0 @@
-{% for entry in content.content %} {# content(Content Entity).content(content field)#}
-
-    <h4>{{ entry.header | raw }} {# entry.header field of RichTextHeaderAndCustomRichText Entity #}</h4>
-    {{ entry.content | raw }} {# entry.content field of RichTextHeaderAndCustomRichText.html.twig Entity #}
-
-{% endfor %}

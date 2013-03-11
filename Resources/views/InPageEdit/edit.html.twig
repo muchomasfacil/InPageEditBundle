@@ -1,0 +1,32 @@
+{{ include(bundle_name ~ ':InPageEdit:_flashCollection.html.twig') }}
+
+<form class="well" method="post" id="ipe_form">
+    {{ form_widget(form) }}
+    {% if params.is_collection %}        
+        <button type="submit" class="btn">{{ 'button.recreate'|trans}}</button>
+        <button type="submit" class="btn">{{ 'button.reset'|trans}}</button>
+        <button type="submit" class="btn">{{ 'button.list'|trans}}</button>
+        <button type="submit" class="btn">{{ 'button.save'|trans}}</button> 
+        <button type="submit" class="btn">{{ 'button.save_and_list'|trans}}</button>
+        <button type="submit" class="btn">{{ 'button.save_and_close'|trans}}</button>       
+    {% else %}        
+        <button type="submit" class="btn">{{ 'button.delete'|trans}}</button>
+        <button type="submit" class="btn">{{ 'button.reset'|trans}}</button>
+        <button type="submit" class="btn">{{ 'button.save'|trans}}</button>
+        <button type="submit" class="btn">{{ 'button.save_and_close'|trans}}</button>    
+    {% endif %}
+</form>
+
+<script>
+/* attach a submit handler to the form */
+$(function() {
+    // prepare Options Object 
+    var options = { 
+        target:     '#ipe_ui_dialog', 
+        url:        Routing.generate('ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}'})
+    }; 
+ 
+    // pass options to ajaxForm 
+    $('#ipe_form').ajaxForm(options); 
+}); 
+</script>

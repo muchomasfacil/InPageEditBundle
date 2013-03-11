@@ -1,0 +1,6 @@
+app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle --no-backup
+app/console doctrine:schema:drop --force
+app/console doctrine:schema:create
+
+- hacer que los plugins de malsup vengan desde github con composer
+- uploads con ajax... (malsup form plugin)

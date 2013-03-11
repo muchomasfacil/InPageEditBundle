@@ -78,3 +78,46 @@ mmf_ie_cache_clear:
     pattern:  /mmf_ie_cache_clear
     defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:cacheClear}
 
+
+#-------------------------------------------------------------------------------
+# InPageEdit doctrine routes
+#-------------------------------------------------------------------------------
+ipe_doctrine_render:
+    pattern:  /ipe_doctrine_render/{ipe_hash}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:ajaxRender}
+
+ipe_doctrine_edit_index:
+    pattern:  /ipe_doctrine_edit_index/{ipe_hash}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:editIndex}
+    options:
+        expose: true
+
+ipe_doctrine_edit:
+    pattern:  /ipe_doctrine_edit/{ipe_hash}/{post_action}/{id}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:edit, post_action: none, id: null}
+    options:
+        expose: true
+
+ipe_doctrine_collection_list:
+    pattern:  /ipe_doctrine_collection_list/{ipe_hash}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionList}
+    options:
+        expose: true
+
+ipe_doctrine_collection_sort:
+    pattern:  /ipe_doctrine_collection_sort/{ipe_hash}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionSort}
+    options:
+        expose: true
+
+ipe_doctrine_collection_add_item:
+    pattern:  /ipe_doctrine_collection_add_item/{ipe_hash}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionAddItem}
+    options:
+        expose: true
+
+ipe_doctrine_collection_delete_item:
+    pattern:  /ipe_doctrine_collection_delete_item/{ipe_hash}/{uid}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionDeleteItem}
+    options:
+        expose: true    
