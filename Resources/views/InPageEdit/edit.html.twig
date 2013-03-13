@@ -2,31 +2,48 @@
 
 <form class="well" method="post" id="ipe_form">
     {{ form_widget(form) }}
+        <button type="button" class="btn btn-danger"  data-ipe-action="delete">{{ 'edit.button_delete'|trans({}, 'mmf_ipe') }}</button>
+        <button type="reset"  class="btn">{{ 'edit.button_reset'|trans({}, 'mmf_ipe') }}</button>
     {% if params.is_collection %}        
-        <button type="submit" class="btn">{{ 'button.recreate'|trans}}</button>
-        <button type="submit" class="btn">{{ 'button.reset'|trans}}</button>
-        <button type="submit" class="btn">{{ 'button.list'|trans}}</button>
-        <button type="submit" class="btn">{{ 'button.save'|trans}}</button> 
-        <button type="submit" class="btn">{{ 'button.save_and_list'|trans}}</button>
-        <button type="submit" class="btn">{{ 'button.save_and_close'|trans}}</button>       
+        <button type="button" class="btn btn-success" data-ipe-action="list">{{ 'edit.button_list'|trans({}, 'mmf_ipe') }}</button>
+        <button type="button" class="btn btn-info"    data-ipe-action="save">{{ 'edit.button_save'|trans({}, 'mmf_ipe') }}</button> 
+        <button type="button" class="btn btn-success" data-ipe-action="save_and_list">{{ 'edit.button_save_and_list'|trans({}, 'mmf_ipe') }}</button>
+        <button type="button" class="btn btn-primary" data-ipe-action="save_and_close">{{ 'edit.button_save_and_close'|trans({}, 'mmf_ipe') }}</button>       
     {% else %}        
-        <button type="submit" class="btn">{{ 'button.delete'|trans}}</button>
-        <button type="submit" class="btn">{{ 'button.reset'|trans}}</button>
-        <button type="submit" class="btn">{{ 'button.save'|trans}}</button>
-        <button type="submit" class="btn">{{ 'button.save_and_close'|trans}}</button>    
+        <button type="button" class="btn btn-info"    data-ipe-action="save">{{ 'edit.button_save'|trans({}, 'mmf_ipe') }}</button>
+        <button type="button" class="btn btn-primary" data-ipe-action="save_and_close">{{ 'edit.button_save_and_close'|trans({}, 'mmf_ipe') }}</button>    
     {% endif %}
 </form>
 
 <script>
-/* attach a submit handler to the form */
+
+
 $(function() {
-    // prepare Options Object 
-    var options = { 
-        target:     '#ipe_ui_dialog', 
-        url:        Routing.generate('ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}'})
-    }; 
- 
-    // pass options to ajaxForm 
-    $('#ipe_form').ajaxForm(options); 
+    var ipe_uid = '{{ entity.id }}';        
+    var ipe_form = 'ipe_form';
+
+    $( "[data-ipe-action]" ).click(function() {   
+        switch($(this).attr('data-ipe-action'))
+        {
+            case 'delete':
+                if (confirm('{{ 'delete_confirmation'  |trans({}, 'mmf_ipe')}}')) {
+                    ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': '{{ data_ipe_hash }}', 'uid': ipe_uid}));  
+                }
+                break;
+            case 'list':                
+                ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_list', {'ipe_hash': '{{ data_ipe_hash }}'}));  
+                break;
+            case 'save':
+                ipe_form_submit('#' + ipe_form, ipe_target, 'ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'none', 'id': ipe_uid });
+                break;
+            case 'save_and_list':
+                ipe_form_submit('#' + ipe_form, ipe_target, 'ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'list', 'id': ipe_uid });
+                break;
+            case 'save_and_close':
+                ipe_form_submit('#' + ipe_form, ipe_target, 'ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'close', 'id': ipe_uid });
+                break;
+            default:         
+        } 
+    });
 }); 
 </script>

@@ -1,26 +1,24 @@
 {{ include(bundle_name ~ ':InPageEdit:_flashCollection.html.twig') }}
-   
-<ul id="sortable" class="inline">
-{% for result in results %}
-  <li class="alert alert-info" >
-    <!--<ul class="inline">
-      <li><a class="btn btn-mini" href="#"><i class="icon-move"></i></a></li>
-      <li><a class="btn btn-mini" href="#"><i class="icon-trash"></i></a></li>
-      <li><a class="btn btn-mini" href="#"><i class="icon-edit"></i></a></li>
-      <li><a class="btn btn-mini" href="#"><i class="icon-plus"></i></a></li>      
-    </ul>-->
-    <a class="btn btn-mini"            data-ipe-action="move"   data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_move_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-move"></i></a>
-    <a class="btn btn-mini btn-danger" data-ipe-action="delete" data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_trash_title' |trans({}, 'mmf_ipe')}}"><i class="icon-trash"></i></a>
-    <a class="btn btn-mini"            data-ipe-action="add"    data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i></a>
-    <a class="btn btn-mini"            data-ipe-action="edit"   data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_edit_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-edit"></i></a>
-    http://badonkatrunc.com/
-    {{ has__to_string_method ? result : result.id }}
-  </li>
-{% endfor %}  
-</ul>
+<div class="well">
+    <ul id="sortable" class="inline">
+        <li><a class="btn btn-mini" data-ipe-action="add" href="javascript:void(0)" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i>&nbsp;{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}</a></li>
+    </ul>
+    <ul id="sortable" class="inline">
+    {% for result in results %}
+      <li class="alert">
+        <a class="btn btn-mini"            data-ipe-action="move"   data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_move_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-move"></i></a>
+        <a class="btn btn-mini btn-danger" data-ipe-action="delete" data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_trash_title' |trans({}, 'mmf_ipe')}}"><i class="icon-trash"></i></a>
+        <a class="btn btn-mini"            data-ipe-action="add"    data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i></a>
+        <a class="btn btn-mini"            data-ipe-action="edit"   data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_edit_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-edit"></i></a>
+        http://badonkatrunc.com/
+        {{ has__to_string_method ? result : result.id }}
+      </li>
+    {% endfor %}  
+    </ul>
+</div>
 
 <script>
-$(function() {
+$(function() {    
     $( "[data-ipe-action]" ).click(function() {   
         switch($(this).attr('data-ipe-action'))
         {
@@ -28,16 +26,16 @@ $(function() {
                 alert('move');
                 break;
             case 'delete':
-                if (confirm('{{ 'delete_confirmation'  |trans({}, 'mmf_ipe')}}')) {
-                    ipe_load_in_dialog (Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': '{{ data_ipe_hash }}', 'uid': $(this).attr('data-ipe-uid')}));  
+                if (confirm('{{ 'delete_confirmation'  |trans({}, 'mmf_ipe')}}')) {                    
+                    ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': '{{ data_ipe_hash }}', 'uid': $(this).attr('data-ipe-uid')}));  
                 }
                 break;
             case 'add':
                 
                 break;
             case 'edit':
-              ipe_load_in_dialog (Routing.generate('ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'id': $(this).attr('data-ipe-uid')}));                
-              break;                
+                ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'none', 'id': $(this).attr('data-ipe-uid')}));                
+                break;                
             default:         
         } 
         //alert( + $(this).attr('data-ipe-uid'));        

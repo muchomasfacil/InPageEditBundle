@@ -93,8 +93,8 @@ ipe_doctrine_edit_index:
         expose: true
 
 ipe_doctrine_edit:
-    pattern:  /ipe_doctrine_edit/{ipe_hash}/{post_action}/{id}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:edit, post_action: none, id: null}
+    pattern:  /ipe_doctrine_edit/{ipe_hash}/{action_on_success}/{id}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:edit, action_on_success: none, id: null}
     options:
         expose: true
 

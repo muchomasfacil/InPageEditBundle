@@ -193,6 +193,7 @@ class InPageEditController extends ContainerAware
                 $this->render_vars['flashes'][] = array('type' => 'success', 'error' => $this->trans('controller.editAction.form_errors'), 'close' => true, 'use_raw' => true);
             }
         } 
+        $this->render_vars['entity'] = $entity;
         $this->render_vars['form'] = $form->createView();
         $this->render_vars['data_ipe_hash'] = $ipe_hash;
         $this->render_vars['params'] = $params;
