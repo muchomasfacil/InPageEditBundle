@@ -253,8 +253,7 @@ class InPageEditController extends ContainerAware
             throw new \Exception($this->trans('controller.not_found_exception', array('%entity_class%' => $params['entity_class'] ,'%find_by%' => 'id='.$id )));
         }
         $set_position_string = 'set'.Inflector::classify($params['collection_ipe_position_field']);
-
-        eval('$entity->'. $set_position_string .'($position);');
+        $entity->$set_position_string($position);
         $em->persist($entity);
         $em->flush();
         $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionSortAction.list_reordered'), 'close' => true, 'use_raw' => true);        

@@ -13,5 +13,7 @@ app/console doctrine:schema:create
 - documentation
 
 
-
-- En la documentación recordar el crear toString en las colecciones
+WORKING ON
+- rerender
+- add
+- uploads
