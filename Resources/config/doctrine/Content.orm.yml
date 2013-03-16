@@ -8,7 +8,8 @@ MuchoMasFacil\InPageEditBundle\Entity\Content:
             generator:
                 strategy: AUTO
     fields:
-        handler: {type: string, length: 255}
+        ipe_handler: {type: string, length: 255, gedmo: ['sortableGroup']}
+        ipe_position: {type: integer, gedmo: ['sortablePosition']}
         header: {type: string, length: 255}
         content: {type: text}
     lifecycleCallbacks: {}

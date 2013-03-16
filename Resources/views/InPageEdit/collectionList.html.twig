@@ -1,11 +1,11 @@
 {{ include(bundle_name ~ ':InPageEdit:_flashCollection.html.twig') }}
 <div class="well">
-    <ul id="sortable" class="inline">
+    <ul class="inline">
         <li><a class="btn btn-mini" data-ipe-action="add" href="javascript:void(0)" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i>&nbsp;{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}</a></li>
     </ul>
-    <ul id="sortable" class="inline">
-    {% for result in results %}
-      <li class="alert">
+    <ul id="ipe-sortable" class="inline">
+    {% for key,result in results %}
+      <li class="alert" id="ipe_sortable_uid_{{ result.id }}">
         <a class="btn btn-mini"            data-ipe-action="move"   data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_move_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-move"></i></a>
         <a class="btn btn-mini btn-danger" data-ipe-action="delete" data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_trash_title' |trans({}, 'mmf_ipe')}}"><i class="icon-trash"></i></a>
         <a class="btn btn-mini"            data-ipe-action="add"    data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i></a>
@@ -40,5 +40,18 @@ $(function() {
         } 
         //alert( + $(this).attr('data-ipe-uid'));        
     });
+
+    $( "#ipe-sortable").sortable({
+        placeholder: "alert alert-info",
+        forcePlaceholderSize: true,
+        handle: '[data-ipe-action="move"]',
+        update : function (event, ui) {            
+            var end_pos = $(ui.item).index();
+            var uid = $(ui.item).attr('id').replace('ipe_sortable_uid_', '');
+            //alert(uid + ' - ' + end_pos);
+            ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_sort', {'ipe_hash': '{{ data_ipe_hash }}', 'id': uid, 'position': end_pos }));
+        }
+    });
+
 });
 </script>

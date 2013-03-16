@@ -105,7 +105,7 @@ ipe_doctrine_collection_list:
         expose: true
 
 ipe_doctrine_collection_sort:
-    pattern:  /ipe_doctrine_collection_sort/{ipe_hash}
+    pattern:  /ipe_doctrine_collection_sort/{ipe_hash}/{id}/{position}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionSort}
     options:
         expose: true
@@ -117,7 +117,7 @@ ipe_doctrine_collection_add_item:
         expose: true
 
 ipe_doctrine_collection_delete_item:
-    pattern:  /ipe_doctrine_collection_delete_item/{ipe_hash}/{uid}
+    pattern:  /ipe_doctrine_collection_delete_item/{ipe_hash}/{id}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionDeleteItem}
     options:
         expose: true    

@@ -7,10 +7,12 @@ controller:
         form_errors: Please fix <strong>ERRORS</strong> in form
     collectionDeleteItemAction:
         entry_deleted: The entry was properly <strong>DELETED</strong>    
+    collectionSortAction:
+        list_reordered: The list was properly <strong>REORDERED</strong>    
     collectionListAction:
         to_string_not_defined: You should define a __toString() method in %entity_class%
     #now shared messages
-    not_found_exception: Nothing found for searching by %find_by%
+    not_found_exception: Nothing found for %entity_class% searching by %find_by%
 collectionList:
     icon_move_title: Drag here to sort
     icon_trash_title: Delete item
