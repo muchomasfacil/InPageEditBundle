@@ -1,90 +1,9 @@
-mmf_ie_demo:
-    pattern:  /mmf_ie_demo
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:Demo:index }
-#-------------------------------------------------------------------------------
-# Routes for entity editing
-#-------------------------------------------------------------------------------
-mmf_ie_render:
-    pattern:  /mmf_ie_render/{url_safe_encoded_params}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:render }
-
-mmf_ie_edit:
-    pattern:  /mmf_ie_edit/{url_safe_encoded_params}/{action_if_success}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:edit, action_if_success: false }
-
-mmf_ie_add:
-    pattern:  /mmf_ie_add/{url_safe_encoded_params}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:add }
-
-mmf_ie_delete:
-    pattern:  /mmf_ie_delete/{url_safe_encoded_params}/{action_if_success}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:delete, action_if_success: false }
-
-#-------------------------------------------------------------------------------
-# Routes for entity editing
-#-------------------------------------------------------------------------------
-mmf_ie_unencode:
-    pattern:  /mmf_ie_unencode/{url_safe_encoded_params}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ContentAdmin:unencode}
-
-mmf_ie_content_render:
-    pattern:  /mmf_ie_content_render/{url_safe_encoded_params}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ContentAdmin:render}
-
-mmf_ie_content_edit:
-    pattern:  /mmf_ie_content_edit/{url_safe_encoded_params}/{action_if_success}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ContentAdmin:contentEdit, action_if_success: false }
-
-mmf_ie_content_collection:
-    pattern:  /mmf_ie_content_collection/{url_safe_encoded_params}/{reload_container}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ContentAdmin:collection, reload_container: false }
-
-mmf_ie_content_collection_sort:
-    pattern:  /mmf_ie_content_collection_sort/{url_safe_encoded_params}/{reload_container}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ContentAdmin:collectionSort, reload_container: false }
-
-mmf_ie_content_collection_add_item:
-    pattern:  /mmf_ie_content_collection_add_item/{url_safe_encoded_params}/{content_order}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ContentAdmin:collectionAddItem}
-
-mmf_ie_content_collection_delete_item:
-    pattern:  /mmf_ie_content_collection_delete_item/{url_safe_encoded_params}/{content_order}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ContentAdmin:collectionDeleteItem}
-
-mmf_ie_content_item_edit:
-    pattern:  /mmf_ie_content_item_edit/{url_safe_encoded_params}/{content_order}/{action_if_success}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ContentAdmin:itemEdit, content_order: 0, action_if_success: false }
-
-mmf_ie_content_admin_form:
-    pattern:  /mmf_ie_content_admin_form/{url_safe_encoded_params}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ContentAdmin:adminForm}
-
-#-------------------------------------------------------------------------------
-# Other routes
-#-------------------------------------------------------------------------------
-mmf_ie_ckeditor_config:
-    pattern:  /mmf_ie_ckeditor_config/{ckeditor_option}/{form_name}/{uids_as_string}/{input_id}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:ckeditorConfig, ckeditor_option: default, form_name: '', uids_as_string: '', input_id: ''}
-
-mmf_ie_mmf_fm_bridge:
-    pattern:  /mmf_ie_mmf_fm_bridge/{mmf_fm_option}/{form_name}/{uids_as_string}/{input_id}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:mmfFileManagerBridge, mmf_fm_option: default, form_name: '', uids_as_string: '', input_id: ''}
-
-mmf_ie_static:
-    pattern:  /mmf_ie_static/{template}.{_format}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:Static:render}
-
-mmf_ie_cache_clear:
-    pattern:  /mmf_ie_cache_clear
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:EntityAdmin:cacheClear}
-
-
-#-------------------------------------------------------------------------------
 # InPageEdit doctrine routes
-#-------------------------------------------------------------------------------
 ipe_doctrine_render:
     pattern:  /ipe_doctrine_render/{ipe_hash}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:ajaxRender}
+    options:
+        expose: true
 
 ipe_doctrine_edit_index:
     pattern:  /ipe_doctrine_edit_index/{ipe_hash}
@@ -99,8 +18,8 @@ ipe_doctrine_edit:
         expose: true
 
 ipe_doctrine_collection_list:
-    pattern:  /ipe_doctrine_collection_list/{ipe_hash}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionList}
+    pattern:  /ipe_doctrine_collection_list/{ipe_hash}/{reload_content}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionList, reload_content: false}
     options:
         expose: true
 
@@ -111,7 +30,7 @@ ipe_doctrine_collection_sort:
         expose: true
 
 ipe_doctrine_collection_add_item:
-    pattern:  /ipe_doctrine_collection_add_item/{ipe_hash}
+    pattern:  /ipe_doctrine_collection_add_item/{ipe_hash}/{position}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionAddItem}
     options:
         expose: true

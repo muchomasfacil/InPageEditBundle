@@ -1,0 +1,11 @@
+<script>
+$(function() {    
+
+    ipe_close_dialog(ipe_target);
+
+{% if reload_content %}    
+    ipe_reload('{{ data_ipe_hash }}');
+{% endif %}
+
+});
+</script>

@@ -11,10 +11,12 @@ controller:
         list_reordered: The list was properly <strong>REORDERED</strong>    
     collectionListAction:
         to_string_not_defined: You should define a __toString() method in %entity_class%
+    collectionAddItemAction:
+        item_added: The item was properly <strong>ADDED</strong>    
     #now shared messages
     not_found_exception: Nothing found for %entity_class% searching by %find_by%
 collectionList:
-    icon_move_title: Drag here to sort
+    icon_move_title: Drag to move item
     icon_trash_title: Delete item
     icon_plus_title: Add item below
     icon_edit_title: Edit item

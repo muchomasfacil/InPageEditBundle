@@ -124,12 +124,7 @@ class InPageEditController extends ContainerAware
             if (!$results) {  
                 if ($create_if_not_found) 
                 {
-                    $number_of_entities = (!$params['is_collection'])? 1 : $params['number_of_entities_to_fake_if_collection'];                 
-                    $locale = ($params['faker_locale'])? $params['faker_locale'] : $this->container->get('request')->getLocale();
-                    $column_formatters = array_merge($params['faker_custom_column_formatters'], $params['find_by']);
-                    if ($params['is_collection']) {
-                        $column_formatters[$params['collection_ipe_position_field']] = null;
-                    }
+                    list($number_of_entities, $locale, $column_formatters) = $this->getFakeDefaults($params);                    
                     $rep->fake($locale, $number_of_entities, $column_formatters, $params['faker_custom_modifiers'], $params['faker_generate_id'] );        
                     $results = $rep->findBy($params['find_by'], $order_by);                 
                 }
@@ -165,7 +160,7 @@ class InPageEditController extends ContainerAware
         }        
     }
 
-    public function editAction($ipe_hash, $post_action = null, $id = null)
+    public function editAction($ipe_hash, $action_on_success = null, $id = null)
     {
         $request = $this->container->get('request');
         $params = $request->getSession()->get('ipe_' . $ipe_hash);        
@@ -196,12 +191,22 @@ class InPageEditController extends ContainerAware
                 $em->persist($entity);
                 $em->flush();
                 $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.editAction.entry_saved'), 'close' => true, 'use_raw' => true);
-                //$this->render_vars['advanced_flashes'][] = array();
+                $this->render_vars['reload_content'] = true;
+                if ($action_on_success == 'close') {                    
+                    $this->render_vars['data_ipe_hash'] = $ipe_hash;
+                    return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults('_closeDialog'), $this->render_vars);                
+                }
+                if ($action_on_success == 'list') {                
+                    return $this->collectionListAction($ipe_hash, true);
+                }
             }
             else {
                 $this->render_vars['flashes'][] = array('type' => 'success', 'error' => $this->trans('controller.editAction.form_errors'), 'close' => true, 'use_raw' => true);
             }
         } 
+        if (!isset($this->render_vars['reload_content'])) {
+            $this->render_vars['reload_content'] = false;
+        }
         $this->render_vars['entity'] = $entity;
         $this->render_vars['form'] = $form->createView();
         $this->render_vars['data_ipe_hash'] = $ipe_hash;
@@ -210,15 +215,16 @@ class InPageEditController extends ContainerAware
         return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults( __FUNCTION__), $this->render_vars);            
     }
 
-    public function collectionListAction($ipe_hash)
+    public function collectionListAction($ipe_hash, $reload_content = false)
     {
-        $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);
-        //var_dump($params);
+        $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);        
         $rep = $this->container->get('doctrine')->getRepository($params['entity_class']);        
         $this->render_vars['has__to_string_method'] = (method_exists(new $params['entity_class'](), '__toString'))? true : false;
         if (!$this->render_vars['has__to_string_method']) {
             $this->render_vars['flashes'][] = array('type' => 'warning', 'message' => $this->trans('controller.collectionListAction.to_string_not_defined', array('%entity_class%' => $params['entity_class'])), 'close' => true, 'use_raw' => false);
-        }
+        }        
+        $this->render_vars['inflected_position_field'] = Inflector::classify($params['collection_ipe_position_field']);
+        $this->render_vars['reload_content'] = $reload_content;
         $this->render_vars['results'] = $rep->findBy($params['find_by'], array($params['collection_ipe_position_field'] => 'ASC'));
         $this->render_vars['data_ipe_hash'] = $ipe_hash;
         $this->render_vars['params'] = $params;
@@ -228,20 +234,20 @@ class InPageEditController extends ContainerAware
     }
 
     public function collectionDeleteItemAction($ipe_hash, $id)
-    {
-        $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);        
-        $em = $this->container->get('doctrine')->getManager();        
+    {        
+        $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);
+        $em = $this->container->get('doctrine')->getManager();            
         $entity = $em->getRepository($params['entity_class'])->find($id);
+        
         if (!$entity) {            
             throw new \Exception($this->trans('controller.not_found_exception', array('%entity_class%' => $params['entity_class'] ,'%find_by%' => 'id='.$id )));
         }
         $em->remove($entity);
         $em->flush();
-        $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionDeleteItemAction.entry_deleted'), 'close' => true, 'use_raw' => true);
-        //$this->render_vars['advanced_flashes'][] = array('type' => 'error', 'heading' => 'header', 'message' => 'my first error', 'close' => true, 'use_raw' => false);
+        $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionDeleteItemAction.entry_deleted'), 'close' => true, 'use_raw' => true);        
         
         //return new Response('collection '. $ipe_hash. ' ' . $this->getTemplateNameByDefaults( __FUNCTION__));
-        return $this->collectionListAction($ipe_hash);
+        return $this->collectionListAction($ipe_hash, true);
     }
 
     public function collectionSortAction($ipe_hash, $id, $position)
@@ -259,7 +265,21 @@ class InPageEditController extends ContainerAware
         $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionSortAction.list_reordered'), 'close' => true, 'use_raw' => true);        
         
         //return new Response($ipe_hash. '--' . $id. '--' . $position);
-        return $this->collectionListAction($ipe_hash);
+        return $this->collectionListAction($ipe_hash, true);
+    }
+
+    public function collectionAddItemAction($ipe_hash, $position)
+    {        
+        $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);                        
+        list($number_of_entities, $locale, $column_formatters) = $this->getFakeDefaults($params);                    
+        $column_formatters[$params['collection_ipe_position_field']] = $position;
+        $rep = $this->container->get('doctrine')->getRepository($params['entity_class']);
+        $rep->fake($locale, 1, $column_formatters, $params['faker_custom_modifiers'], $params['faker_generate_id'] );        
+
+        $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionAddItemAction.item_added'), 'close' => true, 'use_raw' => true);        
+        
+        //return new Response($ipe_hash. '--' . $id. '--' . $position);
+        return $this->collectionListAction($ipe_hash, true);
     }
 
     //-------------------------------------------------
@@ -287,6 +307,17 @@ class InPageEditController extends ContainerAware
     private function guessFormTypeClass($entity_class)
     {
         return  str_replace('\\Entity\\', '\\Form\\', $entity_class).'Type';
+    }
+
+    private function getFakeDefaults($params)
+    {
+        $number_of_entities = (!$params['is_collection'])? 1 : $params['number_of_entities_to_fake_if_collection'];                 
+        $locale = ($params['faker_locale'])? $params['faker_locale'] : $this->container->get('request')->getLocale();
+        $column_formatters = array_merge($params['faker_custom_column_formatters'], $params['find_by']);
+        if ($params['is_collection']) {
+            $column_formatters[$params['collection_ipe_position_field']] = null;
+        }
+        return array($number_of_entities, $locale, $column_formatters);
     }
 
 }

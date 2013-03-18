@@ -27,7 +27,7 @@ $(function() {
         {
             case 'delete':
                 if (confirm('{{ 'delete_confirmation'  |trans({}, 'mmf_ipe')}}')) {
-                    ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': '{{ data_ipe_hash }}', 'uid': ipe_uid}));  
+                    ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid}));  
                 }
                 break;
             case 'list':                
@@ -45,5 +45,11 @@ $(function() {
             default:         
         } 
     });
+
+{% if reload_content %}    
+    ipe_reload('{{ data_ipe_hash }}');
+{% endif %}
+
+
 }); 
 </script>

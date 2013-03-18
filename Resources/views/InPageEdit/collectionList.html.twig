@@ -1,15 +1,15 @@
 {{ include(bundle_name ~ ':InPageEdit:_flashCollection.html.twig') }}
 <div class="well">
     <ul class="inline">
-        <li><a class="btn btn-mini" data-ipe-action="add" href="javascript:void(0)" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i>&nbsp;{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}</a></li>
+        <li><a class="btn btn-mini" data-ipe-action="add" data-ipe-insert-position="0" href="javascript:void(0)" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i>&nbsp;{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}</a></li>
     </ul>
     <ul id="ipe-sortable" class="inline">
     {% for key,result in results %}
       <li class="alert" id="ipe_sortable_uid_{{ result.id }}">
-        <a class="btn btn-mini"            data-ipe-action="move"   data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_move_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-move"></i></a>
-        <a class="btn btn-mini btn-danger" data-ipe-action="delete" data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_trash_title' |trans({}, 'mmf_ipe')}}"><i class="icon-trash"></i></a>
-        <a class="btn btn-mini"            data-ipe-action="add"    data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i></a>
-        <a class="btn btn-mini"            data-ipe-action="edit"   data-ipe-uid="{{ result.id }}" href="javascript:void(0)" title="{{ 'collectionList.icon_edit_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-edit"></i></a>
+        <a class="btn btn-mini"            href="javascript:void(0)" data-ipe-action="move" title="{{ 'collectionList.icon_move_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-move"></i></a>
+        <a class="btn btn-mini btn-danger" href="javascript:void(0)" data-ipe-action="delete" data-ipe-uid="{{ result.id }}" title="{{ 'collectionList.icon_trash_title' |trans({}, 'mmf_ipe')}}"><i class="icon-trash"></i></a>
+        <a class="btn btn-mini"            href="javascript:void(0)" data-ipe-action="add" data-ipe-insert-position="{{ attribute(result, inflected_position_field) + 1 }}" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i></a>
+        <a class="btn btn-mini"            href="javascript:void(0)" data-ipe-action="edit" data-ipe-uid="{{ result.id }}" title="{{ 'collectionList.icon_edit_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-edit"></i></a>
         http://badonkatrunc.com/
         {{ has__to_string_method ? result : result.id }}
       </li>
@@ -18,23 +18,26 @@
 </div>
 
 <script>
+
+var ipe_hash = '{{ data_ipe_hash }}';
+
 $(function() {    
     $( "[data-ipe-action]" ).click(function() {   
         switch($(this).attr('data-ipe-action'))
         {
             case 'move':
-                alert('move');
+                //look bellow for $( "#ipe-sortable").sortable({
                 break;
             case 'delete':
                 if (confirm('{{ 'delete_confirmation'  |trans({}, 'mmf_ipe')}}')) {                    
-                    ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': '{{ data_ipe_hash }}', 'uid': $(this).attr('data-ipe-uid')}));  
+                    ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': ipe_hash, 'id': $(this).attr('data-ipe-uid')}));  
                 }
                 break;
             case 'add':
-                
+                    ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_add_item', {'ipe_hash': ipe_hash, 'position': $(this).attr('data-ipe-insert-position')}));                                
                 break;
             case 'edit':
-                ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'none', 'id': $(this).attr('data-ipe-uid')}));                
+                ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_edit', {'ipe_hash': ipe_hash, 'action_on_success': 'none', 'id': $(this).attr('data-ipe-uid')}));                
                 break;                
             default:         
         } 
@@ -49,9 +52,13 @@ $(function() {
             var end_pos = $(ui.item).index();
             var uid = $(ui.item).attr('id').replace('ipe_sortable_uid_', '');
             //alert(uid + ' - ' + end_pos);
-            ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_sort', {'ipe_hash': '{{ data_ipe_hash }}', 'id': uid, 'position': end_pos }));
+            ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_sort', {'ipe_hash': ipe_hash, 'id': uid, 'position': end_pos }));
         }
     });
+
+{% if reload_content %}    
+    ipe_reload(ipe_hash);
+{% endif %}
 
 });
 </script>

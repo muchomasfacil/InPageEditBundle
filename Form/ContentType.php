@@ -12,7 +12,7 @@ class ContentType extends AbstractType
     {
         $builder->setAttribute('show_legend', false); // no legend for main form
         $builder
-            ->add('handler')
+            ->add('ipe_handler')
             ->add('header')
             ->add('content')
         ;
