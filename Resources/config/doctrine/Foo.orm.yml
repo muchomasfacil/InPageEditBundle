@@ -2,6 +2,14 @@ MuchoMasFacil\InPageEditBundle\Entity\Foo:
     type: entity
     repositoryClass: MuchoMasFacil\InPageEditBundle\Entity\FooRepository
     table: null
+    gedmo:
+        uploadable: 
+          allowOverwrite: true
+          appendNumber: true
+          #path: '/my/path'
+          #pathMethod: getPath
+          #callback: callbackMethod
+          filenameGenerator: SHA1
     id:
         id:
             type: integer
@@ -17,6 +25,18 @@ MuchoMasFacil\InPageEditBundle\Entity\Foo:
         datetime: {type: datetime}
         date: {type: date}
         time: {type: time}
-        text: {type: text, nullable: true}        
+        text: {type: text, nullable: true}
+        path:
+            type: string
+            gedmo:
+                - uploadableFilePath
+        mimeType:
+            type: string
+            gedmo:
+                - uploadableFileMimeType
+        size:
+            type: decimal
+            gedmo:
+                - uploadableFileSize
     lifecycleCallbacks: {}
 

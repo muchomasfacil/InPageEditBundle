@@ -189,7 +189,23 @@ class InPageEditController extends ContainerAware
 
             if ($form->isValid()) {
                 $em->persist($entity);
-                $em->flush();
+                $uploadableManager = $this->container->get('stof_doctrine_extensions.uploadable.manager');
+
+                // Here, "getMyFile" returns the "UploadedFile" instance that the form bound in your $myFile property
+                $uploadableManager->markEntityToUpload($entity, $entity->getPath());
+                try{                    
+                    $em->flush();
+                }
+                catch (\Exception $e)
+                {
+
+                }
+                
+                // return new Response(
+                //     get_class($uploadableManager)."\n"
+                //     .get_class($entity->getPath())."\n"
+                //     .var_export($_FILES)
+                //     );
                 $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.editAction.entry_saved'), 'close' => true, 'use_raw' => true);
                 $this->render_vars['reload_content'] = true;
                 if ($action_on_success == 'close') {                    

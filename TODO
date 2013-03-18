@@ -4,15 +4,14 @@ app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle --no-backup
 app/console doctrine:schema:drop --force
 app/console doctrine:schema:create
 
-- hacer que los plugins de malsup vengan desde github con composer
-- hacer que funcione con distintos entity manager
+- uploads con ajax
 - poder seleccionar y fijar, independientemente del locale, en qué idioma utilizamos el plugin
 - ckeditor
-- uploads con ajax... (malsup form plugin)
 - navbar
+- hacer que funcione con distintos entity manager
+- hacer que los plugins de malsup vengan desde github con composer
 - documentation
 
 
 WORKING ON
-- rerender
-- uploads
+- uploads: ver el fallo del delete del /tmp y coger ficheros to upload con metaclass

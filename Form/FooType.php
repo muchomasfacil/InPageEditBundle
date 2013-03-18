@@ -21,6 +21,9 @@ class FooType extends AbstractType
             ->add('date')
             ->add('time')
             ->add('text')
+            ->add('path', 'file', array('required' => false, 'data_class' => null, 'mapped' => true))
+            //->add('mimeType')
+            //->add('size')
         ;
     }
 
