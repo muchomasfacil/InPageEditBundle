@@ -18,6 +18,7 @@ class InPageEditController extends ContainerAware
     {
         $this->render_vars['bundle_name'] = 'MuchoMasFacilInPageEditBundle';        
         $this->render_vars['controller_name'] = 'ORM/Doctrine/InPageEdit';        
+        $this->render_vars['ipe_message_catalog'] = 'mmf_ipe';
     }
 
     //this has an associated route will always be called from it
@@ -298,18 +299,29 @@ class InPageEditController extends ContainerAware
         return $this->collectionListAction($ipe_hash, true);
     }
 
+    public function setIpeLocaleAction($locale)
+    {
+        $this->container->get('request')->getSession()->set('ipe_locale', $locale);
+        return new Response('Ipe locale changed to'. $locale);
+    }
+
     //-------------------------------------------------
     // now private shared functions
     //-------------------------------------------------
     private function getTemplateNameByDefaults($action_function_name, $template_format = 'html')
     {
-      $this->render_vars['action_name'] = str_replace('Action', '', $action_function_name);
-      return $this->render_vars['bundle_name'] . ':InPageEdit:' . $this->render_vars['action_name'] . '.'.$template_format.'.twig';
+        $this->render_vars['action_name'] = str_replace('Action', '', $action_function_name);
+        return $this->render_vars['bundle_name'] . ':InPageEdit:' . $this->render_vars['action_name'] . '.'.$template_format.'.twig';
     }
 
     private function trans($translatable, $params = array())
     {
-      return $this->container->get('translator')->trans($translatable, $params, 'mmf_ipe');
+        $locale = $this->container->get('request')->getSession()->get('ipe_locale');
+        if (!$locale) {
+            $locale = $this->container->get('request')->getLocale();
+            $this->container->get('request')->getSession()->set('ipe_locale', $locale);
+        }
+        return $this->container->get('translator')->trans($translatable, $params, $this->render_vars['ipe_message_catalog'], $locale);
     }   
 
     private function forward($controller, array $path = array(), array $query = array())

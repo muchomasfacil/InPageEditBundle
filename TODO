@@ -4,14 +4,15 @@ app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle --no-backup
 app/console doctrine:schema:drop --force
 app/console doctrine:schema:create
 
-- uploads con ajax
+
 - poder seleccionar y fijar, independientemente del locale, en qué idioma utilizamos el plugin
 - ckeditor
 - navbar
 - hacer que funcione con distintos entity manager
+- seguridad de 
 - hacer que los plugins de malsup vengan desde github con composer
 - documentation
+- uploads seleccionar un tipo de file input y programarlo
 
-
-WORKING ON
-- uploads: ver el fallo del delete del /tmp y coger ficheros to upload con metaclass
+working on:
+- in templates, add the force translator locale item

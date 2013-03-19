@@ -1,4 +1,8 @@
 # InPageEdit doctrine routes
+ipe_set_locale:
+    pattern:  /ipe_set_locale/{locale}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:setIpeLocale}
+
 ipe_doctrine_render:
     pattern:  /ipe_doctrine_render/{ipe_hash}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:ajaxRender}
