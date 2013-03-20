@@ -63,10 +63,11 @@ class InPageEditController extends ContainerAware
             , 'container_html_attributes' => ''
             )
         );
-
+        
         //some magic to allow preload of contents for for example a pagination for entities
         //we make sure $find_by $entity_class.. and $preloaded result are correlationated
         //TODO CHECK IT WORKS
+        
         if($preloaded_result) { 
             if (!is_array($preloaded_result)) { //it is a single entity we guess $entity_class_or_definition as a class and corresponding find_by            
                 $entity_class_or_definition = get_class($preloaded_result); //so, it is an entity not a definition
@@ -152,6 +153,12 @@ class InPageEditController extends ContainerAware
 
     public function editIndexAction($ipe_hash)
     {        
+
+        //let us check ipe_locale session var (may be changed afterwards) is set
+        $ipe_locale = $this->container->get('request')->getSession()->get('ipe_locale');
+        if (!$ipe_locale) {
+            $this->setIpeLocaleAction();    
+        }        
         $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);
         if ($params['is_collection']) {
             return $this->collectionListAction($ipe_hash);
@@ -299,15 +306,23 @@ class InPageEditController extends ContainerAware
         return $this->collectionListAction($ipe_hash, true);
     }
 
-    public function setIpeLocaleAction($locale)
+    public function setIpeLocaleAction($locale = null)
     {
-        $this->container->get('request')->getSession()->set('ipe_locale', $locale);
-        return new Response('Ipe locale changed to'. $locale);
+        return new Response('Ipe locale changed to '. $this->setIpeLocale($locale));
     }
 
     //-------------------------------------------------
     // now private shared functions
     //-------------------------------------------------
+    private function setIpeLocale($locale = null)
+    {
+        if (!$locale) {
+            $locale = $this->container->get('request')->getLocale();            
+        }
+        $this->container->get('request')->getSession()->set('ipe_locale', $locale);
+        return $locale;
+    }
+
     private function getTemplateNameByDefaults($action_function_name, $template_format = 'html')
     {
         $this->render_vars['action_name'] = str_replace('Action', '', $action_function_name);
@@ -316,12 +331,11 @@ class InPageEditController extends ContainerAware
 
     private function trans($translatable, $params = array())
     {
-        $locale = $this->container->get('request')->getSession()->get('ipe_locale');
-        if (!$locale) {
-            $locale = $this->container->get('request')->getLocale();
-            $this->container->get('request')->getSession()->set('ipe_locale', $locale);
+        $ipe_locale = $this->container->get('request')->getSession()->get('ipe_locale');        
+        if (!$ipe_locale) {
+            $this->setIpeLocale();
         }
-        return $this->container->get('translator')->trans($translatable, $params, $this->render_vars['ipe_message_catalog'], $locale);
+        return $this->container->get('translator')->trans($translatable, $params, $this->render_vars['ipe_message_catalog'], $ipe_locale);
     }   
 
     private function forward($controller, array $path = array(), array $query = array())

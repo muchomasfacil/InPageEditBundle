@@ -4,12 +4,13 @@ app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle --no-backup
 app/console doctrine:schema:drop --force
 app/console doctrine:schema:create
 
-
-- poder seleccionar y fijar, independientemente del locale, en qué idioma utilizamos el plugin
-- ckeditor
 - navbar
+- evaluar qué acción debe hacer el setIpeLocale (tiene que ser llamado al menos una vez)
+- seguridad
 - hacer que funcione con distintos entity manager
-- seguridad de 
+- pasar configuración a la configuración del bundle
+- utilizar bootstrap modal en vez de jquery dialog
+- integrar ckeditor y elfinder
 - hacer que los plugins de malsup vengan desde github con composer
 - documentation
 - uploads seleccionar un tipo de file input y programarlo

@@ -2,16 +2,16 @@
 
 <form class="well" method="post" id="ipe_form">
     {{ form_widget(form) }}
-        <button type="button" class="btn btn-danger"  data-ipe-action="delete">{{ 'edit.button_delete'|trans({}, 'mmf_ipe') }}</button>
-        <button type="reset"  class="btn">{{ 'edit.button_reset'|trans({}, 'mmf_ipe') }}</button>
+        <button type="button" class="btn btn-danger"  data-ipe-action="delete">{{ 'edit.button_delete'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="reset"  class="btn">{{ 'edit.button_reset'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
     {% if params.is_collection %}        
-        <button type="button" class="btn btn-success" data-ipe-action="list">{{ 'edit.button_list'|trans({}, 'mmf_ipe') }}</button>
-        <button type="button" class="btn btn-info"    data-ipe-action="save">{{ 'edit.button_save'|trans({}, 'mmf_ipe') }}</button> 
-        <button type="button" class="btn btn-success" data-ipe-action="save_and_list">{{ 'edit.button_save_and_list'|trans({}, 'mmf_ipe') }}</button>
-        <button type="button" class="btn btn-primary" data-ipe-action="save_and_close">{{ 'edit.button_save_and_close'|trans({}, 'mmf_ipe') }}</button>       
+        <button type="button" class="btn btn-success" data-ipe-action="list">{{ 'edit.button_list'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="btn btn-info"    data-ipe-action="save">{{ 'edit.button_save'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button> 
+        <button type="button" class="btn btn-success" data-ipe-action="save_and_list">{{ 'edit.button_save_and_list'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="btn btn-primary" data-ipe-action="save_and_close">{{ 'edit.button_save_and_close'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>       
     {% else %}        
-        <button type="button" class="btn btn-info"    data-ipe-action="save">{{ 'edit.button_save'|trans({}, 'mmf_ipe') }}</button>
-        <button type="button" class="btn btn-primary" data-ipe-action="save_and_close">{{ 'edit.button_save_and_close'|trans({}, 'mmf_ipe') }}</button>    
+        <button type="button" class="btn btn-info"    data-ipe-action="save">{{ 'edit.button_save'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="btn btn-primary" data-ipe-action="save_and_close">{{ 'edit.button_save_and_close'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>    
     {% endif %}
 </form>
 
@@ -26,7 +26,7 @@ $(function() {
         switch($(this).attr('data-ipe-action'))
         {
             case 'delete':
-                if (confirm('{{ 'delete_confirmation'  |trans({}, 'mmf_ipe')}}')) {
+                if (confirm('{{ 'delete_confirmation'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}')) {
                     ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid}));  
                 }
                 break;
