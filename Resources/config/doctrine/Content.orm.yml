@@ -3,17 +3,14 @@ MuchoMasFacil\InPageEditBundle\Entity\Content:
     repositoryClass: MuchoMasFacil\InPageEditBundle\Entity\ContentRepository
     table: null
     id:
-        handler:
-            type: string
-            length: 255
-            id: true
+        id:
+            type: integer
             generator:
-                strategy: NONE
+                strategy: AUTO
     fields:
-        content_entity_class: {type: string, length: 255}
-        editor_roles: {type: text}
-        is_collection: {type: boolean}
-        max_collection_length: {type: integer, nullable: true}
-        content: {type: array, nullable: true}
+        ipe_handler: {type: string, length: 255, gedmo: ['sortableGroup']}
+        ipe_position: {type: integer, gedmo: ['sortablePosition']}
+        header: {type: string, length: 255}
+        content: {type: text}
     lifecycleCallbacks: {}
         #prePersist: [ doStuffOnPrePersist, doOtherStuffOnPrePersistToo ]

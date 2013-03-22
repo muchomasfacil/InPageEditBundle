@@ -1,0 +1,13 @@
+{% from 'MopaBootstrapBundle::flash.html.twig' import flash, advanced_flash %}
+
+{% if flashes is defined %}
+  {% for flash in flashes %}  
+    {{ flash(flash.type, flash.message, flash.close, flash.use_raw) }}
+  {% endfor %}
+{% endif %}
+
+{% if advanced_flashes is defined %}
+  {% for flash in advanced_flashes %}
+    {{ advanced_flash(flash.type, flash.heading, flash.message, flash.close, flash.use_raw) }}
+  {% endfor %}
+{% endif %}
