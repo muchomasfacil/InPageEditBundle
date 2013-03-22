@@ -1,8 +1,0 @@
-CKEDITOR.editorConfig = function( config )
-{
-{{ ckeditor_config | raw }}
-{% for key, val in ckeditor_guessed_config  %}
-config.{{ key }} = '{{ val }}';
-{% endfor %}
-};
-

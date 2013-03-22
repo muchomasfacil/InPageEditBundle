@@ -1,6 +1,0 @@
-{% if reload_container %}
-    <eval><![CDATA[
-    mmf_ie_load('#{{ container_id }}', '{{ path( 'mmf_ie_content_render' , {'url_safe_encoded_params': url_safe_encoded_params}) }}');
-    ]]>
-    </eval>
-{% endif %}

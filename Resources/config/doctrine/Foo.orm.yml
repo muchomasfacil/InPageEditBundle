@@ -1,15 +1,42 @@
 MuchoMasFacil\InPageEditBundle\Entity\Foo:
     type: entity
+    repositoryClass: MuchoMasFacil\InPageEditBundle\Entity\FooRepository
     table: null
+    gedmo:
+        uploadable: 
+          allowOverwrite: true
+          appendNumber: true
+          #path: '/my/path'
+          #pathMethod: getPath
+          #callback: callbackMethod
+          filenameGenerator: SHA1
     id:
         id:
             type: integer
             generator:
                 strategy: AUTO
     fields:
-        text: {type: string, length: 255}
-        multi_line_text: {type: string, length: 255, nullable: true}
-        file_list: {type: text, nullable: true}
-        file: {type: string, length: 255, nullable: true}
+        name: {type: string, length: 255}
+        address: {type: string, length: 255}
+        phone_number: {type: string, length: 255}
+        company: {type: string, length: 255}
+        email: {type: string, length: 255}
+        url: {type: string, length: 255}
+        datetime: {type: datetime}
+        date: {type: date}
+        time: {type: time}
+        text: {type: text, nullable: true}
+        path:
+            type: string
+            gedmo:
+                - uploadableFilePath
+        mimeType:
+            type: string
+            gedmo:
+                - uploadableFileMimeType
+        size:
+            type: decimal
+            gedmo:
+                - uploadableFileSize
     lifecycleCallbacks: {}
 

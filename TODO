@@ -1,0 +1,19 @@
+document.body.insertBefore( prettyPrint( ui ), document.body.firstChild );
+
+app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle --no-backup
+app/console doctrine:schema:drop --force
+app/console doctrine:schema:create
+
+- navbar
+- evaluar qué acción debe hacer el setIpeLocale (tiene que ser llamado al menos una vez)
+- seguridad
+- hacer que funcione con distintos entity manager
+- pasar configuración a la configuración del bundle
+- utilizar bootstrap modal en vez de jquery dialog
+- integrar ckeditor y elfinder
+- hacer que los plugins de malsup vengan desde github con composer
+- documentation
+- uploads seleccionar un tipo de file input y programarlo
+
+working on:
+- in templates, add the force translator locale item

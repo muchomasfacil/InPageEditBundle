@@ -1,0 +1,31 @@
+controller:
+    renderAction:
+        exception_1: Llamando al metodo renderWithContainerAction con $preloaded_result como colección pero o bien $find_by o $entity_class_or_definition son nulos
+        exception_2: El parámetro entity_class_or_definition debe ser una entidad válida entity o bien una definición en la configuración de MuchoMasFacilInPageEditBundle
+    editAction:
+        entry_saved: La entrada se <strong>SALVÓ</strong> correctamente
+        form_errors: Por favor corrije los <strong>ERRORES</strong> en el formulario
+    collectionDeleteItemAction:
+        entry_deleted: La entrada se <strong>BORRÓ</strong> correctamente    
+    collectionSortAction:
+        list_reordered: La lista se ha <strong>REORDENADO</strong> correctamente
+    collectionListAction:
+        to_string_not_defined: Se debería definir un método __toString() en %entity_class%
+    collectionAddItemAction:
+        item_added: Se ha añadido una <strong>NUEVA</strong> entrada
+    #now shared messages
+    not_found_exception: No se ha encontrado nada en %entity_class% buscando por %find_by%
+collectionList:
+    icon_move_title: Arrastra para mover la entrada
+    icon_trash_title: Borrar entrada
+    icon_plus_title: Añadir entrada justo debajo
+    icon_edit_title: Editar entrada
+edit:
+    button_reset: Limpiar
+    button_save: Salvar
+    button_list: Listado
+    button_save_and_list: Salvar y listado
+    button_save_and_close: Salvar y cerrar
+    button_delete: Borrar
+delete_confirmation: ¿Estás seguro que quieres eliminar?
+ajax_error: Lo sentimos se produjo un error
