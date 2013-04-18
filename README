@@ -1,9 +1,27 @@
+# in-page-edit-bundle
 A Symfony2 bundle for fast (may be dirty but quite usefull; and ready for no high skilled users or clients) in page edition for general entities and common contents
 
-Work in progrees, testing its stability.
+**Work in progrees, testing its stability.**
 
-Will try to add some doc and usefull examples.
+## Installation
 
+### Install symfony
+
+Install and configure your symfony-standard if you have not done it yet [http://symfony.com/doc/master/book/installation.html]
+
+### Changes in config files:
+
+#### composer.json
+Add to your composer.json in the repositories section:
+
+```json
+...
+        {
+            "type": "vcs",
+            "url": "https://github.com/Seldaek/monolog"
+        },
+...
+```
 
 #app/AppKernel.php
 new MuchoMasFacil\InPageEditBundle\MuchoMasFacilInPageEditBundle(),
