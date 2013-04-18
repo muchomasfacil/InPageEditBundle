@@ -3,7 +3,7 @@ A Symfony2 bundle for fast (may be dirty but quite usefull; and ready for no hig
 
 **Work in progrees, testing its stability.**
 
-## Installation
+## Installation (use of composer.json is required)
 
 ### Install symfony
 
@@ -16,12 +16,21 @@ Add to your composer.json in the repositories section:
 
 ```json
 ...
+    "repositories": [
+...
         {
             "type": "vcs",
-            "url": "https://github.com/Seldaek/monolog"
-        },
+            "url": "git://github.com/muchomasfacil/in-page-edit-bundle.git"
+        },    
+...
+    ],
 ...
 ```
+now run on your project (take care of "minimum-stability")
+```bash
+composer.phar require muchomasfacil/in-page-edit-bundle dev-master
+```
+
 
 #app/AppKernel.php
 new MuchoMasFacil\InPageEditBundle\MuchoMasFacilInPageEditBundle(),
