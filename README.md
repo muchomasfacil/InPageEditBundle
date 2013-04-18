@@ -32,7 +32,7 @@ composer.phar require muchomasfacil/in-page-edit-bundle dev-master
 ```
 
 
-#app/AppKernel.php
+#### changes in app/AppKernel.php
 new MuchoMasFacil\InPageEditBundle\MuchoMasFacilInPageEditBundle(),
 new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
 new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
