@@ -7,13 +7,15 @@ app/console doctrine:schema:create
 - navbar
 - evaluar qué acción debe hacer el setIpeLocale (tiene que ser llamado al menos una vez)
 - seguridad
-- hacer que funcione con distintos entity manager
-- pasar configuración a la configuración del bundle
+- pasar configuración a la configuración del bundle (only remove param definitions array in renderaction)
 - utilizar bootstrap modal en vez de jquery dialog
-- integrar ckeditor y elfinder
 - hacer que los plugins de malsup vengan desde github con composer
-- documentation
+- integrar ckeditor y elfinder
 - uploads seleccionar un tipo de file input y programarlo
+- hacer que funcione con distintos entity manager
+- documentation
+
 
 working on:
 - in templates, add the force translator locale item
+- (only remove param definitions array in renderaction)

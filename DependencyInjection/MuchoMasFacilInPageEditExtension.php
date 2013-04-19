@@ -24,8 +24,7 @@ class MuchoMasFacilInPageEditExtension extends Extension
         $loader->load('services.yml');
         //and add them to our list
         $parameter_configs[] = array(
-            'entity_custom_params' => $container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params'),
-            'content_definitions'  => $container->getParameter('mucho_mas_facil_in_page_edit.content_definitions'),
+            'definitions'  => $container->getParameter('mucho_mas_facil_in_page_edit.definitions'),
             'ckeditor_options'     => $container->getParameter('mucho_mas_facil_in_page_edit.ckeditor_options'),
             );
 
@@ -37,8 +36,7 @@ class MuchoMasFacilInPageEditExtension extends Extension
 
         $final_config = $this->processConfiguration($configuration, $parameter_configs);
 
-        $container->setParameter('mucho_mas_facil_in_page_edit.entity_custom_params', $final_config['entity_custom_params']);
-        $container->setParameter('mucho_mas_facil_in_page_edit.content_definitions', $final_config['content_definitions']);
+        $container->setParameter('mucho_mas_facil_in_page_edit.definitions', $final_config['definitions']);
         $container->setParameter('mucho_mas_facil_in_page_edit.ckeditor_options', $final_config['ckeditor_options']);
     }
 }
