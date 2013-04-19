@@ -1,3 +1,6 @@
+    {{ render(controller('MuchoMasFacilInPageEditBundle:ORM\\Doctrine\\InPageEdit:navbar')) }}
+
+    
     {{ render(controller('MuchoMasFacilInPageEditBundle:ORM\\Doctrine\\InPageEdit:render', {         
                 'find_by': {'id': 1}
                 , 'entity_class_or_definition': 'MuchoMasFacil\\InPageEditBundle\\Entity\\Foo'
@@ -31,21 +34,11 @@
             } 
         ))
     }}
+ 
 
-<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
+<link href="http://twitter.github.io/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
+<link href="http://twitter.github.io/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css" rel="stylesheet">
-
-<div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <a class="brand" href="#">Title</a>
-    <ul class="nav">
-      <li class="active"><a href="#">Home</a></li>
-      <li><a href="#">Link</a></li>
-      <li><a href="#">Link</a></li>
-    </ul>
-  </div>
-</div>
-
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
@@ -53,7 +46,8 @@
 <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 <script type="text/javascript" src="https://raw.github.com/malsup/blockui/master/jquery.blockUI.js"></script>
 <script type="text/javascript" src="https://raw.github.com/malsup/form/master/jquery.form.js"></script>
-<script type="text/javascript" src="https://raw.github.com/padolsey/prettyPrint.js/master/prettyprint.js"></script>
+<script type="text/javascript" src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-dropdown.js"></script>
+<!--<script type="text/javascript" src="https://raw.github.com/padolsey/prettyPrint.js/master/prettyprint.js"></script>-->
 
 <script>
 var ipe_target = 'ipe_ui_dialog';
@@ -148,16 +142,7 @@ function ipe_form_submit(form_selector, target, route, params )
     }; 
     $(form_selector).ajaxSubmit(options); 
     $(form_selector).submit(options); 
-    /*$(form_selector).submit(function() { 
-        alert('hola');
-        // inside event callbacks 'this' is the DOM element so we first 
-        // wrap it in a jQuery object and then invoke ajaxSubmit 
-        $(this).ajaxSubmit(options); 
- 
-        // !!! Important !!! 
-        // always return false to prevent standard browser submit and page navigation 
-        return false; 
-    }); */
+    
 }
 
 $(function() {    

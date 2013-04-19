@@ -27,5 +27,11 @@ edit:
     button_save_and_list: Save & list
     button_save_and_close: Save & close
     button_delete: Delete
-delete_confirmation: Are you sure you want to delete this item?
-ajax_error: Sorry but there was an error
+navbar:
+    edit_page_title: Edit page title
+    edit_page_metas: Edit page metas
+    clear_cache: Clear cache
+    logout: Logout
+shared:
+    delete_confirmation: Are you sure you want to delete this item?
+    ajax_error: Sorry but there was an error

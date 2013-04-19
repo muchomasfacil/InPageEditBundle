@@ -153,12 +153,8 @@ class InPageEditController extends ContainerAware
 
     public function editIndexAction($ipe_hash)
     {        
-
         //let us check ipe_locale session var (may be changed afterwards) is set
-        $ipe_locale = $this->container->get('request')->getSession()->get('ipe_locale');
-        if (!$ipe_locale) {
-            $this->setIpeLocaleAction();    
-        }        
+        $ipe_locale = $ipe_locale = $this->getIpeLocale();
         $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);
         if ($params['is_collection']) {
             return $this->collectionListAction($ipe_hash);
@@ -197,10 +193,10 @@ class InPageEditController extends ContainerAware
 
             if ($form->isValid()) {
                 $em->persist($entity);
-                $uploadableManager = $this->container->get('stof_doctrine_extensions.uploadable.manager');
+                //$uploadableManager = $this->container->get('stof_doctrine_extensions.uploadable.manager');
 
                 // Here, "getMyFile" returns the "UploadedFile" instance that the form bound in your $myFile property
-                $uploadableManager->markEntityToUpload($entity, $entity->getPath());
+                //$uploadableManager->markEntityToUpload($entity, $entity->getPath());
                 try{                    
                     $em->flush();
                 }
@@ -311,6 +307,16 @@ class InPageEditController extends ContainerAware
         return new Response('Ipe locale changed to '. $this->setIpeLocale($locale));
     }
 
+    public function navbarAction($template = null)
+    {
+        if (is_null($template))
+        {
+            $template = $this->getTemplateNameByDefaults( __FUNCTION__)            
+        }        
+        
+        return $this->container->get('templating')->renderResponse($template , $this->render_vars);
+    }
+
     //-------------------------------------------------
     // now private shared functions
     //-------------------------------------------------
@@ -323,6 +329,15 @@ class InPageEditController extends ContainerAware
         return $locale;
     }
 
+    private function getIpeLocale($locale = null)
+    {
+        $ipe_locale = $this->container->get('request')->getSession()->get('ipe_locale');        
+        if (!$ipe_locale) {
+            $ipe_locale = $this->setIpeLocale();
+        }
+        return $ipe_locale
+    }
+
     private function getTemplateNameByDefaults($action_function_name, $template_format = 'html')
     {
         $this->render_vars['action_name'] = str_replace('Action', '', $action_function_name);
@@ -331,10 +346,7 @@ class InPageEditController extends ContainerAware
 
     private function trans($translatable, $params = array())
     {
-        $ipe_locale = $this->container->get('request')->getSession()->get('ipe_locale');        
-        if (!$ipe_locale) {
-            $this->setIpeLocale();
-        }
+        $ipe_locale = $this->getIpeLocale();
         return $this->container->get('translator')->trans($translatable, $params, $this->render_vars['ipe_message_catalog'], $ipe_locale);
     }   
 
