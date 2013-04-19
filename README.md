@@ -31,7 +31,7 @@ now run on your project (take care of "minimum-stability")
 ```bash
 composer.phar require muchomasfacil/in-page-edit-bundle dev-master
 ```
-Take a look at [../composer.json] to see the bundles InPageEditBundle relies on.
+Take a look at [composer.json](composer.json) to see the bundles InPageEditBundle relies on.
 
 #### changes in app/AppKernel.php
 ```php
