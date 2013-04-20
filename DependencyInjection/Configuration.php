@@ -20,23 +20,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('mucho_mas_facil_in_page_edit');
         
-        $rootNode
-            ->children()
-                ->arrayNode('entity_custom_params')
-                ->useAttributeAsKey('name')
-                ->prototype('array')
-                    ->children()
-                        ->scalarNode('editor_roles')->end()
-                        ->scalarNode('render_action')->end()
-                        ->scalarNode('render_template')->end()
-                        ->scalarNode('form_type_class')->end()
-                        ->scalarNode('form_template')->end()
-                        ->scalarNode('orm')->end()
-                    ->end()
-                ->end()
-            ->end()
-        ;
-
         /*$rootNode
             ->children()
                 ->scalarNode('content_orm')->end()
@@ -45,19 +28,26 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('content_definitions')
+                ->arrayNode('definitions')
                 ->useAttributeAsKey('name')
                 ->prototype('array')
                     ->children()
-                        ->scalarNode('content_entity_class')->isRequired()->end()                   
-                        ->scalarNode('editor_roles')->end()
+                        ->scalarNode('entity_class')->end()
+                        ->scalarNode('form_type_class')->end()
+                        ->scalarNode('render_template')->end()
+                        ->scalarNode('ipe_controller')->end()
                         ->booleanNode('is_collection')->end()
                         ->scalarNode('max_collection_length')->end()
-                        ->scalarNode('lorem_ipsum_items_in_collection')->end()
-                        ->scalarNode('render_action')->end()
-                        ->scalarNode('render_template')->end()
-                        ->scalarNode('form_type_class')->end()                        
-                        ->scalarNode('form_template')->end()
+                        ->scalarNode('number_of_entities_to_fake_if_collection')->end()
+                        ->scalarNode('collection_ipe_handler_field')->end()
+                        ->scalarNode('collection_ipe_position_field')->end()
+                        ->scalarNode('faker_locale')->end()
+                        ->arrayNode('faker_custom_column_formatters')->end()
+                        ->arrayNode('faker_custom_modifiers')->end()
+                        ->scalarNode('faker_generate_id')->end()
+                        ->scalarNode('editor_roles')->end()                                                
+                        ->scalarNode('container_html_tag')->end()                        
+                        ->scalarNode('container_html_attributes')->end()
                     ->end()
                 ->end()
             ->end()
