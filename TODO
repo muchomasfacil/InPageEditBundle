@@ -6,15 +6,27 @@ app/console doctrine:schema:create
 
 - utilizar bootstrap modal en vez de jquery dialog
 - seguridad
-- hacer que los plugins de malsup vengan desde github con composer
-- integrar ckeditor y elfinder
-- uploads seleccionar un tipo de file input y programarlo
+- usar assetic para css y js (trayéndolo directamente desde github???)
+- integrar ckeditor y elfinder https://github.com/neutron-project/form-bundle
+- uploads seleccionar un tipo de file input y programarlo https://github.com/neutron-project/form-bundle
 - title y metas
 - documentation
+- inline ckeditor o tinyc??
 - hacer que funcione con distintos entity manager
 
 
+- hacer que los plugins de malsup vengan desde github con composer
+public static function createSymlink($symlinkTarget, $symlinkName)
+    {
+        if (false === @symlink($symlinkTarget, $symlinkName)) {
+            throw new \Exception("An error occured while creating symlink" . $symlinkName);
+        }
+        if (false === $target = readlink($symlinkName)) {
+            throw new \Exception("Symlink $symlinkName points to target $target");
+        }
+    }10
 
 working on:
 - utilizar bootstrap modal en vez de jquery dialog
-- hacer que los plugins de malsup vengan desde github con composer
+
+
