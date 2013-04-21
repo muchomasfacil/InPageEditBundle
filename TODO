@@ -1,0 +1,20 @@
+document.body.insertBefore( prettyPrint( ui ), document.body.firstChild );
+
+app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle --no-backup
+app/console doctrine:schema:drop --force
+app/console doctrine:schema:create
+
+- utilizar bootstrap modal en vez de jquery dialog
+- seguridad
+- hacer que los plugins de malsup vengan desde github con composer
+- integrar ckeditor y elfinder
+- uploads seleccionar un tipo de file input y programarlo
+- title y metas
+- documentation
+- hacer que funcione con distintos entity manager
+
+
+
+working on:
+- utilizar bootstrap modal en vez de jquery dialog
+- hacer que los plugins de malsup vengan desde github con composer

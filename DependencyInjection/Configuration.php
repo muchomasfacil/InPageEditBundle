@@ -25,12 +25,24 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('content_orm')->end()
             ->end()
         ;*/
+        
+        $rootNode
+            ->children()
+                ->arrayNode('available_langs')
+                    ->useAttributeAsKey('locale')
+                    ->prototype('array')
+                        ->children()
+                        ->scalarNode('label')->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
 
         $rootNode
             ->children()
                 ->arrayNode('definitions')
-                ->useAttributeAsKey('name')
-                ->prototype('array')
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
                     ->children()
                         ->scalarNode('entity_class')->end()
                         ->scalarNode('form_type_class')->end()
@@ -56,7 +68,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('ckeditor_options')
-                ->useAttributeAsKey('name')
+                    ->useAttributeAsKey('name')
                     ->prototype('scalar')->end()
                 ->end()
             ->end()

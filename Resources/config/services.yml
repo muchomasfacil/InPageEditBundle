@@ -1,4 +1,9 @@
 parameters:
+    mucho_mas_facil_in_page_edit.available_langs:
+        en: 
+            label: English
+        es: 
+            label: Español
     mucho_mas_facil_in_page_edit.definitions:
         default:
             entity_class: ~ # guessed either from definition or by parameter

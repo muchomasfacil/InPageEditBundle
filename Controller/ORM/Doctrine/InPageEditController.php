@@ -42,27 +42,8 @@ class InPageEditController extends ContainerAware
     //no associated route. Will always be called from twig templates
     public function renderAction($find_by = null, $entity_class_or_definition = null, $preloaded_result = null, $render_template = null, $create_if_not_found = false, $render_with_container = true, $params = array())
     {  
-        //$param_definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.entity_custom_params');    
-        $param_definitions = array(
-        'default' => array(
-            'entity_class' => null //guessed either from definition or by parameter
-            ,'form_type_class' => null //guessed either from definition or by parameter
-            , 'render_template' => null //if not set will be guessed from entity_class
-            , 'ipe_controller'=> 'MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine'                
-            , 'is_collection'=> false
-            , 'max_collection_length'=> null
-            , 'number_of_entities_to_fake_if_collection'=> null
-            , 'collection_ipe_handler_field'=> 'ipe_handler'
-            , 'collection_ipe_position_field'=> 'ipe_position'
-            , 'faker_locale'=> null
-            , 'faker_custom_column_formatters' => array()
-            , 'faker_custom_modifiers' => array()
-            , 'faker_generate_id' => false
-            , 'editor_roles'=> 'ROLE_USER'
-            , 'container_html_tag' => 'div'
-            , 'container_html_attributes' => ''
-            )
-        );
+        $this->getIpeLocale();
+        $param_definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');    
         
         //some magic to allow preload of contents for for example a pagination for entities
         //we make sure $find_by $entity_class.. and $preloaded result are correlationated
@@ -152,9 +133,8 @@ class InPageEditController extends ContainerAware
     }
 
     public function editIndexAction($ipe_hash)
-    {        
-        //let us check ipe_locale session var (may be changed afterwards) is set
-        $ipe_locale = $ipe_locale = $this->getIpeLocale();
+    {                
+        $this->getIpeLocale();
         $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);
         if ($params['is_collection']) {
             return $this->collectionListAction($ipe_hash);
@@ -307,11 +287,19 @@ class InPageEditController extends ContainerAware
         return new Response('Ipe locale changed to '. $this->setIpeLocale($locale));
     }
 
-    public function navbarAction($template = null)
+    public function _navbarAction($template = null, $locale = null)
     {
+        $this->render_vars['available_langs'] = $this->container->getParameter('mucho_mas_facil_in_page_edit.available_langs');
+        if (is_null($locale)) {
+            $this->render_vars['ipe_locale'] = $this->getIpeLocale();
+        }
+        else {
+            $this->render_vars['ipe_locale'] = $this->setIpeLocale($locale);
+        }
+        
         if (is_null($template))
         {
-            $template = $this->getTemplateNameByDefaults( __FUNCTION__)            
+            $template = $this->getTemplateNameByDefaults( __FUNCTION__);           
         }        
         
         return $this->container->get('templating')->renderResponse($template , $this->render_vars);
@@ -329,13 +317,13 @@ class InPageEditController extends ContainerAware
         return $locale;
     }
 
-    private function getIpeLocale($locale = null)
+    private function getIpeLocale()
     {
         $ipe_locale = $this->container->get('request')->getSession()->get('ipe_locale');        
         if (!$ipe_locale) {
             $ipe_locale = $this->setIpeLocale();
         }
-        return $ipe_locale
+        return $ipe_locale;
     }
 
     private function getTemplateNameByDefaults($action_function_name, $template_format = 'html')

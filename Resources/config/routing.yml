@@ -1,7 +1,7 @@
 # InPageEdit doctrine routes
-ipe_set_locale:
-    pattern:  /ipe_set_locale/{locale}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:setIpeLocale}
+ipe_navbar:
+    pattern:  /ipe_navbar/{locale}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:_navbar}
 
 ipe_doctrine_render:
     pattern:  /ipe_doctrine_render/{ipe_hash}
