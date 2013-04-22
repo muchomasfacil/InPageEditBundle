@@ -13,7 +13,13 @@ app/console doctrine:schema:create
 - documentation
 - inline ckeditor o tinyc??
 - hacer que funcione con distintos entity manager
-
+- posible twig actions:
+ipe_navbar(template, locale)
+ipe_render(controller, params)
+- en el javascript:
+que venga de un controlador
+cambiar target por target selector
+generalizar la acción ipe_reload a ipe_hash_reload
 
 - hacer que los plugins de malsup vengan desde github con composer
 public static function createSymlink($symlinkTarget, $symlinkName)

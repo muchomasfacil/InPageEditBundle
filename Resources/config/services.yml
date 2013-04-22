@@ -19,7 +19,7 @@ parameters:
             faker_custom_column_formatters: []
             faker_custom_modifiers: []
             faker_generate_id: false
-            editor_roles: ROLE_USER
+            editor_roles: [ROLE_IPE_EDITOR]
             container_html_tag: div
             container_html_attributes: ''
             

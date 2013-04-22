@@ -1,13 +1,14 @@
-# InPageEdit doctrine routes
-ipe_navbar:
-    pattern:  /ipe_navbar/{locale}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:_navbar}
-
-ipe_doctrine_render:
+# InPageEdit doctrine NOT secured routes
+_ipe_doctrine_render:
     pattern:  /ipe_doctrine_render/{ipe_hash}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:ajaxRender}
     options:
         expose: true
+
+# InPageEdit doctrine secured routes
+ipe_navbar:
+    pattern:  /ipe_navbar/{locale}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:_navbar}
 
 ipe_doctrine_edit_index:
     pattern:  /ipe_doctrine_edit_index/{ipe_hash}

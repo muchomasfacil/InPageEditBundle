@@ -55,7 +55,7 @@ var ipe_target = 'ipe_ui_dialog';
 function ipe_reload(ipe_hash)
 {
     var selector = "[data-ipe-hash='" + ipe_hash + "']";
-    ipe_load(selector, Routing.generate('ipe_doctrine_render', {'ipe_hash': ipe_hash}));
+    ipe_load(selector, Routing.generate('_ipe_doctrine_render', {'ipe_hash': ipe_hash}));
 }
 
 function ipe_close_dialog(target)
