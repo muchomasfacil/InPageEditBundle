@@ -20,6 +20,10 @@ ipe_render(controller, params)
 que venga de un controlador
 cambiar target por target selector
 generalizar la acción ipe_reload a ipe_hash_reload
+- avoid this configuration, passing this to the twig template
+mopa_bootstrap:
+    form:
+        show_legend: false # default is true 
 
 - hacer que los plugins de malsup vengan desde github con composer
 public static function createSymlink($symlinkTarget, $symlinkName)
