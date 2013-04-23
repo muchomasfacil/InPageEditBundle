@@ -15,6 +15,7 @@ controller:
         item_added: The item was properly <strong>ADDED</strong>    
     #now shared messages
     not_found_exception: Nothing found for %entity_class% searching by %find_by%
+    editor_roles_error: editor_roles must be either null or an array of roles
 collectionList:
     icon_move_title: Drag to move item
     icon_trash_title: Delete item

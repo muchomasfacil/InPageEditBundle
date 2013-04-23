@@ -1,5 +1,6 @@
 document.body.insertBefore( prettyPrint( ui ), document.body.firstChild );
 
+app/console doctrine:database:create
 app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle --no-backup
 app/console doctrine:schema:drop --force
 app/console doctrine:schema:create

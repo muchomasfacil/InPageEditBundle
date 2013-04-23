@@ -59,6 +59,17 @@ ipe_routes:
     resource: "@MuchoMasFacilInPageEditBundle/Resources/config/routing.yml"
 # ...    
 ```
+
+### Enable translation
+In your app/config/config.yml
+```yml
+# ...
+framework:
+# ...
+    translator:      { fallback: %locale% }
+# ...    
+```
+
 ### (optional but recommended) Secure your InPageEditBundle
 in your app/config/security.yml secure ipe_actions, for example add this:
 ```yml
@@ -91,8 +102,62 @@ mucho_mas_facil_in_page_edit:
         # ...
 # ...
 ```
-### PENDING 
-moopa and stof extensions y app/config/config.yml
+
+### (optional) if your want to use the bundle predefined helper entities 
+Enable sortable doctrine extension in app/config/config.yml 
+```yml
+# in your app/config/config.yml
+#...      
+stof_doctrine_extensions:
+    orm:
+        default:
+            sortable: ~
+# ...    
+```
+If you have not alredy done, configure your database params and then update your schema with your command line
+```bash
+app/console doctrine:schema:create
+```
+
+#### fast install of helper entities in a clean symfony-standard and using sqlite
+If doing in a clean symfony-standard installation and :
+```yml
+# in your app/config/parameters.yml
+# ...
+    database_driver:   pdo_sqlite
+    database_host:     ~
+    database_port:     ~
+    database_name:     ipe
+    database_user:     user
+    database_password: pass
+# ...    
+```
+
+```yml
+# in your app/config/config.yml
+# ...
+doctrine:
+    dbal:
+        driver:   %database_driver%
+        host:     %database_host%
+        port:     %database_port%
+        dbname:   %database_name%
+        user:     %database_user%
+        password: %database_password%
+        charset:  UTF8
+        # if using pdo_sqlite as your database driver, add the path in parameters.yml
+        # e.g. database_path: %kernel.root_dir%/data/data.db3
+        # path:     %database_path%
+        path:     %kernel.root_dir%/data/%database_name%.db
+```
+In the command line
+```bash
+mkdir app/data
+app/console doctrine:database:create
+chmod a+w -R data # or adjust as needed
+app/console doctrine:schema:create
+```
+
 
 ## Using InPageEditBundle
 

@@ -1,4 +1,4 @@
-<{{ params.container_html_tag }}  {{ params.container_html_attributes | raw }}{% if is_granted(params.editor_roles) %} data-ipe-hash="{{ data_ipe_hash }}"{% endif %}>
+<{{ params.container_html_tag }}  {{ params.container_html_attributes | raw }}{% if true %} {#%if (app.security.getToken() and is_granted(params.editor_roles)) %#} data-ipe-hash="{{ data_ipe_hash }}"{% endif %}>
 
   {{ include(params.render_template) }}
 

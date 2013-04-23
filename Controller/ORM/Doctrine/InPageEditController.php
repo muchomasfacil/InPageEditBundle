@@ -5,6 +5,7 @@ namespace MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Util\Inflector;
 
@@ -95,7 +96,7 @@ class InPageEditController extends ContainerAware
             $params['render_template'] = $render_template;
         } 
         
-        
+
         if ($preloaded_result) {
             $results = $preloaded_result;
         }
@@ -147,9 +148,7 @@ class InPageEditController extends ContainerAware
     {
         $request = $this->container->get('request');
         $params = $request->getSession()->get('ipe_' . $ipe_hash);        
-        if (false === $this->get('security.context')->isGranted($params['editor_roles'])) {
-            throw new AccessDeniedException();
-        }
+        $this->checkRoles($params['editor_roles']);
         //the entry MUST alredy exist let us get it
         $em = $this->container->get('doctrine')->getManager();        
         $rep = $em->getRepository($params['entity_class']);
@@ -220,9 +219,7 @@ class InPageEditController extends ContainerAware
     public function collectionListAction($ipe_hash, $reload_content = false)
     {
         $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);        
-        if (false === $this->get('security.context')->isGranted($params['editor_roles'])) {
-            throw new AccessDeniedException();
-        }
+        $this->checkRoles($params['editor_roles']);
         $rep = $this->container->get('doctrine')->getRepository($params['entity_class']);        
         $this->render_vars['has__to_string_method'] = (method_exists(new $params['entity_class'](), '__toString'))? true : false;
         if (!$this->render_vars['has__to_string_method']) {
@@ -241,9 +238,7 @@ class InPageEditController extends ContainerAware
     public function collectionDeleteItemAction($ipe_hash, $id)
     {        
         $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);
-        if (false === $this->get('security.context')->isGranted($params['editor_roles'])) {
-            throw new AccessDeniedException();
-        }
+        $this->checkRoles($params['editor_roles']);
         $em = $this->container->get('doctrine')->getManager();            
         $entity = $em->getRepository($params['entity_class'])->find($id);
         
@@ -261,9 +256,7 @@ class InPageEditController extends ContainerAware
     public function collectionSortAction($ipe_hash, $id, $position)
     {
         $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);        
-        if (false === $this->get('security.context')->isGranted($params['editor_roles'])) {
-            throw new AccessDeniedException();
-        }
+        $this->checkRoles($params['editor_roles']);
         $em = $this->container->get('doctrine')->getManager();        
         $entity = $em->getRepository($params['entity_class'])->find($id);
         if (!$entity) {
@@ -282,9 +275,7 @@ class InPageEditController extends ContainerAware
     public function collectionAddItemAction($ipe_hash, $position)
     {        
         $params = $this->container->get('request')->getSession()->get('ipe_' . $ipe_hash);                        
-        if (false === $this->get('security.context')->isGranted($params['editor_roles'])) {
-            throw new AccessDeniedException();
-        }
+        $this->checkRoles($params['editor_roles']);
         list($number_of_entities, $locale, $column_formatters) = $this->getFakeDefaults($params);                    
         $column_formatters[$params['collection_ipe_position_field']] = $position;
         $rep = $this->container->get('doctrine')->getRepository($params['entity_class']);
@@ -322,6 +313,22 @@ class InPageEditController extends ContainerAware
     //-------------------------------------------------
     // now private shared functions
     //-------------------------------------------------
+    private function checkRoles($roles)
+    {        
+        if ((!is_array($roles)) && (!is_null($roles))) {
+            throw new \Exception($this->trans('controller.editor_roles_error'));
+        }
+        if ((is_array($roles)) && (count($roles) > 0)) {
+            if (
+                (is_null($this->container->get('security.context')->getToken())) 
+                || (false === $this->container->get('security.context')->isGranted($roles))
+                ) {
+                throw new AccessDeniedException();
+            }
+        }
+
+    }
+
     private function setIpeLocale($locale = null)
     {
         if (!$locale) {
