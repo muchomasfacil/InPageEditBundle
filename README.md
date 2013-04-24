@@ -11,18 +11,13 @@ A Symfony2 bundle for fast (may be dirty but quite usefull; and ready for no hig
 Install and configure your symfony-standard if you have not done it yet [http://symfony.com/doc/master/book/installation.html]
 
 ### Install bundle with composer.json
-Add to your composer.json in the repositories section:
+Add to your composer.json in the repositories (create it if not exist) section:
 
 ```json
-//...
-    "repositories": [
-        // ...
         {
             "type": "vcs",
             "url": "git://github.com/muchomasfacil/in-page-edit-bundle.git"
-        },    
-        // ...
-    ],
+        }
 //...
 ```
 now run on your project (take care of "minimum-stability" if necesary)
