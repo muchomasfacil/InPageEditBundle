@@ -1,9 +1,8 @@
 parameters:
-    mucho_mas_facil_in_page_edit.available_langs:
-        en: 
-            label: English
-        es: 
-            label: Español
+    mucho_mas_facil_in_page_edit.available_langs: 
+        en: {label: English}             
+        es: {label: Español}
+            
     mucho_mas_facil_in_page_edit.definitions:
         default:
             entity_class: ~ # guessed either from definition or by parameter
@@ -19,44 +18,9 @@ parameters:
             faker_custom_column_formatters: []
             faker_custom_modifiers: []
             faker_generate_id: false
-            editor_roles: [ROLE_IPE_EDITOR]
+            editor_roles: [] # ROLE_IPE_EDITOR
             container_html_tag: div
             container_html_attributes: ''
-            
-    mucho_mas_facil_in_page_edit.ckeditor_options:
-        default: |
-            config.forcePasteAsPlainText = true;
-            config.toolbar = 'Default';
-            config.toolbar_Default =
-            [
-                ['Bold', 'Italic', 'Underline', '-', 'Link', 'Unlink','-','NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','About']
-            ];
-
-        full: |
-            config.forcePasteAsPlainText = true;
-            config.toolbar = 'Full';
-        basic: |
-            config.forcePasteAsPlainText = true;
-            config.toolbar = 'Basic';
-        custom: |
-            config.forcePasteAsPlainText = true;
-            config.toolbar = 'Custom';
-            config.toolbar_Custom =
-            [
-                { name: 'document', items : [ 'Source','-','Templates' ] },
-                { name: 'clipboard', items : [ 'Cut','Copy','PasteText','-','Undo','Redo' ] },
-                { name: 'editing', items : [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },
-                { name: 'links', items : [ 'Link','Unlink','Anchor' ] },
-                '/',
-                { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
-                { name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-'
-                 ,'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ] },
-                 '/',
-                { name: 'insert', items : [ 'Image','Flash','Table','HorizontalRule','Smiley','SpecialChar' ] },
-                { name: 'styles', items : [ 'Format' ] },
-                { name: 'tools', items : [ 'Maximize', 'ShowBlocks','-','About' ] }
-            ];
-
 
 services:
 #    mucho_mas_facil_in_page_edit.example:

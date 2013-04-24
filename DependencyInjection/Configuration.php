@@ -71,15 +71,6 @@ class Configuration implements ConfigurationInterface
             ->end()
         ;
 
-        $rootNode
-            ->children()
-                ->arrayNode('ckeditor_options')
-                    ->useAttributeAsKey('name')
-                    ->prototype('scalar')->end()
-                ->end()
-            ->end()
-        ;
-
         return $treeBuilder;
     }
 }

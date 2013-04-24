@@ -17,7 +17,7 @@ app/console doctrine:schema:create
 - posible twig actions:
 ipe_navbar(template, locale)
 ipe_render(controller, params)
-- en el javascript:
+- en el javascript principal:
 que venga de un controlador
 cambiar target por target selector
 generalizar la acción ipe_reload a ipe_hash_reload
@@ -25,17 +25,6 @@ generalizar la acción ipe_reload a ipe_hash_reload
 mopa_bootstrap:
     form:
         show_legend: false # default is true 
-
-- hacer que los plugins de malsup vengan desde github con composer
-public static function createSymlink($symlinkTarget, $symlinkName)
-    {
-        if (false === @symlink($symlinkTarget, $symlinkName)) {
-            throw new \Exception("An error occured while creating symlink" . $symlinkName);
-        }
-        if (false === $target = readlink($symlinkName)) {
-            throw new \Exception("Symlink $symlinkName points to target $target");
-        }
-    }10
 
 working on:
 - utilizar bootstrap modal en vez de jquery dialog
