@@ -1,5 +1,5 @@
 {
-    "name": "muchomasfacil/in-page-edit-bundle",
+    "name": "muchomasfacil/InPageEditBundle",
     "type": "symfony-bundle",
     "description": "Symfony2 fast in page edit for entities and common contents",
     "license": "MIT",
