@@ -18,33 +18,17 @@ Add to your composer.json in the repositories (create it if not exist) section:
             "type": "vcs",
             "url": "git://github.com/muchomasfacil/in-page-edit-bundle.git"
         }
-//...
 ```
-now run on your project (take care of "minimum-stability" if necesary)
-```bash
-composer.phar require muchomasfacil/in-page-edit-bundle dev-master
-```
-Take a look at [composer.json](composer.json) to see the bundles InPageEditBundle relies on.
 
-### Configuration
-
-#### changes in app/AppKernel.php
-You must use at least this entries
+You must add this entries to your app/AppKernel.php
 ```php
-// ...
-$loader->registerNamespaces(array(
-    // ...
-    new MuchoMasFacil\InPageEditBundle\MuchoMasFacilInPageEditBundle(),
-    new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
-    new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
-    new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-    // ...
-));    
-// ...
+            new MuchoMasFacil\InPageEditBundle\MuchoMasFacilInPageEditBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
+            new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
 ```
 
-### Import routes
-Add in your app/config/routing.yml
+Add this routes in your app/config/routing.yml
 ```yml
 # ...
 fos_js_routing:
@@ -55,8 +39,7 @@ ipe_routes:
 # ...    
 ```
 
-### Enable translation
-In your app/config/config.yml
+Enable translation in your app/config/config.yml
 ```yml
 # ...
 framework:
@@ -64,6 +47,12 @@ framework:
     translator:      { fallback: %locale% }
 # ...    
 ```
+
+Finally run on your project (take care of "minimum-stability" if necesary)
+```bash
+composer.phar require muchomasfacil/in-page-edit-bundle dev-master
+```
+Take a look at [composer.json](composer.json) to see the bundles InPageEditBundle relies on.
 
 ### (optional but recommended) Secure your InPageEditBundle
 in your app/config/security.yml secure ipe_actions, for example add this:
@@ -79,8 +68,6 @@ in your app/config/security.yml secure ipe_actions, for example add this:
     role_hierarchy:
         # ... create the default ROLE_IPE_EDITOR and add some user
         ROLE_IPE_EDITOR: [ROLE_ADMIN]
-
-
 #...
 ```
 
