@@ -1,3 +1,10 @@
+{% extends bundle_name ~ '::modal_layout.html.twig' %}
+
+{% block modal_header_label %}{{ 'collectionList.modal_title' |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}{% endblock modal_header_label %}
+
+{% block modal_footer %}{% endblock modal_footer %}
+
+{% block modal_body %}
 {{ include(bundle_name ~ ':InPageEdit:_flashCollection.html.twig') }}
 <div class="well">
     <ul class="inline">
@@ -29,15 +36,15 @@ $(function() {
                 //look bellow for $( "#ipe-sortable").sortable({
                 break;
             case 'delete':
-                if (confirm('{{ 'delete_confirmation'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}')) {                    
-                    ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': ipe_hash, 'id': $(this).attr('data-ipe-uid')}));  
+                if (confirm('{{ 'shared.delete_confirmation'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}')) {                    
+                    ipe_load_in_dialog (ipe_target_id, Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': ipe_hash, 'id': $(this).attr('data-ipe-uid')}));  
                 }
                 break;
             case 'add':
-                    ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_add_item', {'ipe_hash': ipe_hash, 'position': $(this).attr('data-ipe-insert-position')}));                                
+                    ipe_load_in_dialog (ipe_target_id, Routing.generate('ipe_doctrine_collection_add_item', {'ipe_hash': ipe_hash, 'position': $(this).attr('data-ipe-insert-position')}));                                
                 break;
             case 'edit':
-                ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_edit', {'ipe_hash': ipe_hash, 'action_on_success': 'none', 'id': $(this).attr('data-ipe-uid')}));                
+                ipe_load_in_dialog (ipe_target_id, Routing.generate('ipe_doctrine_edit', {'ipe_hash': ipe_hash, 'action_on_success': 'none', 'id': $(this).attr('data-ipe-uid')}));                
                 break;                
             default:         
         } 
@@ -52,7 +59,7 @@ $(function() {
             var end_pos = $(ui.item).index();
             var uid = $(ui.item).attr('id').replace('ipe_sortable_uid_', '');
             //alert(uid + ' - ' + end_pos);
-            ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_sort', {'ipe_hash': ipe_hash, 'id': uid, 'position': end_pos }));
+            ipe_load_in_dialog (ipe_target_id, Routing.generate('ipe_doctrine_collection_sort', {'ipe_hash': ipe_hash, 'id': uid, 'position': end_pos }));
         }
     });
 
@@ -62,3 +69,4 @@ $(function() {
 
 });
 </script>
+{% endblock modal_body %}

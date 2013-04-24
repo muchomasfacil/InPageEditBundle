@@ -39,5 +39,10 @@ public static function createSymlink($symlinkTarget, $symlinkName)
 
 working on:
 - utilizar bootstrap modal en vez de jquery dialog
+close programatically (save & close)
+close with esc button
+
+- en el caso de delete y si create if not exists es false
+Nothing found for MuchoMasFacil\InPageEditBundle\Entity\Foo searching by id=1
 
 

@@ -27,20 +27,20 @@ $(function() {
         {
             case 'delete':
                 if (confirm('{{ 'delete_confirmation'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}')) {
-                    ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid}));  
+                    ipe_load_in_dialog (ipe_target_id, Routing.generate('ipe_doctrine_collection_delete_item', {'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid}));  
                 }
                 break;
             case 'list':                
-                ipe_load_in_dialog (ipe_target, Routing.generate('ipe_doctrine_collection_list', {'ipe_hash': '{{ data_ipe_hash }}'}));  
+                ipe_load_in_dialog (ipe_target_id, Routing.generate('ipe_doctrine_collection_list', {'ipe_hash': '{{ data_ipe_hash }}'}));  
                 break;
             case 'save':
-                ipe_form_submit('#' + ipe_form, ipe_target, 'ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'none', 'id': ipe_uid });
+                ipe_form_submit('#' + ipe_form, ipe_target_id, 'ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'none', 'id': ipe_uid });
                 break;
             case 'save_and_list':
-                ipe_form_submit('#' + ipe_form, ipe_target, 'ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'list', 'id': ipe_uid });
+                ipe_form_submit('#' + ipe_form, ipe_target_id, 'ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'list', 'id': ipe_uid });
                 break;
             case 'save_and_close':
-                ipe_form_submit('#' + ipe_form, ipe_target, 'ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'close', 'id': ipe_uid });
+                ipe_form_submit('#' + ipe_form, ipe_target_id, 'ipe_doctrine_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'close', 'id': ipe_uid });
                 break;
             default:         
         } 
