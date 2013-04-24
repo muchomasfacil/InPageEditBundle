@@ -66,8 +66,8 @@ in your app/config/security.yml secure ipe_actions, for example add this:
             http_basic:
                 realm: "IPE backend"
     role_hierarchy:
-        # ... create the default ROLE_IPE_EDITOR and add some user
-        ROLE_IPE_EDITOR: [ROLE_ADMIN]
+        # ... this add ROLE_IPE_EDITOR to, for example, ROLE_ADMIN
+        ROLE_ADMIN:  [ROLE_USER, ROLE_IPE_EDITOR]
 #...
 ```
 
