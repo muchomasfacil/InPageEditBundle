@@ -10,7 +10,7 @@ Add to your composer.json in the repositories (create it if not exist) section:
 ``` json
         {
             "type": "vcs",
-            "url": "git://github.com/muchomasfacil/in-page-edit-bundle.git"
+            "url": "git@github.com:muchomasfacil/InPageEditBundle.git"
         }
 ```
 
