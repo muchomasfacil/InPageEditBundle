@@ -44,7 +44,7 @@ framework:
 
 Finally run on your project (take care of "minimum-stability" if necesary)
 ``` bash
-composer.phar require muchomasfacil/in-page-edit-bundle dev-master
+composer.phar require muchomasfacil/InPageEditBundle dev-master
 ```
 Take a look at [composer.json](composer.json) to see the bundles InPageEditBundle relies on.
 
