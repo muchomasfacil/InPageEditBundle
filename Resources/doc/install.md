@@ -41,6 +41,20 @@ framework:
     translator:      { fallback: %locale% }
 # ...    
 ```
+Add this to your existing scripts section in your composer json: (recommended!)
+
+```json
+    {
+        "scripts": {
+            "post-install-cmd": [
+                "Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap"
+            ],
+            "post-update-cmd": [
+                "Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap"
+            ]
+        }
+    }
+```
 
 Finally run on your project (take care of "minimum-stability" if necesary)
 ``` bash
