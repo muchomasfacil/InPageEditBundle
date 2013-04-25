@@ -1,36 +1,39 @@
 document.body.insertBefore( prettyPrint( ui ), document.body.firstChild );
 
 app/console doctrine:database:create
+app/console doctrine:generate:entities MuchoMasFacilInPageEditDemoBundle --no-backup
 app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle --no-backup
 app/console doctrine:schema:drop --force
 app/console doctrine:schema:create
 
-- utilizar bootstrap modal en vez de jquery dialog
-- seguridad
-- usar assetic para css y js (trayéndolo directamente desde github???)
-- integrar ckeditor y elfinder https://github.com/neutron-project/form-bundle
+- integrar ckeditor o tinymce y elfinder https://github.com/neutron-project/form-bundle
 - uploads seleccionar un tipo de file input y programarlo https://github.com/neutron-project/form-bundle
+
+- comentar en la documentación los css y js que se necesitan para que los cargue sólo en caso de ipeisgranted
+- lo mismo para el navbar
+- documentar $builder->setAttribute('show_legend', true); cuando se creen los posibles entities
+
 - title y metas
 - documentation
-- inline ckeditor o tinyc??
+
+- en el javascript principal:
+que venga de un controlador
+generalizar la acción ipe_reload a ipe_hash_reload
+
+
 - hacer que funcione con distintos entity manager
 - posible twig actions:
 ipe_navbar(template, locale)
 ipe_render(controller, params)
-- en el javascript principal:
-que venga de un controlador
-cambiar target por target selector
-generalizar la acción ipe_reload a ipe_hash_reload
-- avoid this configuration, passing this to the twig template
+- try to avoid this configuration, passing this to the twig template
 mopa_bootstrap:
     form:
         show_legend: false # default is true 
 
 working on:
-- utilizar bootstrap modal en vez de jquery dialog
-close programatically (save & close)
-close with esc button
+-security en el render.html.twig
 
+Issues
 - en el caso de delete y si create if not exists es false
 Nothing found for MuchoMasFacil\InPageEditBundle\Entity\Foo searching by id=1
 

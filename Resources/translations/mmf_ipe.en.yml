@@ -5,6 +5,7 @@ controller:
     editAction:
         entry_saved: The entry was properly <strong>SAVED</strong>
         form_errors: Please fix <strong>ERRORS</strong> in form
+        flush_errors: There was an error saving data. Try again later or contact your IT department.
     collectionDeleteItemAction:
         entry_deleted: The entry was properly <strong>DELETED</strong>    
     collectionSortAction:

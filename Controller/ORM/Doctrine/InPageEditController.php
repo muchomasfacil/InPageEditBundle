@@ -119,6 +119,7 @@ class InPageEditController extends ContainerAware
         
         $this->render_vars['results'] = $results;
         $this->render_vars['data_ipe_hash'] = md5(serialize(array($params['find_by'], $params['entity_class'])));        
+        $this->render_vars['show_data_ipe_hash'] = $this->ipeIsGranted($params['editor_roles']);
         $this->render_vars['params'] = $params;
 
         $session = $this->container->get('request')->getSession();        
@@ -164,10 +165,7 @@ class InPageEditController extends ContainerAware
                 throw new \Exception($this->trans('controller.not_found_exception', array('%entity_class%' => $params['entity_class'] ,'%find_by%' => $id)));
             }
         }
-        //die(get_class($entity));
-        $form = $this->container->get('form.factory')->create(new $params['form_type_class'](), $entity);
-        
-        //die(get_class($form));
+        $form = $this->container->get('form.factory')->create(new $params['form_type_class'](), $entity);        
 
         if ($request->isMethod('POST')) {
             $form->bind($request);
@@ -180,10 +178,19 @@ class InPageEditController extends ContainerAware
                 //$uploadableManager->markEntityToUpload($entity, $entity->getPath());
                 try{                    
                     $em->flush();
+                    $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.editAction.entry_saved'), 'close' => true, 'use_raw' => true);
+                    $this->render_vars['reload_content'] = true;
+                    if ($action_on_success == 'close') {                    
+                        $this->render_vars['data_ipe_hash'] = $ipe_hash;
+                        return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults('_closeDialog'), $this->render_vars);                
+                    }
+                    if ($action_on_success == 'list') {                
+                        return $this->collectionListAction($ipe_hash, true);
+                    }
                 }
                 catch (\Exception $e)
                 {
-
+                    $this->render_vars['flashes'][] = array('type' => 'error', 'message' => $this->trans('controller.editAction.flush_errors'). ' '. $e, 'close' => true, 'use_raw' => true);
                 }
                 
                 // return new Response(
@@ -191,18 +198,9 @@ class InPageEditController extends ContainerAware
                 //     .get_class($entity->getPath())."\n"
                 //     .var_export($_FILES)
                 //     );
-                $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.editAction.entry_saved'), 'close' => true, 'use_raw' => true);
-                $this->render_vars['reload_content'] = true;
-                if ($action_on_success == 'close') {                    
-                    $this->render_vars['data_ipe_hash'] = $ipe_hash;
-                    return $this->container->get('templating')->renderResponse($this->getTemplateNameByDefaults('_closeDialog'), $this->render_vars);                
-                }
-                if ($action_on_success == 'list') {                
-                    return $this->collectionListAction($ipe_hash, true);
-                }
             }
             else {
-                $this->render_vars['flashes'][] = array('type' => 'success', 'error' => $this->trans('controller.editAction.form_errors'), 'close' => true, 'use_raw' => true);
+                $this->render_vars['flashes'][] = array('type' => 'error', 'message' => $this->trans('controller.editAction.form_errors'), 'close' => true, 'use_raw' => true);
             }
         } 
         if (!isset($this->render_vars['reload_content'])) {
@@ -315,6 +313,13 @@ class InPageEditController extends ContainerAware
     //-------------------------------------------------
     private function checkRoles($roles)
     {        
+        if (!$this->ipeIsGranted($roles)) {
+            throw new AccessDeniedException();
+        }
+    }
+    
+    private function ipeIsGranted($roles)
+    {
         if ((!is_array($roles)) && (!is_null($roles))) {
             throw new \Exception($this->trans('controller.editor_roles_error'));
         }
@@ -323,10 +328,10 @@ class InPageEditController extends ContainerAware
                 (is_null($this->container->get('security.context')->getToken())) 
                 || (false === $this->container->get('security.context')->isGranted($roles))
                 ) {
-                throw new AccessDeniedException();
+                return false;
             }
         }
-
+        return true;
     }
 
     private function setIpeLocale($locale = null)
