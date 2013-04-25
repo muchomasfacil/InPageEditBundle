@@ -87,7 +87,7 @@ Enable sortable doctrine extension in app/config/config.yml
 stof_doctrine_extensions:
     orm:
         default:
-            sortable: ~
+            sortable: true
 # ...    
 ```
 
