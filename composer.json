@@ -11,8 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "symfony/symfony": ">=2.1,<2.3-dev",
+        "php": ">=5.3.3",        
         "fzaninotto/faker": "dev-master",
         "twitter/bootstrap": "master",  
         "stof/doctrine-extensions-bundle": "1.0.x",
