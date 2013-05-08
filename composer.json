@@ -16,7 +16,7 @@
         "fzaninotto/faker": "dev-master",
         "twitter/bootstrap": "master",  
         "stof/doctrine-extensions-bundle": "dev-master",
-        "mopa/bootstrap-bundle": "dev-master",        
+        "mopa/bootstrap-bundle": "v2.0.0",        
         "friendsofsymfony/jsrouting-bundle": "1.1.*"     
     },
 
