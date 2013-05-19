@@ -1,5 +1,7 @@
 # InPageEditBundle
 
+** Abandonned. Not ready for production use ** 
+
 **Work in progrees, testing its stability.**
 
 It is intended to offer in page edition for general entities and some commonly used special helper entities.
