@@ -14,5 +14,5 @@ PENDING
 ## Documentation
 
 - [Installation](./install.md)
-- [Using](./using.md)
 - [Parameters reference](./param_reference.md)
+- [Examples](./examples)
