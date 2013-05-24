@@ -15,8 +15,7 @@ The bulk of the documentation is stored in the `Resources/doc/index.md` file in 
 
 ## Installation
 
-
-All the installation instructions are located in [Documentation](https://github.com/muchomasfacil/InPageEditBundle/blob/master/Resources/doc/index.md).
+All the installation instructions are located in the documentation [installation page](https://github.com/muchomasfacil/InPageEditBundle/blob/master/Resources/doc/install.md).
 
 ## License
 
