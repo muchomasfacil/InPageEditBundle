@@ -1,8 +1,8 @@
 parameters:
-    mucho_mas_facil_in_page_edit.available_langs: 
-        en: {label: English}             
+    mucho_mas_facil_in_page_edit.available_langs:
+        en: {label: English}
         es: {label: Español}
-            
+
     mucho_mas_facil_in_page_edit.definitions:
         default:
             entity_class: ~ # guessed either from definition or by parameter
@@ -11,7 +11,7 @@ parameters:
             ipe_controller: MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine
             is_collection: false
             max_collection_length: ~
-            number_of_entities_to_fake_if_collection: ~ 
+            number_of_entities_to_fake_if_collection: ~
             collection_ipe_handler_field: ipe_handler
             collection_ipe_position_field: ipe_position
             faker_locale: ~ # will be guessed from request if not set
@@ -22,8 +22,14 @@ parameters:
             container_html_tag: div
             container_html_attributes: ''
 
+    mucho_mas_facil_in_page_edit.twig.ipe_extension.class: MuchoMasFacil\InPageEditBundle\Twig\IpeExtension
+
 services:
 #    mucho_mas_facil_in_page_edit.example:
 #        class: %mucho_mas_facil_in_page_edit.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
+    mucho_mas_facil_in_page_edit.twig.ipe_extension:
+        class: %mucho_mas_facil_in_page_edit.twig.ipe_extension.class%
+        tags:
+            - {name: twig.extension}
 
