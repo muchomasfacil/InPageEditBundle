@@ -11,12 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",        
-        "fzaninotto/faker": "dev-master",
-        "twitter/bootstrap": "master",  
-        "stof/doctrine-extensions-bundle": "~1.1@dev",
-        "mopa/bootstrap-bundle": "2.2.0-alpha1",        
-        "friendsofsymfony/jsrouting-bundle": "~1.1"     
+        "symfony/symfony": "2.3.*", 
     },
 
     "autoload": {
