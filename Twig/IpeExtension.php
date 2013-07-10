@@ -3,19 +3,32 @@ namespace MuchoMasFacil\InPageEditBundle\Twig;
 
 class IpeExtension extends \Twig_Extension
 {
-    public function getFilters()
+
+    /**
+     *
+     * @var  \Symfony\Component\DependencyInjection\Container
+     */
+    protected $container;
+
+
+    public function __construct(\Symfony\Component\DependencyInjection\Container $container)
+    {
+        $this->container = $container;
+    }
+
+    public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFilter('ipe_render', array($this, 'priceFilter')),
+            new \Twig_SimpleFunction('ipe_render', array($this, 'ipeRenderFuncion')),
         );
     }
 
-    public function priceFilter($number, $decimals = 0, $decPoint = '.', $thousandsSep = ',')
+    public function ipeRenderFuncion()
     {
-        $price = number_format($number, $decimals, $decPoint, $thousandsSep);
-        $price = '$'.$price;
+        $param_definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
 
-        return $price;
+        //return $this->container;
+        return $param_definitions;
     }
 
     public function getName()

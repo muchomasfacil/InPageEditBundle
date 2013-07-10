@@ -1,0 +1,17 @@
+MuchoMasFacil\InPageEditBundle\Entity\Foo:
+    type: entity
+    table: null
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        date:
+            type: date
+        header:
+            type: string
+            length: 255
+        text:
+            type: text
+    lifecycleCallbacks: {  }
