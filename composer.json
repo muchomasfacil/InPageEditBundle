@@ -11,9 +11,13 @@
         }
     ],
     "require": {
-        "symfony/symfony": "2.3.*"
+        "symfony/symfony": "2.3.*",
+        "friendsofsymfony/jsrouting-bundle": "~1.1",
+        "fzaninotto/faker": "~1"
     },
-
+    "suggest": {
+        "stof/doctrine-extensions-bundle": "~1.1@dev Sortable, Uploadable may be useful"
+    },
     "autoload": {
         "psr-0": { "MuchoMasFacil\\InPageEditBundle": "" }
     },
