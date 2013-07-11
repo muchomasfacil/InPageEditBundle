@@ -38,11 +38,24 @@ class Configuration implements ConfigurationInterface
             ->end()
         ;
 
-        $rootNode
+            $rootNode
             ->children()
                 ->arrayNode('definitions')
                     ->useAttributeAsKey('name')
-                    ->prototype('variable')
+                    ->prototype('array')
+                    ->children()
+                        ->scalarNode('alias')->end()
+                        ->scalarNode('ipe_controller')->isRequired()->end()
+                        ->arrayNode('editor_roles')
+                            ->prototype('scalar')->end()
+                            ->defaultValue(array('ROLE_IPE_EDITOR'))
+                        ->end()
+                        ->scalarNode('container_html_tag')->defaultValue('div')->end()
+                        ->scalarNode('container_html_attributes')->defaultValue('')->end()
+                        ->arrayNode('params')
+                            ->prototype('variable')
+                        ->end()
+                    ->end()
                 ->end()
             ->end()
         ;

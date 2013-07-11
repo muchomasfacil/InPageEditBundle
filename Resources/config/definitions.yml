@@ -1,0 +1,31 @@
+parameters:
+    mucho_mas_facil_in_page_edit.definitions:
+
+        doctrine_entity:
+            alias: de
+            ipe_controller: MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine\EntityController
+            editor_roles: [] # ROLE_IPE_EDITOR # optional
+            container_html_tag: div # optional
+            container_html_attributes: '' # optional
+            params:
+                entity_class: ~ # guessed from definition or by parameter
+                form_type_class: ~ # guessed either from definition or by parameter
+                render_template: ~ # if not set will be guessed from entity_class
+
+        doctrine_entity_sorted_collection:
+            alias: desc
+            ipe_controller: MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine\EntityCollectionController
+            params:
+                max_collection_length: ~
+                collection_ipe_handler_field: ipe_handler
+                collection_ipe_position_field: ipe_position
+                fake_min_number_of_items: 3
+                fake_max_number_of_items: 6
+                faker_locale: ~ # will be guessed from request if not set
+                faker_custom_column_formatters: []
+                faker_custom_modifiers: []
+                faker_generate_id: false
+
+        doctrine_object_collection:
+            alias: doc
+            ipe_controller: MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine\ObjectCollectionController

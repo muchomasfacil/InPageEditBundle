@@ -1,26 +1,8 @@
 parameters:
+
     mucho_mas_facil_in_page_edit.available_langs:
         en: {label: English}
         es: {label: Español}
-
-    mucho_mas_facil_in_page_edit.definitions:
-        default:
-            entity_class: ~ # guessed either from definition or by parameter
-            form_type_class: ~ # guessed either from definition or by parameter
-            render_template: ~ # if not set will be guessed from entity_class
-            ipe_controller: MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine
-            is_collection: false
-            max_collection_length: ~
-            number_of_entities_to_fake_if_collection: ~
-            collection_ipe_handler_field: ipe_handler
-            collection_ipe_position_field: ipe_position
-            faker_locale: ~ # will be guessed from request if not set
-            faker_custom_column_formatters: []
-            faker_custom_modifiers: []
-            faker_generate_id: false
-            editor_roles: [] # ROLE_IPE_EDITOR
-            container_html_tag: div
-            container_html_attributes: ''
 
     mucho_mas_facil_in_page_edit.twig.ipe_extension.class: MuchoMasFacil\InPageEditBundle\Twig\IpeExtension
 

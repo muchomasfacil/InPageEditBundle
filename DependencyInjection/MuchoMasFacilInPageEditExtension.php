@@ -19,12 +19,13 @@ class MuchoMasFacilInPageEditExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        //first load definitions in services.yml
+        //first load services and definitions
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        $loader->load('definitions.yml');
         //and add them to our list
         $parameter_configs[] = array(
-            'definitions'  => $container->getParameter('mucho_mas_facil_in_page_edit.definitions'),            
+            'definitions'  => $container->getParameter('mucho_mas_facil_in_page_edit.definitions'),
             );
 
         //now take configurations
@@ -35,6 +36,6 @@ class MuchoMasFacilInPageEditExtension extends Extension
 
         $final_config = $this->processConfiguration($configuration, $parameter_configs);
 
-        $container->setParameter('mucho_mas_facil_in_page_edit.definitions', $final_config['definitions']);        
+        $container->setParameter('mucho_mas_facil_in_page_edit.definitions', $final_config['definitions']);
     }
 }
