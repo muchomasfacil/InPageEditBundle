@@ -13,9 +13,11 @@ class EntityController extends ContainerAware //implements ControllerInterface
     }
 
     //no associated route. Will always be called from twig templates
-    public function renderAction($ipe_definition, $object, $render_template, $params = array(), $render_with_container = true)
+    public function renderAction($ipe_definition, $object, $render_template = null, $params = array(), $render_with_container = true)
     {
+        $this->render_vars['object'] = $object;
 
+        return $this->container->get('templating')->renderResponse($render_template , $this->render_vars);
     }
 
     public function editIndexAction($ipe_hash)

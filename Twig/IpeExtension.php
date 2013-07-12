@@ -1,6 +1,9 @@
 <?php
 namespace MuchoMasFacil\InPageEditBundle\Twig;
 
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+
 class IpeExtension extends \Twig_Extension
 {
 
@@ -8,38 +11,75 @@ class IpeExtension extends \Twig_Extension
      *
      * @var  \Symfony\Component\DependencyInjection\Container
      */
-    protected $container;
+    private $handler;
 
+    private $definitions;
 
-    public function __construct(\Symfony\Component\DependencyInjection\Container $container)
+    /**
+     * Constructor.
+     *
+     * @param FragmentHandler $handler A FragmentHandler instance
+     */
+    public function __construct(FragmentHandler $handler, $definitions)
     {
-        $this->container = $container;
+        $this->handler = $handler;
+        $this->definitions = $definitions;
     }
 
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('ipe_render', array($this, 'ipeRenderFuncion')),
+            'ipe_render'     => new \Twig_Function_Method($this, 'ipeRenderFragment', array('is_safe' => array('html'))),
         );
     }
 
-    public function ipeRenderFuncion($ipe_definition, $object, $render_template, $params = array(), $render_with_container = true)
+    public function ipeRenderFragment($ipe_definition, $object, $render_template = null, $params = array(), $render_with_container = true)
     {
-        $param_definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
         // let us check we have a valid definition
-        if (!in_array($ipe_definition, $param_definitions)) {
-            // let us look for aliases
-            $aliases = array_column($param_definitions , 'alias');
-            print_r($aliases);
-            die();
+        if (!in_array($ipe_definition, array_keys($this->definitions))) {
+            // no definition, let us search for an alias
+            foreach ($this->definitions as $key => $value) {
+                if (isset($value['alias'])) {
+                    $aliases[$key] = $value['alias'];
+                }
+            }
+            if (($key = array_search($ipe_definition, $aliases)) === false) {
+                throw new \Exception ($ipe_definition . ' is not a valid ipe definition or ipe definition alias');
+            }
+            else {
+                $ipe_definition = $key;
+            }
         }
+        $definition = $this->definitions[$ipe_definition];
+        $options = array(
+            'ipe_definition'  => $ipe_definition,
+            'object'  => $object,
+            'render_template' => $render_template,
+            'params' => $params,
+            'render_with_container' => $render_with_container,
+            );
 
-        //return $this->container;
-        return $param_definitions;
+        return $this->renderFragment($this->controller($definition['ipe_controller'].':render', $options));
+        /*
+                                     ,
+        ));*/
     }
 
     public function getName()
     {
         return 'ipe_extension';
+    }
+
+    private function renderFragment($uri, $options = array())
+    {
+        $strategy = isset($options['strategy']) ? $options['strategy'] : 'inline';
+        unset($options['strategy']);
+
+        return $this->handler->render($uri, $strategy, $options);
+    }
+
+    private function controller($controller, $attributes = array(), $query = array())
+    {
+        return new ControllerReference($controller, $attributes, $query);
     }
 }

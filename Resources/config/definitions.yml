@@ -3,7 +3,7 @@ parameters:
 
         doctrine_entity:
             alias: de
-            ipe_controller: MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine\EntityController
+            ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/Entity
             editor_roles: [] # ROLE_IPE_EDITOR # optional
             container_html_tag: div # optional
             container_html_attributes: '' # optional
@@ -26,6 +26,6 @@ parameters:
                 faker_custom_modifiers: []
                 faker_generate_id: false
 
-        doctrine_object_collection:
-            alias: doc
-            ipe_controller: MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine\ObjectCollectionController
+        doctrine_object_sorted_collection:
+            alias: dosc
+            ipe_controller: MuchoMasFacilInPageEditBundle\Controller\ORM\Doctrine\ObjectCollectionController
