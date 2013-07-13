@@ -44,12 +44,6 @@ class EntityController extends IpeController //implements ControllerInterface
             $final_render_template = $render_template;
         }
         else {
-            $this->render_vars['editor_roles'] = (isset($params['editor_roles']))? $params['editor_roles']: $definition['editor_roles'];
-            $this->render_vars['container_html_tag'] = (isset($params['container_html_tag']))? $params['container_html_tag']: $definition['container_html_tag'];
-            $this->render_vars['container_html_attributes'] = (isset($params['container_html_attributes']))? $params['container_html_attributes']: $definition['container_html_attributes'];
-            $this->render_vars['render_template'] = $render_template;
-            $this->render_vars['data_ipe_hash'] = $this->createDataIpeHash($this->render_vars['object']);
-            $this->render_vars['show_data_ipe_hash'] = $this->ipeIsGranted($this->render_vars['editor_roles']);
 
             $ipe = array(
                 'ipe_definition' => $ipe_definition,
@@ -58,10 +52,18 @@ class EntityController extends IpeController //implements ControllerInterface
                 //this should be specific by definition
                 'find_object_params' => array('class' => get_class($object), 'id' => $object->getId())
             );
-            //let us save ip data to session
-            $this->setIpe($this->render_vars['data_ipe_hash'], $ipe);
+            $ipe_hash = $this->createDataIpeHash($ipe);
+
+            $this->render_vars['editor_roles'] = (isset($params['editor_roles']))? $params['editor_roles']: $definition['editor_roles'];
+            $this->render_vars['container_html_tag'] = (isset($params['container_html_tag']))? $params['container_html_tag']: $definition['container_html_tag'];
+            $this->render_vars['container_html_attributes'] = (isset($params['container_html_attributes']))? $params['container_html_attributes']: $definition['container_html_attributes'];
+            $this->render_vars['render_template'] = $render_template;
+            $this->render_vars['data_ipe_hash'] = $ipe_hash;
+            $this->render_vars['show_data_ipe_hash'] = $this->ipeIsGranted($this->render_vars['editor_roles']);
 
             $final_render_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':render.html.twig';
+            //now ipe to session
+            $this->setIpe($ipe_hash, $ipe);
         }
 
         return $this->container->get('templating')->renderResponse($final_render_template , $this->render_vars);
@@ -72,11 +74,9 @@ class EntityController extends IpeController //implements ControllerInterface
 
     }
 
-    public function createDataIpeHash($object)
+    public function createDataIpeHash($ipe)
     {
-        //TODO: what if I render the same $object in different places in the same page?
-        //different templates same objects and should not have same session hash...
-        return md5(serialize(array($object->getId(), get_class($object))));
+        return md5(serialize($ipe));
     }
 
 
