@@ -4,7 +4,7 @@ namespace MuchoMasFacil\InPageEditBundle\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 
-interface ControllerInterface extends ContainerAware
+interface IpeControllerInterface extends ContainerAware
 {
     public function ajaxRenderAction($ipe_hash)
 

@@ -33,7 +33,7 @@ class IpeExtension extends \Twig_Extension
         );
     }
 
-    public function ipeRenderFragment($ipe_definition, $object, $render_template = null, $params = array(), $render_with_container = true)
+    public function ipeRenderFragment($ipe_definition, $object, $render_template, $params = array(), $render_with_container = true)
     {
         // let us check we have a valid definition
         if (!in_array($ipe_definition, array_keys($this->definitions))) {
@@ -60,9 +60,6 @@ class IpeExtension extends \Twig_Extension
             );
 
         return $this->renderFragment($this->controller($definition['ipe_controller'].':render', $options));
-        /*
-                                     ,
-        ));*/
     }
 
     public function getName()

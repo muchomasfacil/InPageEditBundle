@@ -1,0 +1,5 @@
+<{{ container_html_tag }}  {{ container_html_attributes | raw }}{% if show_data_ipe_hash %} data-ipe-hash="{{ data_ipe_hash }}"{% endif %}>
+
+  {{ include(render_template) }}
+
+</{{ container_html_tag }}>
