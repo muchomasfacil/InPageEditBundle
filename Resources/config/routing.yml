@@ -8,7 +8,12 @@ _ipe_locale:
     pattern:  /ipe_locale/{locale}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:Ipe:ipeSetLocale}
 
-
+_ipe_js:
+    path: /ipe_js.{_format}
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        _format: js
+        template: 'MuchoMasFacilInPageEditBundle:Ipe:ipeModal.js.twig'
 
 
 

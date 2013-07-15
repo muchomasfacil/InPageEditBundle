@@ -5,8 +5,9 @@ controller:
     editAction:
         entry_saved: La entrada se <strong>SALVÓ</strong> correctamente
         form_errors: Por favor corrije los <strong>ERRORES</strong> en el formulario
+        flush_errors: Se produjo un errror al salvar los datos. Inténtalo más tarde o contacta a tu departamento de IT.
     collectionDeleteItemAction:
-        entry_deleted: La entrada se <strong>BORRÓ</strong> correctamente    
+        entry_deleted: La entrada se <strong>BORRÓ</strong> correctamente
     collectionSortAction:
         list_reordered: La lista se ha <strong>REORDENADO</strong> correctamente
     collectionListAction:
@@ -15,17 +16,26 @@ controller:
         item_added: Se ha añadido una <strong>NUEVA</strong> entrada
     #now shared messages
     not_found_exception: No se ha encontrado nada en %entity_class% buscando por %find_by%
+    editor_roles_error: editor_roles debe ser null o un array de roles
 collectionList:
+    modal_title: Editando collección
     icon_move_title: Arrastra para mover la entrada
     icon_trash_title: Borrar entrada
     icon_plus_title: Añadir entrada justo debajo
     icon_edit_title: Editar entrada
 edit:
+    modal_title: Editando entrada
     button_reset: Limpiar
     button_save: Salvar
     button_list: Listado
     button_save_and_list: Salvar y listado
     button_save_and_close: Salvar y cerrar
     button_delete: Borrar
-delete_confirmation: ¿Estás seguro que quieres eliminar?
-ajax_error: Lo sentimos se produjo un error
+navbar:
+    edit_page_title: Editar título de la página
+    edit_page_metas: Editar metas de la página
+    clear_cache: Clear cache
+    logout: Logout
+shared:
+    delete_confirmation: ¿Estás seguro que quieres eliminar?
+    ajax_error: Lo sentimos se produjo un error

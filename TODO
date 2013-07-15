@@ -1,3 +1,4 @@
+## FAST ACCESS
 document.body.insertBefore( prettyPrint( ui ), document.body.firstChild );
 
 app/console doctrine:database:create
@@ -6,6 +7,7 @@ app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle --no-backup
 app/console doctrine:schema:drop --force
 app/console doctrine:schema:create
 
+## TODO
 - integrar ckeditor o tinymce y elfinder https://github.com/neutron-project/form-bundle
 - uploads seleccionar un tipo de file input y programarlo https://github.com/neutron-project/form-bundle
 
@@ -28,13 +30,13 @@ ipe_render(controller, params)
 - try to avoid this configuration, passing this to the twig template
 mopa_bootstrap:
     form:
-        show_legend: false # default is true 
-
-working on:
--security en el render.html.twig
+        show_legend: false # default is true
 
 Issues
 - en el caso de delete y si create if not exists es false
 Nothing found for MuchoMasFacil\InPageEditBundle\Entity\Foo searching by id=1
+- cuando modificas una entidad que se muestra más de una vez en la misma página solo recargará la del ipe-hash que se modifica, aunque al recargar la página completa esté todo correcto.
+Posible solución usar un data-ipe-realod (hash echo a base de class e id)
 
-
+Working on:
+- entity

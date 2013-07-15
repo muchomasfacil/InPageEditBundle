@@ -1,8 +1,8 @@
 parameters:
     mucho_mas_facil_in_page_edit.definitions:
 
-        doctrine_entity: # doctrine_mapped_entity
-            alias: de
+        orm_doctrine_entity: # doctrine_mapped_entity
+            alias: ode
             ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/Entity
             editor_roles: [] # ROLE_IPE_EDITOR # optional
             container_html_tag: div # optional
@@ -12,8 +12,8 @@ parameters:
                 form_type_class: ~ # guessed either from definition or by parameter
                 render_template: ~ # if not set will be guessed from entity_class
 
-        doctrine_sorted_hashed_entity_collection:
-            alias: dshec
+        orm_doctrine_sorted_hashed_entity_collection:
+            alias: odshec
             ipe_controller: MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine\EntityCollectionController
             params:
                 max_collection_length: ~
@@ -26,6 +26,6 @@ parameters:
                 faker_custom_modifiers: []
                 faker_generate_id: false
 
-        doctrine_sorted_hashed_object_collection:
-            alias: dshoc
+        orm_doctrine_sorted_hashed_object_collection:
+            alias: odshoc
             ipe_controller: MuchoMasFacilInPageEditBundle\Controller\ORM\Doctrine\ObjectCollectionController

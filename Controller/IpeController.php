@@ -32,7 +32,7 @@ class IpeController extends ContainerAware //implements ControllerInterface
         $definition = $definitions[$ipe['ipe_definition']];
         $action = Inflector::camelize($action);
 
-        return $this->forward($definition['ipe_controller'].':'.$action, array('ipe'=>$ipe));
+        return $this->forward($definition['ipe_controller'].':'.$action, array('ipe_hash'=> $ipe_hash, 'ipe'=>$ipe));
     }
 
     public function ipeSetLocaleAction($locale = null)
@@ -135,8 +135,9 @@ class IpeController extends ContainerAware //implements ControllerInterface
         return $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
     }
 
-    protected function guessFormTypeClass($entity_class)
+    protected function guessFormTypeClass($entity)
     {
+        $entity_class = get_class($entity);
         return  str_replace('\\Entity\\', '\\Form\\', $entity_class).'Type';
     }
 

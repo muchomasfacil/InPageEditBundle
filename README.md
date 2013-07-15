@@ -3,9 +3,11 @@
 **Not ready for production use yet.
 Work in progrees, testing its stability.**
 
-It is intended to offer in page edition for general entities and some commonly used special helper entities.
+Offers in page edition for orm entities, odm entities, not mapped entities, and often repeated use cases.
+Not a CMS, not a CMF, just an easy and visual content edition for simple projects.
 
-Demo page PENDING
+## Demo
+Intall [Symfony standard](http://symfony.com/download) and then the [InPageEditDemoBundle](https://github.com/muchomasfacil/InPageEditDemoBundle)
 
 ## Documentation
 
