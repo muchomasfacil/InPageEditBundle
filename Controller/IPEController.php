@@ -9,7 +9,7 @@ use Doctrine\Common\Util\Inflector;
 
 use MuchoMasFacil\InPageEditBundle\Controller\ControllerInterface;
 
-class IpeController extends ContainerAware //implements ControllerInterface
+class IPEController extends ContainerAware //implements ControllerInterface
 {
     protected $render_vars = array();
 
@@ -40,7 +40,57 @@ class IpeController extends ContainerAware //implements ControllerInterface
         return new Response('Ipe locale changed to '. $this->setIpeLocale($locale));
     }
 
-    private function guessBundleAndControllerName($class)
+    //no associated route. Will always be called from twig templates or from ajaxRenderAction
+    public function renderAction($ipe_definition, $object, $render_template, $params = array(), $render_with_container = true)
+    {
+        $definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
+        $this->getIpeLocale();
+        $definition = $definitions[$ipe_definition];
+        $params = array_merge($definition['params'], $params);
+
+        $this->render_vars['ipe_definition'] = $ipe_definition;
+        $this->render_vars['object'] = $object;
+        $this->render_vars['params'] = $params;
+        $this->render_vars['render_with_container'] = $render_with_container;
+
+        if (!$render_with_container) {
+            $final_render_template = $render_template;
+        }
+        else {
+            // prepare values for session:
+            // first, those from the function params
+            $ipe = array(
+                'ipe_definition' => $ipe_definition,
+                'render_template' => $render_template,
+                'params' => $params,
+                //this should be specific by definition
+                'find_object_params' => $this->getFindObjectParams($ipe_definition, $object, $render_template, $params , $render_with_container)
+            );
+            // then those that can be overwritten by params
+            foreach(array('editor_roles', 'container_html_tag', 'container_html_attributes') as $key) {
+                $value = (isset($params[$key]))? $params[$key]: $definition[$key];
+                $ipe[$key] = $value;
+            }
+            $ipe_hash = $this->createDataIpeHash($ipe);
+            //now ipe to session
+            $this->setIpe($ipe_hash, $ipe);
+
+            // now add render info
+            $this->render_vars['editor_roles'] = $ipe['editor_roles'];
+            $this->render_vars['container_html_tag'] = $ipe['container_html_tag'];
+            $this->render_vars['container_html_attributes'] = $ipe['container_html_attributes'];
+            $this->render_vars['render_template'] = $ipe['render_template'];
+
+            $this->render_vars['data_ipe_hash'] = $ipe_hash;
+            $this->render_vars['show_data_ipe_hash'] = $this->ipeIsGranted($ipe['editor_roles']);
+
+            $final_render_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':render.html.twig';
+        }
+
+        return $this->container->get('templating')->renderResponse($final_render_template , $this->render_vars);
+    }
+
+    protected function guessBundleAndControllerName($class)
     {
         $reflector = new \ReflectionClass($class);
         $class_name = $reflector->getName();
@@ -113,12 +163,6 @@ class IpeController extends ContainerAware //implements ControllerInterface
             $ipe_locale = $this->setIpeLocale();
         }
         return $ipe_locale;
-    }
-
-    protected function getTemplateNameByDefaults($action_function_name, $template_format = 'html')
-    {
-        $this->render_vars['action_name'] = str_replace('Action', '', $action_function_name);
-        return $this->render_vars['bundle_name'] . ':InPageEdit:' . $this->render_vars['action_name'] . '.'.$template_format.'.twig';
     }
 
     protected function trans($translatable, $params = array())

@@ -1,19 +1,26 @@
 _ipe_action:
     pattern:  /ipe/{action}/{ipe_hash}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:Ipe:ipe}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:IPE:ipe}
     options:
         expose: true
 
 _ipe_locale:
     pattern:  /ipe_locale/{locale}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:Ipe:ipeSetLocale}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:IPE:ipeSetLocale}
 
 _ipe_js:
     path: /ipe_js.{_format}
     defaults:
         _controller: FrameworkBundle:Template:template
         _format: js
-        template: 'MuchoMasFacilInPageEditBundle:Ipe:ipeModal.js.twig'
+        template: 'MuchoMasFacilInPageEditBundle:IPE:ipeModal.js.twig'
+#routes for doctrine_orm_entity
+ipe_doe_edit:
+    pattern:  /ipe_doe_edit/{ipe_hash}/{action_on_success}/{id}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/Entity:edit, action_on_success: none, id: null}
+    options:
+        expose: true
+
 
 
 
@@ -37,11 +44,7 @@ ipe_doctrine_edit_index:
     options:
         expose: true
 
-ipe_doctrine_edit:
-    pattern:  /ipe_doctrine_edit/{ipe_hash}/{action_on_success}/{id}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:edit, action_on_success: none, id: null}
-    options:
-        expose: true
+
 
 ipe_doctrine_collection_list:
     pattern:  /ipe_doctrine_collection_list/{ipe_hash}/{reload_content}

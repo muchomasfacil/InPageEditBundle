@@ -1,4 +1,4 @@
-function mmf_reload(ipe_hash)
+function ipe_reload(ipe_hash)
 {
     var selector = "[data-ipe-hash='" + ipe_hash + "']";
     mmf_load(selector, Routing.generate('_ipe_action', {'action': 'ajax-render','ipe_hash': ipe_hash}));
@@ -78,7 +78,7 @@ function mmf_load(selector, url, params)
     $(selector).load(url, params, function(response, status, xhr) {
       mmf_unblock(selector);
       if (status == "error") {
-        var msg = "{{ 'shared.ajax_error'|trans({}, 'mmf_ipe', app.session.get('ipe_locale')) }}: "; ///////////////////////////
+        var msg = "{{ 'shared.ajax_error'|trans }}: ";
         $(selector).html(msg + xhr.status+ " " + xhr.statusText);
       }
     });
@@ -102,7 +102,7 @@ function mmf_form_submit(form_selector, target_id, route, params )
             //mmf_unblock('#' + target_id);
             mmf_unblock(form_selector);
             if (statusText == "error") {
-                var msg = "{{ 'shared.ajax_error'|trans({}, 'mmf_ipe', app.session.get('ipe_locale')) }}: ";
+                var msg = "{{ 'shared.ajax_error'|trans }}: ";
                 $('#' + target_id).html(msg + xhr.status+ " " + xhr.statusText);
             }
         }
