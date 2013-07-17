@@ -15,7 +15,7 @@ controller:
     collectionAddItemAction:
         item_added: Se ha añadido una <strong>NUEVA</strong> entrada
     #now shared messages
-    not_found_exception: No se ha encontrado nada en %entity_class% buscando por %find_by%
+    not_found_exception: No se ha encontrado nada buscando por %find_object_params%
     editor_roles_error: editor_roles debe ser null o un array de roles
 collectionList:
     modal_title: Editando collección

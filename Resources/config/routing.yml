@@ -8,19 +8,24 @@ _ipe_locale:
     pattern:  /ipe_locale/{locale}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:IPE:ipeSetLocale}
 
-_ipe_js:
-    path: /ipe_js.{_format}
+_ipe_mmf_ajax_modal_helper:
+    path: /ipe_mmf_ajax_modal_helper.js
     defaults:
         _controller: FrameworkBundle:Template:template
-        _format: js
-        template: 'MuchoMasFacilInPageEditBundle:IPE:ipeModal.js.twig'
+        template: 'MuchoMasFacilInPageEditBundle:IPE:mmfAjaxModalHelpers.js.twig'
+
 #routes for doctrine_orm_entity
 ipe_doe_edit:
-    pattern:  /ipe_doe_edit/{ipe_hash}/{action_on_success}/{id}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/Entity:edit, action_on_success: none, id: null}
+    pattern:  /ipe_doe_edit/{ipe_hash}/{action_on_success}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/Entity:edit, action_on_success: none}
     options:
         expose: true
 
+ipe_doe_remove:
+    pattern:  /ipe_doe_remove/{ipe_hash}/{action_on_success}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/Entity:remove, action_on_success: none}
+    options:
+        expose: true
 
 
 

@@ -3,8 +3,12 @@ $(function() {
 
     mmf_close_dialog(ipe_target_id);
 
-{% if reload_content %}
+{% if reload_content is defined %}
     ipe_reload('{{ data_ipe_hash }}');
+{% endif %}
+
+{% if remove_content_container is defined %}
+    ipe_remove('{{ data_ipe_hash }}');
 {% endif %}
 
 });

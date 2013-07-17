@@ -7,9 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Doctrine\Common\Util\Inflector;
 
-use MuchoMasFacil\InPageEditBundle\Controller\ControllerInterface;
-
-class IPEController extends ContainerAware //implements ControllerInterface
+class IPEController extends ContainerAware
 {
     protected $render_vars = array();
 
@@ -40,11 +38,26 @@ class IPEController extends ContainerAware //implements ControllerInterface
         return new Response('Ipe locale changed to '. $this->setIpeLocale($locale));
     }
 
+    //this should always by called for IPEController:ajaxIpeRenderAction
+    public function ajaxRenderAction($ipe, $ipe_hash)
+    {
+        $object = $this->findObject($ipe['find_object_params']);
+
+        return $this->forward($this->render_vars['bundle_name'] . ':'.$this->render_vars['controller_name'].':render', array(
+            'ipe_definition'  => $ipe['ipe_definition'],
+            'object'  => $object,
+            'render_template' => $ipe['render_template'],
+            'params' => $ipe['params'],
+            'render_with_container' => false
+        ));
+    }
+
+
     //no associated route. Will always be called from twig templates or from ajaxRenderAction
     public function renderAction($ipe_definition, $object, $render_template, $params = array(), $render_with_container = true)
     {
         $definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
-        $this->getIpeLocale();
+        $this->getIpeLocale(); //init ipe_locale
         $definition = $definitions[$ipe_definition];
         $params = array_merge($definition['params'], $params);
 
@@ -90,9 +103,14 @@ class IPEController extends ContainerAware //implements ControllerInterface
         return $this->container->get('templating')->renderResponse($final_render_template , $this->render_vars);
     }
 
-    protected function guessBundleAndControllerName($class)
+    public function createDataIpeHash($ipe)
     {
-        $reflector = new \ReflectionClass($class);
+        return md5(serialize($ipe));
+    }
+
+    protected function guessBundleAndControllerName($bundle_class_name)
+    {
+        $reflector = new \ReflectionClass($bundle_class_name);
         $class_name = $reflector->getName();
         // get string left of \Controller\
         $bundle_name = strstr($class_name, '\\Controller\\', true);
@@ -104,6 +122,12 @@ class IPEController extends ContainerAware //implements ControllerInterface
         $bundle_name = str_replace('\\', '', $bundle_name);
 
         return array($bundle_name, $controller_name);
+    }
+
+    protected function guessFormTypeClass($entity)
+    {
+        $entity_class = get_class($entity);
+        return  str_replace('\\Entity\\', '\\Form\\', $entity_class).'Type';
     }
 
     protected function checkRoles($roles)
@@ -126,7 +150,14 @@ class IPEController extends ContainerAware //implements ControllerInterface
                 return false;
             }
         }
+
         return true;
+    }
+
+    protected function removeIpe($ipe_hash)
+    {
+        $session = $this->container->get('request')->getSession();
+        $session->remove('ipe_' . $ipe_hash);
     }
 
     protected function setIpe($ipe_hash, $ipe)
@@ -177,12 +208,6 @@ class IPEController extends ContainerAware //implements ControllerInterface
         $subRequest = $this->container->get('request')->duplicate($query, null, $path);
 
         return $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-    }
-
-    protected function guessFormTypeClass($entity)
-    {
-        $entity_class = get_class($entity);
-        return  str_replace('\\Entity\\', '\\Form\\', $entity_class).'Type';
     }
 
 }
