@@ -1,9 +1,9 @@
 parameters:
     mucho_mas_facil_in_page_edit.definitions:
 
-        orm_doctrine_entity: # doctrine_mapped_entity
-            alias: ode
-            ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/Entity
+        orm_doctrine_mapped_entity: # doctrine_mapped_entity
+            alias: odme
+            ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/MappedEntity
             editor_roles: [] # ROLE_IPE_EDITOR # optional
             container_html_tag: div # optional
             container_html_attributes: '' # optional
@@ -12,9 +12,10 @@ parameters:
                 form_type_class: ~ # guessed either from definition or by parameter
                 render_template: ~ # if not set will be guessed from entity_class
 
-        orm_doctrine_sorted_hashed_entity_collection:
-            alias: odshec
-            ipe_controller: MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine\EntityCollectionController
+        orm_doctrine_sorted_mapped_entity_collection:
+            alias: odsmec
+            ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/SortedMappedEntityCollection
+            editor_roles: [] # ROLE_IPE_EDITOR # optional
             params:
                 max_collection_length: ~
                 collection_ipe_handler_field: ipe_handler
@@ -26,6 +27,6 @@ parameters:
                 faker_custom_modifiers: []
                 faker_generate_id: false
 
-        orm_doctrine_sorted_hashed_object_collection:
-            alias: odshoc
-            ipe_controller: MuchoMasFacilInPageEditBundle\Controller\ORM\Doctrine\ObjectCollectionController
+        orm_doctrine_sorted_entity_collection:
+            alias: odsec
+            ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/SortedEntityCollection

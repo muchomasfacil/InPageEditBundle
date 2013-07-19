@@ -8,7 +8,7 @@ use MuchoMasFacil\InPageEditBundle\Controller\IPEControllerInterface;
 
 
 
-class EntityController extends IPEController implements IPEControllerInterface
+class MappedEntityController extends IPEController implements IPEControllerInterface
 {
 
     function __construct()
@@ -21,7 +21,7 @@ class EntityController extends IPEController implements IPEControllerInterface
     {
         $entity = $this->container->get('doctrine')
             ->getRepository($find_object_params['entity_class'])
-            ->find($find_object_params['id']);
+            ->findOneBy($find_object_params['find_by']);
 
         if (!$entity) {
             throw new \Exception($this->trans('controller.not_found_exception', array('%find_object_params%' => print_r($find_object_params, true))));
@@ -31,7 +31,8 @@ class EntityController extends IPEController implements IPEControllerInterface
 
     public function getFindObjectParams($ipe_definition, $object, $render_template, $params , $render_with_container)
     {
-        return array('entity_class' => get_class($object), 'id' => $object->getId());
+        $find_by = array('id' => $object->getId());
+        return array('entity_class' => get_class($object), 'find_by' => $find_by);
     }
 
     public function editAction($ipe_hash, $action_on_success = null)

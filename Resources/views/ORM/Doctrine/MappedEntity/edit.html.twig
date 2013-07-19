@@ -1,4 +1,4 @@
-{% extends bundle_name ~ '::modal_layout.html.twig' %}
+{% extends parent_bundle_name ~ '::modal_layout.html.twig' %}
 
 {% block modal_header_label %}{{ 'edit.modal_title' |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}{% endblock modal_header_label %}
 

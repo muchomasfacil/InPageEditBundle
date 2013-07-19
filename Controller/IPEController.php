@@ -5,6 +5,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 use Doctrine\Common\Util\Inflector;
 
 class IPEController extends ContainerAware
@@ -56,6 +57,10 @@ class IPEController extends ContainerAware
     //no associated route. Will always be called from twig templates or from ajaxRenderAction
     public function renderAction($ipe_definition, $object, $render_template, $params = array(), $render_with_container = true)
     {
+        //if not object or empty array of objects give an empty
+        if ((!$object) || (is_array($object) && (count($object) == 0))){
+            return new Response('');
+        }
         $definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
         $this->getIpeLocale(); //init ipe_locale
         $definition = $definitions[$ipe_definition];
@@ -96,7 +101,6 @@ class IPEController extends ContainerAware
 
             $this->render_vars['data_ipe_hash'] = $ipe_hash;
             $this->render_vars['show_data_ipe_hash'] = $this->ipeIsGranted($ipe['editor_roles']);
-
             $final_render_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':render.html.twig';
         }
 
