@@ -20,14 +20,14 @@ $(function() {
         {
             case 'delete':
                 if (confirm('{{ 'shared.delete_confirmation'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}')) {
-                    mmf_load_in_dialog (ipe_target_id, Routing.generate('ipe_doe_remove', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'close'}));
+                    mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'remove', 'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'close'}));
                 }
                 break;
             case 'save':
-                mmf_form_submit('#' + ipe_form, ipe_target_id, 'ipe_doe_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'none', 'id': ipe_uid });
+                mmf_form_submit('#' + ipe_form, ipe_target_id, '_ipe_action', {'action': 'edit', 'ipe_hash': '{{ data_ipe_hash }}'});
                 break;
             case 'save_and_close':
-                mmf_form_submit('#' + ipe_form, ipe_target_id, 'ipe_doe_edit', {'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'close', 'id': ipe_uid });
+                mmf_form_submit('#' + ipe_form, ipe_target_id, '_ipe_action', {'action': 'edit', 'ipe_hash': '{{ data_ipe_hash }}', 'action_on_success': 'close'});
                 break;
             case 'reset':
                 mmf_form_reset('#' + ipe_form );

@@ -2,6 +2,7 @@
 namespace MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 use MuchoMasFacil\InPageEditBundle\Controller\IPEController;
 use MuchoMasFacil\InPageEditBundle\Controller\IPEControllerInterface;
@@ -35,9 +36,9 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         return array('entity_class' => get_class($object), 'find_by' => $find_by);
     }
 
-    public function editAction($ipe_hash, $action_on_success = null)
+    public function editAction($ipe_hash, Request $request)
     {
-        $request = $this->container->get('request');
+        $action_on_success = $request->query->get('action_on_success');
         //let us get ipe params from ipe_hash session
         $ipe = $this->getIpe($ipe_hash);
 
@@ -92,9 +93,9 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         return $this->container->get('templating')->renderResponse($this->render_vars['bundle_name'] . ':' . $this->render_vars['controller_name'] . ':edit.html.twig', $this->render_vars);
     }
 
-    public function removeAction($ipe_hash, $action_on_success = null)
+    public function removeAction($ipe_hash, Request $request)
     {
-        $request = $this->container->get('request');
+        $action_on_success = $request->query->get('action_on_success');
         //let us get ipe params from ipe_hash session
         $ipe = $this->getIpe($ipe_hash);
         // let us get definitions

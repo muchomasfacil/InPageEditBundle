@@ -14,21 +14,6 @@ _ipe_mmf_ajax_modal_helper:
         _controller: FrameworkBundle:Template:template
         template: 'MuchoMasFacilInPageEditBundle:IPE:mmfAjaxModalHelpers.js.twig'
 
-#routes for doctrine_orm_entity
-ipe_doe_edit:
-    pattern:  /ipe_doe_edit/{ipe_hash}/{action_on_success}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/MappedEntity:edit, action_on_success: none}
-    options:
-        expose: true
-
-ipe_doe_remove:
-    pattern:  /ipe_doe_remove/{ipe_hash}/{action_on_success}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/MappedEntity:remove, action_on_success: none}
-    options:
-        expose: true
-
-
-
 
 
 # InPageEdit doctrine NOT secured routes

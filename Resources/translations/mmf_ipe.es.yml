@@ -6,10 +6,10 @@ controller:
         entry_saved: La entrada se <strong>SALVÓ</strong> correctamente
         form_errors: Por favor corrije los <strong>ERRORES</strong> en el formulario
         flush_errors: Se produjo un errror al salvar los datos. Inténtalo más tarde o contacta a tu departamento de IT.
-    collectionDeleteItemAction:
-        entry_deleted: La entrada se <strong>BORRÓ</strong> correctamente
-    collectionSortAction:
-        list_reordered: La lista se ha <strong>REORDENADO</strong> correctamente
+    collectionRemoveItemAction:
+        item_removed: La entrada se <strong>BORRÓ</strong> correctamente
+    collectionMoveItemAction:
+        item_moved: La entrada se <strong>MOVIÓ</strong> correctamente
     collectionListAction:
         to_string_not_defined: Se debería definir un método __toString() en %entity_class%
     collectionAddItemAction:

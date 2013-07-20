@@ -6,10 +6,10 @@ controller:
         entry_saved: The entry was properly <strong>SAVED</strong>
         form_errors: Please fix <strong>ERRORS</strong> in form
         flush_errors: There was an error saving data. Try again later or contact your IT department.
-    collectionDeleteItemAction:
-        entry_deleted: The entry was properly <strong>DELETED</strong>
-    collectionSortAction:
-        list_reordered: The list was properly <strong>REORDERED</strong>
+    collectionRemoveItemAction:
+        item_removed: The entry was properly <strong>DELETED</strong>
+    collectionMoveItemAction:
+        item_moved: The item was properly <strong>MOVED</strong>
     collectionListAction:
         to_string_not_defined: You should define a __toString() method in %entity_class%
     collectionAddItemAction:

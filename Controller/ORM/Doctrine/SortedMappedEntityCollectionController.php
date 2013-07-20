@@ -1,6 +1,7 @@
 <?php
 namespace MuchoMasFacil\InPageEditBundle\Controller\ORM\Doctrine;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Doctrine\Common\Util\Inflector;
@@ -41,13 +42,14 @@ class SortedMappedEntityCollectionController extends IPEController implements IP
         return array('entity_class' => get_class($object[0]), 'find_by' => $find_by, 'order_by' => $order_by);
     }
 
-    public function editAction($ipe_hash)
+    public function editAction($ipe_hash, Request $request)
     {
-        return $this->collectionListAction($ipe_hash);
+        return $this->collectionListAction($ipe_hash, $request);
     }
 
-    public function collectionListAction($ipe_hash, $reload_content = false)
+    public function collectionListAction($ipe_hash, Request $request, $reload_content = false)
     {
+        //$reload_content = $request->query->get('reload_content');
         //let us get ipe params from ipe_hash session
         $ipe = $this->getIpe($ipe_hash);
         $this->checkRoles($ipe['editor_roles']);
@@ -70,5 +72,51 @@ class SortedMappedEntityCollectionController extends IPEController implements IP
 
         return $this->container->get('templating')->renderResponse($final_render_template , $this->render_vars);
     }
+
+    public function collectionMoveItemAction($ipe_hash, Request $request)
+    {
+        $id = $request->query->get('id');
+        $position = $request->query->get('position');
+        //let us get ipe params from ipe_hash session
+        $ipe = $this->getIpe($ipe_hash);
+        $this->checkRoles($ipe['editor_roles']);
+        //$object = $this->findObject($ipe['find_object_params']);
+        $params = $ipe['params'];
+        $em = $this->container->get('doctrine')->getManager();
+        $entity_class = $ipe['find_object_params']['entity_class'];
+        $entity = $em->getRepository($entity_class)->find($id);
+        if (!$entity) {
+            throw new \Exception($this->trans('controller.not_found_exception', array('%entity_class%' => $entity_class ,'%find_by%' => 'id='.$id )));
+        }
+        $set_position_string = 'set'.Inflector::classify($params['collection_ipe_position_field']);
+        $entity->$set_position_string($position);
+        $em->persist($entity);
+        $em->flush();
+        $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionMoveItemAction.item_moved'), 'close' => true, 'use_raw' => true);
+
+        return $this->collectionListAction($ipe_hash, $request, true);
+    }
+
+    public function collectionRemoveItemAction($ipe_hash, Request $request)
+    {
+        $id = $request->query->get('id');
+        //let us get ipe params from ipe_hash session
+        $ipe = $this->getIpe($ipe_hash);
+        $this->checkRoles($ipe['editor_roles']);
+        //$object = $this->findObject($ipe['find_object_params']);
+        $params = $ipe['params'];
+        $em = $this->container->get('doctrine')->getManager();
+        $entity_class = $ipe['find_object_params']['entity_class'];
+        $entity = $em->getRepository($entity_class)->find($id);
+        if (!$entity) {
+            throw new \Exception($this->trans('controller.not_found_exception', array('%entity_class%' => $entity_class ,'%find_by%' => 'id='.$id )));
+        }
+        $em->remove($entity);
+        $em->flush();
+        $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionRemoveItemAction.entry_removed'), 'close' => true, 'use_raw' => true);
+
+        return $this->collectionListAction($ipe_hash, $request, true);
+    }
+
 
 }

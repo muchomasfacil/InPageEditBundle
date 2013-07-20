@@ -4,6 +4,7 @@ namespace MuchoMasFacil\InPageEditBundle\Controller;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Doctrine\Common\Util\Inflector;
@@ -24,14 +25,14 @@ class IPEController extends ContainerAware
         $this->render_vars['ipe_message_catalog'] = 'mmf_ipe';
     }
 
-    public function ipeAction($ipe_hash, $action)
+    public function ipeAction($ipe_hash, $action, Request $request)
     {
         $ipe = $this->getIpe($ipe_hash);
         $definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
         $definition = $definitions[$ipe['ipe_definition']];
         $action = Inflector::camelize($action);
 
-        return $this->forward($definition['ipe_controller'].':'.$action, array('ipe_hash'=> $ipe_hash, 'ipe'=>$ipe));
+        return $this->forward($definition['ipe_controller'].':'.$action, array('ipe_hash'=> $ipe_hash, 'ipe'=>$ipe, 'request' => $request));
     }
 
     public function ipeSetLocaleAction($locale = null)
