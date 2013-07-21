@@ -15,47 +15,6 @@ _ipe_mmf_ajax_modal_helper:
         template: 'MuchoMasFacilInPageEditBundle:IPE:mmfAjaxModalHelpers.js.twig'
 
 
-
-# InPageEdit doctrine NOT secured routes
-_ipe_doctrine_render:
-    pattern:  /ipe_doctrine_render/{ipe_hash}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:ajaxRender}
-    options:
-        expose: true
-
-# InPageEdit doctrine secured routes
 ipe_navbar:
     pattern:  /ipe_navbar/{locale}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:_navbar}
-
-ipe_doctrine_edit_index:
-    pattern:  /ipe_doctrine_edit_index/{ipe_hash}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:editIndex}
-    options:
-        expose: true
-
-
-
-ipe_doctrine_collection_list:
-    pattern:  /ipe_doctrine_collection_list/{ipe_hash}/{reload_content}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionList, reload_content: false}
-    options:
-        expose: true
-
-ipe_doctrine_collection_sort:
-    pattern:  /ipe_doctrine_collection_sort/{ipe_hash}/{id}/{position}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionSort}
-    options:
-        expose: true
-
-ipe_doctrine_collection_add_item:
-    pattern:  /ipe_doctrine_collection_add_item/{ipe_hash}/{position}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionAddItem}
-    options:
-        expose: true
-
-ipe_doctrine_collection_delete_item:
-    pattern:  /ipe_doctrine_collection_delete_item/{ipe_hash}/{id}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:collectionDeleteItem}
-    options:
-        expose: true

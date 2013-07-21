@@ -59,22 +59,9 @@ class SortedMappedEntityCollectionController extends IPEController implements IP
         $params = $ipe['params'];
 
         $em = $this->container->get('doctrine')->getManager();
-        //we are editing a single entity, so let us get it by id
-        if ($id) {
-            $entity = $em->getRepository($ipe['find_object_params']['entity_class'])->find($id);
-        }
-        else {
-            $entity = new $ipe['find_object_params']['entity_class']();
-            $position = $request->query->get('position');
-            if ($position != null) {
-                $position_setter = 'set'.Inflector::classify($params['collection_ipe_position_field']);
-                $entity->$position_setter($position);
 
-                $handler_setter = 'set'.Inflector::classify($params['collection_ipe_handler_field']);
-                $handler_value = $ipe['find_object_params']['find_by'][$params['collection_ipe_handler_field']];
-                $entity->$handler_setter($handler_value);
-            }
-        }
+        //we are editing a single entity, so let us get it by id
+        $entity = $em->getRepository($ipe['find_object_params']['entity_class'])->find($id);
 
         $form_type_class = (isset($params['form_type_class']))? $params['form_type_class']: $this->guessFormTypeClass($entity);
         $form = $this->container->get('form.factory')->create(new $form_type_class(), $entity);
@@ -157,8 +144,8 @@ class SortedMappedEntityCollectionController extends IPEController implements IP
         if (!$entity) {
             throw new \Exception($this->trans('controller.not_found_exception', array('%entity_class%' => $entity_class ,'%find_by%' => 'id='.$id )));
         }
-        $position_setter = 'set'.Inflector::classify($params['collection_ipe_position_field']);
-        $entity->$position_setter($position);
+        $set_position_string = 'set'.Inflector::classify($params['collection_ipe_position_field']);
+        $entity->$set_position_string($position);
         $em->persist($entity);
         $em->flush();
         $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionMoveItemAction.item_moved'), 'close' => true, 'use_raw' => true);

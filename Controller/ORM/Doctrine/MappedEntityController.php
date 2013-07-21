@@ -41,11 +41,7 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         $action_on_success = $request->query->get('action_on_success');
         //let us get ipe params from ipe_hash session
         $ipe = $this->getIpe($ipe_hash);
-
         $this->checkRoles($ipe['editor_roles']);
-
-        $object = $this->findObject($ipe['find_object_params']);
-
         $params = $ipe['params'];
 
         $em = $this->container->get('doctrine')->getManager();

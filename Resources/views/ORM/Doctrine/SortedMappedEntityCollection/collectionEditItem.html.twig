@@ -1,0 +1,65 @@
+{% extends parent_bundle_name ~ '::modal_layout.html.twig' %}
+
+{% block modal_header_label %}{{ 'edit.modal_title' |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}{% endblock modal_header_label %}
+
+{% block modal_body %}
+{{ include(bundle_name ~ ':IPE:_flashCollection.html.twig') }}
+
+{{ form_start(form, {'attr': {'class': 'well', 'id': 'ipe_form'}}) }}
+    {{ form_widget(form) }}
+{{ form_end(form) }}
+
+<script>
+$(function() {
+
+    var ipe_uid = '{{ form.vars.value.id }}';
+    var ipe_form = 'ipe_form';
+
+    $( "[data-ipe-action]" ).click(function() {
+        switch($(this).attr('data-ipe-action'))
+        {
+            case 'delete':
+                if (confirm('{{ 'shared.delete_confirmation'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}')) {
+                    mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-remove-item', 'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid, 'action_on_success': 'list'}));
+                }
+                break;
+            case 'list':
+                mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-list', 'ipe_hash': '{{ data_ipe_hash }}'}));
+                break;
+            case 'save':
+                mmf_form_submit('#' + ipe_form, ipe_target_id, '_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid});
+                break;
+            case 'save_and_list':
+                mmf_form_submit('#' + ipe_form, ipe_target_id, '_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid, 'action_on_success': 'list'});
+                break;
+            case 'save_and_close':
+                mmf_form_submit('#' + ipe_form, ipe_target_id, '_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid, 'action_on_success': 'close'});
+                break;
+            case 'reset':
+                mmf_form_reset('#' + ipe_form );
+                break;
+            default:
+        }
+    });
+
+{% if reload_content %}
+    ipe_reload('{{ data_ipe_hash }}');
+{% endif %}
+
+});
+</script>
+{% endblock modal_body %}
+
+{% block modal_footer %}
+{% if form.vars.value.id %}
+        <button type="button" class="btn btn-danger"  data-ipe-action="delete">{{ 'edit.button_delete'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+{% endif %}
+        <button type="button" class="btn"             data-ipe-action="reset">{{ 'edit.button_reset'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="btn btn-success" data-ipe-action="list">{{ 'edit.button_list'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="btn btn-info"    data-ipe-action="save">{{ 'edit.button_save'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="btn btn-success" data-ipe-action="save_and_list">{{ 'edit.button_save_and_list'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="btn btn-primary" data-ipe-action="save_and_close">{{ 'edit.button_save_and_close'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+{% endblock modal_footer %}
+
+
+

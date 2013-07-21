@@ -43,10 +43,10 @@ $(function() {
                 }
                 break;
             case 'add':
-                mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-add-item', 'ipe_hash': ipe_hash, 'position': $(this).attr('data-ipe-insert-position')}));
+                mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': ipe_hash, 'position': $(this).attr('data-ipe-insert-position')}));
                 break;
             case 'edit':
-                //mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-edit-item', ipe_hash': ipe_hash, 'action_on_success': 'none', 'id': $(this).attr('data-ipe-uid')}));
+                mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': ipe_hash, 'action_on_success': 'none', 'id': $(this).attr('data-ipe-uid')}));
                 break;
             default:
         }
