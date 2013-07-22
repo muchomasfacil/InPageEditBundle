@@ -2,41 +2,41 @@
 document.body.insertBefore( prettyPrint( ui ), document.body.firstChild );
 
 app/console doctrine:database:create
+
 app/console doctrine:generate:entities MuchoMasFacilInPageEditDemoBundle --no-backup
 app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle --no-backup
 app/console doctrine:schema:drop --force
 app/console doctrine:schema:create
 
 ## TODO
+- NAVBAR
+ipe_navbar(template, locale)
+-- change ipe locale (cuando se cambie el ipe_locale recargar página)
+-- title y metas
+-- create new entities
+-- ...
+
 - integrar ckeditor o tinymce y elfinder https://github.com/neutron-project/form-bundle
 - uploads seleccionar un tipo de file input y programarlo https://github.com/neutron-project/form-bundle
+- make use of http://fortawesome.github.io/Font-Awesome/ ??
 
-- comentar en la documentación los css y js que se necesitan para que los cargue sólo en caso de ipeisgranted
-- lo mismo para el navbar
-- documentar $builder->setAttribute('show_legend', true); cuando se creen los posibles entities
-
-- title y metas
 - documentation
-
-- en el javascript principal:
-que venga de un controlador
-generalizar la acción ipe_reload a ipe_hash_reload
+-- comentar en la documentación los css y js que se necesitan para que los cargue sólo en caso de ipeisgranted
+-- lo mismo para el navbar
 
 
 - hacer que funcione con distintos entity manager
-- posible twig actions:
-ipe_navbar(template, locale)
-ipe_render(controller, params)
+
 - try to avoid this configuration, passing this to the twig template
+-- documentar $builder->setAttribute('show_legend', true); cuando se creen los posibles entities
 mopa_bootstrap:
     form:
         show_legend: false # default is true
+check if mopa_bootstrap is compulsori
 
 Issues
-- en el caso de delete y si create if not exists es false
-Nothing found for MuchoMasFacil\InPageEditBundle\Entity\Foo searching by id=1
 - cuando modificas una entidad que se muestra más de una vez en la misma página solo recargará la del ipe-hash que se modifica, aunque al recargar la página completa esté todo correcto.
 Posible solución usar un data-ipe-realod (hash echo a base de class e id)
 
 Working on:
-- entity
+- fixing GroupedSortedMappedEntityCollectionController when it is a single entry... (a redirect adding id instead of a return??)

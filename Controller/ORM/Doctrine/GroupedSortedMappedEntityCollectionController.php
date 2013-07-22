@@ -12,7 +12,7 @@ use MuchoMasFacil\InPageEditBundle\Controller\IPEControllerInterface;
 
 
 
-class SortedMappedEntityCollectionController extends IPEController implements IPEControllerInterface
+class GroupedSortedMappedEntityCollectionController extends IPEController implements IPEControllerInterface
 {
 
     function __construct()
@@ -23,9 +23,10 @@ class SortedMappedEntityCollectionController extends IPEController implements IP
 
     public function findObject($find_object_params)
     {
+        $finder = ($find_object_params['is_collection'])? 'findBy' : 'findOneBy';
         $entity = $this->container->get('doctrine')
             ->getRepository($find_object_params['entity_class'])
-            ->findBy($find_object_params['find_by'], $find_object_params['order_by']);
+            ->$finder($find_object_params['find_by'], $find_object_params['order_by']);
 
         //if (!$entity) {
         //    throw new \Exception($this->trans('controller.not_found_exception', array('%find_object_params%' => print_r($find_object_params, true))));
@@ -39,14 +40,31 @@ class SortedMappedEntityCollectionController extends IPEController implements IP
         $definition = $definitions[$ipe_definition];
         $ipe_handler_field = $definition['params']['collection_ipe_handler_field'];
         $getter = 'get'.ucwords(Inflector::camelize($ipe_handler_field));
-        $order_by = array($definition['params']['collection_ipe_position_field'] => 'ASC');
-        $find_by = array($ipe_handler_field => $object[0]->$getter());
-        return array('entity_class' => get_class($object[0]), 'find_by' => $find_by, 'order_by' => $order_by);
+
+        if (is_array($object)) {
+            $entity_class = get_class($object[0]);
+            $find_by = array($ipe_handler_field => $object[0]->$getter());
+            $order_by = array($definition['params']['collection_ipe_position_field'] => 'ASC');
+            $is_collection = true;
+        }
+        else {
+            $entity_class = get_class($object);
+            $find_by = array($ipe_handler_field => $object->$getter());
+            $order_by = array();
+            $is_collection = false;
+        }
+
+        return array('entity_class' => $entity_class, 'find_by' => $find_by, 'order_by' => $order_by, 'is_collection' => $is_collection);
     }
 
     public function editAction($ipe_hash, Request $request)
     {
-        return $this->collectionListAction($ipe_hash, $request);
+        $ipe = $this->getIpe($ipe_hash);
+        if ($ipe['find_object_params']['is_collection']) {
+            return $this->collectionListAction($ipe_hash, $request);
+        }
+        return $this->collectionEditItemAction($ipe_hash, $request);
+
     }
 
     public function collectionEditItemAction($ipe_hash, Request $request)
@@ -61,9 +79,11 @@ class SortedMappedEntityCollectionController extends IPEController implements IP
         $em = $this->container->get('doctrine')->getManager();
         //we are editing a single entity, so let us get it by id
         if ($id) {
+            //editing entity
             $entity = $em->getRepository($ipe['find_object_params']['entity_class'])->find($id);
         }
         else {
+            //creating new entry
             $entity = new $ipe['find_object_params']['entity_class']();
             $position = $request->query->get('position');
             if ($position != null) {
@@ -120,16 +140,15 @@ class SortedMappedEntityCollectionController extends IPEController implements IP
 
     public function collectionListAction($ipe_hash, Request $request, $reload_content = false)
     {
-        //$reload_content = $request->query->get('reload_content');
         //let us get ipe params from ipe_hash session
         $ipe = $this->getIpe($ipe_hash);
         $this->checkRoles($ipe['editor_roles']);
-        $object = $this->findObject($ipe['find_object_params']);
         $params = $ipe['params'];
         //the entry MUST alredy exist let us get it ////////////////////////////
         $list = $this->findObject($ipe['find_object_params']);
         $entity_class = $ipe['find_object_params']['entity_class'];
-        $this->render_vars['has_to_string_method'] = (method_exists(new $entity_class(), '__toString'))? true : false;
+        $to_string_method = (isset($params['to_string_method']))? $params['to_string_method'] : '__toString';
+        $this->render_vars['has_to_string_method'] = (method_exists(new $entity_class(), $to_string_method))? true : false;
         if (!$this->render_vars['has_to_string_method']) {
             $this->render_vars['flashes'][] = array('type' => 'warning', 'message' => $this->trans('controller.collectionListAction.to_string_not_defined', array('%entity_class%' => $entity_class)), 'close' => true, 'use_raw' => false);
         }
@@ -181,37 +200,23 @@ class SortedMappedEntityCollectionController extends IPEController implements IP
         }
         $em->remove($entity);
         $em->flush();
-        $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionRemoveItemAction.entry_removed'), 'close' => true, 'use_raw' => true);
+        $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionRemoveItemAction.item_removed'), 'close' => true, 'use_raw' => true);
 
         return $this->collectionListAction($ipe_hash, $request, true);
     }
 
     public function collectionAddItemAction($ipe_hash, Request $request)
     {
-        $position = $request->query->get('position');
-
-        //let us get ipe params from ipe_hash session
         $ipe = $this->getIpe($ipe_hash);
         $this->checkRoles($ipe['editor_roles']);
-        //$object = $this->findObject($ipe['find_object_params']);
         $params = $ipe['params'];
-        $entity_class = $ipe['find_object_params']['entity_class'];
+        $list = $this->findObject($ipe['find_object_params']);
+        if (($params['max_collection_length']) && (count($list) >= $params['max_collection_length'])) {
+            $this->render_vars['flashes'][] = array('type' => 'error', 'message' => $this->trans('controller.collectionAddItemAction.max_collection_length_error', array('%max_collection_length%' => $params['max_collection_length'])), 'close' => true, 'use_raw' => true);
+            return $this->collectionListAction($ipe_hash, $request, false);
+        }
 
-/*
-        // TODO
-        list($number_of_entities, $locale, $column_formatters) = $this->getFakeDefaults($params);
-
-        $column_formatters[$params['collection_ipe_position_field']] = $position;
-        $rep = $this->container->get('doctrine')->getRepository($entity_class);
-        $rep->fake($locale, 1, $column_formatters, $params['faker_custom_modifiers'], $params['faker_generate_id'] );
-*/
-        $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionAddItemAction.item_added'), 'close' => true, 'use_raw' => true);
-
-        //return new Response($ipe_hash. '--' . $id. '--' . $position);
-        return $this->collectionListAction($ipe_hash, $request, true);
+        return $this->collectionEditItemAction($ipe_hash, $request);
     }
-
-
-
 
 }

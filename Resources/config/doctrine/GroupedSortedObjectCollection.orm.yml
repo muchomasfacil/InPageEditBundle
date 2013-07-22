@@ -1,0 +1,13 @@
+MuchoMasFacil\InPageEditBundle\Entity\GroupedSortedObjectCollection:
+    type: entity
+    table: null
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        object:         {type: object}
+        ipe_handler:    {type: string, length: 255, gedmo: ['sortableGroup']}
+        ipe_position:   {type: integer, gedmo: ['sortablePosition']}
+    lifecycleCallbacks: {  }

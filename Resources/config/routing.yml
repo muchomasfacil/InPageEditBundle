@@ -12,6 +12,7 @@ _ipe_mmf_ajax_modal_helper:
     path: /ipe_mmf_ajax_modal_helper.js
     defaults:
         _controller: FrameworkBundle:Template:template
+        _format: js
         template: 'MuchoMasFacilInPageEditBundle:IPE:mmfAjaxModalHelpers.js.twig'
 
 

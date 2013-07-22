@@ -11,9 +11,10 @@ controller:
     collectionMoveItemAction:
         item_moved: The item was properly <strong>MOVED</strong>
     collectionListAction:
-        to_string_not_defined: You should define a __toString() method in %entity_class%
+        to_string_not_defined: You should define a __toString() method in %entity_class% or add the to_string_method param in your call to ipe_render
     collectionAddItemAction:
         item_added: The item was properly <strong>ADDED</strong>
+        max_collection_length_error: Maximum collection length is %max_collection_length%
     #now shared messages
     not_found_exception: Nothing found searching by %find_object_params%
     editor_roles_error: editor_roles must be either null or an array of roles

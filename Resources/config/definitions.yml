@@ -12,21 +12,27 @@ parameters:
                 form_type_class: ~ # guessed either from definition or by parameter
                 render_template: ~ # if not set will be guessed from entity_class
 
-        orm_doctrine_sorted_mapped_entity_collection:
-            alias: odsmec
-            ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/SortedMappedEntityCollection
+        orm_doctrine_grouped_sorted_mapped_entity_collection:
+            alias: odgsmec
+            ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/GroupedSortedMappedEntityCollection
+            editor_roles: [] # ROLE_IPE_EDITOR # optional
+            params:
+                to_string_method: __toString
+                max_collection_length: ~
+                collection_ipe_handler_field: ipe_handler
+                collection_ipe_position_field: ipe_position
+                #fake_min_number_of_items: 3
+                #fake_max_number_of_items: 6
+                #faker_locale: ~ # will be guessed from request if not set
+                #faker_custom_column_formatters: []
+                #faker_custom_modifiers: []
+                #faker_generate_id: false
+
+        orm_doctrine_grouped_sorted_object_collection:
+            alias: odgsoc
+            ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/GroupedSortedObjectCollection
             editor_roles: [] # ROLE_IPE_EDITOR # optional
             params:
                 max_collection_length: ~
                 collection_ipe_handler_field: ipe_handler
                 collection_ipe_position_field: ipe_position
-                fake_min_number_of_items: 3
-                fake_max_number_of_items: 6
-                faker_locale: ~ # will be guessed from request if not set
-                faker_custom_column_formatters: []
-                faker_custom_modifiers: []
-                faker_generate_id: false
-
-        orm_doctrine_sorted_entity_collection:
-            alias: odsec
-            ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/SortedEntityCollection

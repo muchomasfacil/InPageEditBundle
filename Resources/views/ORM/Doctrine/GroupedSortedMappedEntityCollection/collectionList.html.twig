@@ -11,15 +11,14 @@
     <ul class="inline">
         <li><a class="btn btn-mini" data-ipe-action="add" data-ipe-insert-position="0" href="javascript:void(0)" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i>&nbsp;{{ 'collectionList.icon_plus_title'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}</a></li>
     </ul>
-    <ul id="ipe-sortable" class="inline">
+    <ul id="ipe-sortable" class="unstyled" >
     {% for key,result in list %}
       <li class="alert" id="ipe_sortable_uid_{{ result.id }}">
         <a class="btn btn-mini"            href="javascript:void(0)" data-ipe-action="move" title="{{ 'collectionList.icon_move_title'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}"><i class="icon-move"></i></a>
         <a class="btn btn-mini btn-danger" href="javascript:void(0)" data-ipe-action="remove" data-ipe-uid="{{ result.id }}" title="{{ 'collectionList.icon_trash_title' |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}"><i class="icon-trash"></i></a>
         <a class="btn btn-mini"            href="javascript:void(0)" data-ipe-action="add" data-ipe-insert-position="{{ attribute(result, inflected_position_field) + 1 }}" title="{{ 'collectionList.icon_plus_title'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}"><i class="icon-plus"></i></a>
         <a class="btn btn-mini"            href="javascript:void(0)" data-ipe-action="edit" data-ipe-uid="{{ result.id }}" title="{{ 'collectionList.icon_edit_title'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}"><i class="icon-edit"></i></a>
-        http://badonkatrunc.com/
-        {{ has_to_string_method ? result : result.id }}
+        {{ has_to_string_method ? attribute(result, params['to_string_method']) : result.id }}
       </li>
     {% endfor %}
     </ul>
@@ -43,7 +42,8 @@ $(function() {
                 }
                 break;
             case 'add':
-                mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': ipe_hash, 'position': $(this).attr('data-ipe-insert-position')}));
+                //mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': ipe_hash, 'position': $(this).attr('data-ipe-insert-position')}));
+                mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-add-item', 'ipe_hash': ipe_hash, 'position': $(this).attr('data-ipe-insert-position')}));
                 break;
             case 'edit':
                 mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': ipe_hash, 'action_on_success': 'none', 'id': $(this).attr('data-ipe-uid')}));
