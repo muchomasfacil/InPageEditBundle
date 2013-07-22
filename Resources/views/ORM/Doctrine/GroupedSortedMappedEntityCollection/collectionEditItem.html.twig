@@ -55,9 +55,13 @@ $(function() {
         <button type="button" class="btn btn-danger"  data-ipe-action="delete">{{ 'edit.button_delete'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
 {% endif %}
         <button type="button" class="btn"             data-ipe-action="reset">{{ 'edit.button_reset'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        {% if is_collection %}
         <button type="button" class="btn btn-success" data-ipe-action="list">{{ 'edit.button_list'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        {% endif %}
         <button type="button" class="btn btn-info"    data-ipe-action="save">{{ 'edit.button_save'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        {% if is_collection %}
         <button type="button" class="btn btn-success" data-ipe-action="save_and_list">{{ 'edit.button_save_and_list'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        {% endif %}
         <button type="button" class="btn btn-primary" data-ipe-action="save_and_close">{{ 'edit.button_save_and_close'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
 {% endblock modal_footer %}
 

@@ -61,10 +61,15 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
     {
         $ipe = $this->getIpe($ipe_hash);
         if ($ipe['find_object_params']['is_collection']) {
+
             return $this->collectionListAction($ipe_hash, $request);
         }
-        return $this->collectionEditItemAction($ipe_hash, $request);
+        else {
+            $object = $this->findObject($ipe['find_object_params']);
+            $request->query->set('id', $object->getId());
 
+            return $this->collectionEditItemAction($ipe_hash, $request);
+        }
     }
 
     public function collectionEditItemAction($ipe_hash, Request $request)
@@ -130,6 +135,7 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         if (!isset($this->render_vars['reload_content'])) {
             $this->render_vars['reload_content'] = false;
         }
+        $this->render_vars['is_collection'] = $ipe['find_object_params']['is_collection'];
         $this->render_vars['entity'] = $entity;
         $this->render_vars['form'] = $form->createView();
         $this->render_vars['data_ipe_hash'] = $ipe_hash;
