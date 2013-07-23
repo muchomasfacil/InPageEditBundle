@@ -39,4 +39,4 @@ Issues
 Posible solución usar un data-ipe-realod (hash echo a base de class e id)
 
 Working on:
-- fixing GroupedSortedMappedEntityCollectionController deletin when it is a single entry ... just close
+- begin working on GroupedSortedObjectCollectionController

@@ -12,7 +12,7 @@ use MuchoMasFacil\InPageEditBundle\Controller\IPEControllerInterface;
 
 
 
-class GroupedSortedObjectCollectionController extends IPEController implements IPEControllerInterface
+class GroupedSortedMappedEntityCollectionController extends IPEController implements IPEControllerInterface
 {
 
     function __construct()
@@ -23,9 +23,10 @@ class GroupedSortedObjectCollectionController extends IPEController implements I
 
     public function findObject($find_object_params)
     {
+        $finder = ($find_object_params['is_collection'])? 'findBy' : 'findOneBy';
         $entity = $this->container->get('doctrine')
             ->getRepository($find_object_params['entity_class'])
-            ->findBy($find_object_params['find_by'], $find_object_params['order_by']);
+            ->$finder($find_object_params['find_by'], $find_object_params['order_by']);
 
         //if (!$entity) {
         //    throw new \Exception($this->trans('controller.not_found_exception', array('%find_object_params%' => print_r($find_object_params, true))));
@@ -39,14 +40,36 @@ class GroupedSortedObjectCollectionController extends IPEController implements I
         $definition = $definitions[$ipe_definition];
         $ipe_handler_field = $definition['params']['collection_ipe_handler_field'];
         $getter = 'get'.ucwords(Inflector::camelize($ipe_handler_field));
-        $order_by = array($definition['params']['collection_ipe_position_field'] => 'ASC');
-        $find_by = array($ipe_handler_field => $object[0]->$getter());
-        return array('entity_class' => get_class($object[0]), 'find_by' => $find_by, 'order_by' => $order_by);
+
+        if (is_array($object)) {
+            $entity_class = get_class($object[0]);
+            $find_by = array($ipe_handler_field => $object[0]->$getter());
+            $order_by = array($definition['params']['collection_ipe_position_field'] => 'ASC');
+            $is_collection = true;
+        }
+        else {
+            $entity_class = get_class($object);
+            $find_by = array($ipe_handler_field => $object->$getter());
+            $order_by = array();
+            $is_collection = false;
+        }
+
+        return array('entity_class' => $entity_class, 'find_by' => $find_by, 'order_by' => $order_by, 'is_collection' => $is_collection);
     }
 
     public function editAction($ipe_hash, Request $request)
     {
-        return $this->collectionListAction($ipe_hash, $request);
+        $ipe = $this->getIpe($ipe_hash);
+        if ($ipe['find_object_params']['is_collection']) {
+
+            return $this->collectionListAction($ipe_hash, $request);
+        }
+        else {
+            $object = $this->findObject($ipe['find_object_params']);
+            $request->query->set('id', $object->getId());
+
+            return $this->collectionEditItemAction($ipe_hash, $request);
+        }
     }
 
     public function collectionEditItemAction($ipe_hash, Request $request)
@@ -112,6 +135,7 @@ class GroupedSortedObjectCollectionController extends IPEController implements I
         if (!isset($this->render_vars['reload_content'])) {
             $this->render_vars['reload_content'] = false;
         }
+        $this->render_vars['is_collection'] = $ipe['find_object_params']['is_collection'];
         $this->render_vars['entity'] = $entity;
         $this->render_vars['form'] = $form->createView();
         $this->render_vars['data_ipe_hash'] = $ipe_hash;
@@ -129,7 +153,8 @@ class GroupedSortedObjectCollectionController extends IPEController implements I
         //the entry MUST alredy exist let us get it ////////////////////////////
         $list = $this->findObject($ipe['find_object_params']);
         $entity_class = $ipe['find_object_params']['entity_class'];
-        $this->render_vars['has_to_string_method'] = (method_exists(new $entity_class(), $params['to_string_method']))? true : false;
+        $to_string_method = (isset($params['to_string_method']))? $params['to_string_method'] : '__toString';
+        $this->render_vars['has_to_string_method'] = (method_exists(new $entity_class(), $to_string_method))? true : false;
         if (!$this->render_vars['has_to_string_method']) {
             $this->render_vars['flashes'][] = array('type' => 'warning', 'message' => $this->trans('controller.collectionListAction.to_string_not_defined', array('%entity_class%' => $entity_class)), 'close' => true, 'use_raw' => false);
         }
@@ -182,6 +207,14 @@ class GroupedSortedObjectCollectionController extends IPEController implements I
         $em->remove($entity);
         $em->flush();
         $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionRemoveItemAction.item_removed'), 'close' => true, 'use_raw' => true);
+
+        if (!$ipe['find_object_params']['is_collection']) {
+            $this->render_vars['reload_content'] = true;
+            $this->render_vars['data_ipe_hash'] = $ipe_hash;
+            $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_closeDialog.html.twig';
+
+            return $this->container->get('templating')->renderResponse($close_template, $this->render_vars);
+        }
 
         return $this->collectionListAction($ipe_hash, $request, true);
     }
