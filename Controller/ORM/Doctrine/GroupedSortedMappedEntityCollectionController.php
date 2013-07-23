@@ -208,6 +208,14 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         $em->flush();
         $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionRemoveItemAction.item_removed'), 'close' => true, 'use_raw' => true);
 
+        if (!$ipe['find_object_params']['is_collection']) {
+            $this->render_vars['reload_content'] = true;
+            $this->render_vars['data_ipe_hash'] = $ipe_hash;
+            $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_closeDialog.html.twig';
+
+            return $this->container->get('templating')->renderResponse($close_template, $this->render_vars);
+        }
+
         return $this->collectionListAction($ipe_hash, $request, true);
     }
 

@@ -1,5 +1,6 @@
 MuchoMasFacil\InPageEditBundle\Entity\GroupedSortedObjectCollection:
     type: entity
+    repositoryClass: MuchoMasFacil\InPageEditBundle\Entity\GroupedSortedObjectCollectionRepository
     table: null
     fields:
         id:
