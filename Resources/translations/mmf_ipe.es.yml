@@ -11,7 +11,7 @@ controller:
     collectionMoveItemAction:
         item_moved: La entrada se <strong>MOVIÓ</strong> correctamente
     collectionListAction:
-        to_string_not_defined: Se debería definir un método __toString() en %entity_class% o bien añadir el parámetro to_string_method en la llamada a ipe_render
+        list_to_string_method_not_defined: Se debería definir un método __toString() en %entity_class% o bien añadir el parámetro list_to_string_method en la llamada a ipe_render
     collectionAddItemAction:
         item_added: Se ha añadido una <strong>NUEVA</strong> entrada
         max_collection_length_error: El tamaño máximo de la colección es %max_collection_length%

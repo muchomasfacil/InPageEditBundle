@@ -15,19 +15,9 @@ class GroupedSortedObjectCollection
     private $id;
 
     /**
-     * @var \DateTime
+     * @var \stdClass
      */
-    private $date;
-
-    /**
-     * @var string
-     */
-    private $header;
-
-    /**
-     * @var string
-     */
-    private $text;
+    private $object;
 
     /**
      * @var string
@@ -51,72 +41,26 @@ class GroupedSortedObjectCollection
     }
 
     /**
-     * Set date
+     * Set object
      *
-     * @param \DateTime $date
+     * @param \stdClass $object
      * @return GroupedSortedObjectCollection
      */
-    public function setDate($date)
+    public function setObject($object)
     {
-        $this->date = $date;
+        $this->object = $object;
     
         return $this;
     }
 
     /**
-     * Get date
+     * Get object
      *
-     * @return \DateTime 
+     * @return \stdClass 
      */
-    public function getDate()
+    public function getObject()
     {
-        return $this->date;
-    }
-
-    /**
-     * Set header
-     *
-     * @param string $header
-     * @return GroupedSortedObjectCollection
-     */
-    public function setHeader($header)
-    {
-        $this->header = $header;
-    
-        return $this;
-    }
-
-    /**
-     * Get header
-     *
-     * @return string 
-     */
-    public function getHeader()
-    {
-        return $this->header;
-    }
-
-    /**
-     * Set text
-     *
-     * @param string $text
-     * @return GroupedSortedObjectCollection
-     */
-    public function setText($text)
-    {
-        $this->text = $text;
-    
-        return $this;
-    }
-
-    /**
-     * Get text
-     *
-     * @return string 
-     */
-    public function getText()
-    {
-        return $this->text;
+        return $this->object;
     }
 
     /**
@@ -163,33 +107,5 @@ class GroupedSortedObjectCollection
     public function getIpePosition()
     {
         return $this->ipe_position;
-    }
-    /**
-     * @var \stdClass
-     */
-    private $object;
-
-
-    /**
-     * Set object
-     *
-     * @param \stdClass $object
-     * @return GroupedSortedObjectCollection
-     */
-    public function setObject($object)
-    {
-        $this->object = $object;
-    
-        return $this;
-    }
-
-    /**
-     * Get object
-     *
-     * @return \stdClass 
-     */
-    public function getObject()
-    {
-        return $this->object;
     }
 }

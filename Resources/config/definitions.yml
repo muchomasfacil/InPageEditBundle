@@ -7,6 +7,10 @@ parameters:
             editor_roles: [] # ROLE_IPE_EDITOR # optional
             container_html_tag: div # optional
             container_html_attributes: '' # optional
+            find_params:
+                # in this definition normally, you pass an entity rather than find by params
+                - entity_class: ~ # guessed from entity
+                - find_by_array: ~ # guessed from entity
             params:
                 entity_class: ~ # guessed from definition or by parameter
                 form_type_class: ~ # guessed either from definition or by parameter
@@ -16,23 +20,37 @@ parameters:
             alias: odgsmec
             ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/GroupedSortedMappedEntityCollection
             editor_roles: [] # ROLE_IPE_EDITOR # optional
+            find_params:
+                # in this definition normally, you will propable pass find_params rather than an object or array collection of objects
+                - entity_class: ~ # required YourCustomBundle:YourEntity
+                - find_by_array: ~ # required; propable array('ipe_handler' => 'your-custom-handler')
+                - order_by_array: { ipe_position: ASC }
+                - is_collection: ~ # required boolean
             params:
-                to_string_method: __toString
+                entity_class: ~ # required ??
+                ipe_handler_field_value: ~ # required ??
+                is_collection: true # required ??
+                list_to_string_method: __toString
                 max_collection_length: ~
                 collection_ipe_handler_field: ipe_handler
                 collection_ipe_position_field: ipe_position
-                #fake_min_number_of_items: 3
-                #fake_max_number_of_items: 6
-                #faker_locale: ~ # will be guessed from request if not set
-                #faker_custom_column_formatters: []
-                #faker_custom_modifiers: []
-                #faker_generate_id: false
 
         orm_doctrine_grouped_sorted_object_collection:
             alias: odgsoc
             ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/GroupedSortedObjectCollection
             editor_roles: [] # ROLE_IPE_EDITOR # optional
+            find_params:
+                # in this definition normally, you will propable pass find_params rather than an object or array collection of objects
+                - entity_class: ~ # required YourCustomBundle:YourEntity
+                - find_by_array: ~ # required; propable array('ipe_handler' => 'your-custom-handler')
+                - order_by_array: { ipe_position: ASC }
+                - is_collection: ~ # required boolean
             params:
+                object_class: ~ # required ??
+                ipe_handler_field_value: ~ # required ??
+                is_collection: true # required ??
+                list_to_string_method: __toString
                 max_collection_length: ~
                 collection_ipe_handler_field: ipe_handler
                 collection_ipe_position_field: ipe_position
+

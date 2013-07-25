@@ -5,6 +5,7 @@ parameters:
         es: {label: Español}
 
     mucho_mas_facil_in_page_edit.twig.ipe_extension.class: MuchoMasFacil\InPageEditBundle\Twig\IpeExtension
+    mucho_mas_facil_in_page_edit.twig.ipe_extension.doctrine.orm.faker.class: MuchoMasFacil\InPageEditBundle\Twig\IpeExtensionDoctrineOrmFaker
     mucho_mas_facil_in_page_edit.faker.class: MuchoMasFacil\InPageEditBundle\Faker\Generator
 
 services:
@@ -17,8 +18,14 @@ services:
         tags:
             - {name: twig.extension}
 
-    mucho_mas_facil_in_page_edit.faker:
+    mucho_mas_facil_in_page_edit.twig.ipe_extension_doctrine_orm_faker:
+        class: %mucho_mas_facil_in_page_edit.twig.ipe_extension.doctrine.orm.faker.class%
+        arguments: [@service_container]
+        tags:
+            - {name: twig.extension}
+
+    mucho_mas_facil_in_page_edit.doctrine.orm.faker:
         class: %mucho_mas_facil_in_page_edit.faker.class%
         scope: request
         calls:
-            - [create, ["@request"]]
+            - [initOrmDoctrineFaker, ["@request", "@doctrine"]]

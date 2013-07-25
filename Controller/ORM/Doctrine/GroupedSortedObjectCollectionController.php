@@ -12,7 +12,7 @@ use MuchoMasFacil\InPageEditBundle\Controller\IPEControllerInterface;
 
 
 
-class GroupedSortedMappedEntityCollectionController extends IPEController implements IPEControllerInterface
+class GroupedSortedObjectCollectionController extends IPEController implements IPEControllerInterface
 {
 
     function __construct()
@@ -153,10 +153,10 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         //the entry MUST alredy exist let us get it ////////////////////////////
         $list = $this->findObject($ipe['find_object_params']);
         $entity_class = $ipe['find_object_params']['entity_class'];
-        $to_string_method = (isset($params['to_string_method']))? $params['to_string_method'] : '__toString';
-        $this->render_vars['has_to_string_method'] = (method_exists(new $entity_class(), $to_string_method))? true : false;
+        $list_to_string_method = (isset($params['list_to_string_method']))? $params['list_to_string_method'] : '__toString';
+        $this->render_vars['has_to_string_method'] = (method_exists(new $entity_class(), $list_to_string_method))? true : false;
         if (!$this->render_vars['has_to_string_method']) {
-            $this->render_vars['flashes'][] = array('type' => 'warning', 'message' => $this->trans('controller.collectionListAction.to_string_not_defined', array('%entity_class%' => $entity_class)), 'close' => true, 'use_raw' => false);
+            $this->render_vars['flashes'][] = array('type' => 'warning', 'message' => $this->trans('controller.collectionListAction.list_to_string_method_not_defined', array('%entity_class%' => $entity_class)), 'close' => true, 'use_raw' => false);
         }
         $this->render_vars['inflected_position_field'] = Inflector::classify($params['collection_ipe_position_field']);
         $this->render_vars['reload_content'] = $reload_content;

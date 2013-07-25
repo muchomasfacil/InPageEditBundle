@@ -39,4 +39,12 @@ Issues
 Posible solución usar un data-ipe-realod (hash echo a base de class e id)
 
 Working on:
+- check what to do when empty doctrine collections.
+-- Option 1: If empty show always an edit icon and may be request as required entity_class, ipe_handler_field_value, is_collection params
+-- Option 2: Force to always have some content...
+-- Option 3: param 2 in
+{{ ipe_render('odgsmec', foos_c_2, 'MuchoMasFacilInPageEditDemoBundle:Default:_foos_c_2.html.twig') }}
+can be an entity, an entity collection or a find_by_params array... entity_class_or_definition
+array('entity_class' => $entity_class, 'find_by' => $find_by, 'order_by' => $order_by, 'is_collection' => $is_collection);
+
 - begin working on GroupedSortedObjectCollectionController

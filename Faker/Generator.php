@@ -11,6 +11,39 @@ class Generator extends \Faker\Generator
 
     private static $defaultProviders = array('Person', 'Address', 'PhoneNumber', 'Company', 'Lorem', 'Internet', 'DateTime', 'Miscellaneous', 'UserAgent', 'Uuid', 'File', 'Color');
 
+    private $doctrine = null;
+
+    private $orm_doctrine_connection_name = null;
+
+
+    public function initOrmDoctrineFaker($request_or_locale = self::DEFAULT_LOCALE, $doctrine)
+    {
+        $this->doctrine = $doctrine;
+        $this->create($request_or_locale);
+    }
+
+    public function setOrmDoctrineConnectionName($connection_name)
+    {
+        $this->orm_doctrine_connection_name = $connection_name;
+    }
+
+    public function getOrmDoctrineConnectionName()
+    {
+        return (is_null($this->orm_doctrine_connection_name))? $this->doctrine->getDefaultConnectionName() : $this->orm_doctrine_connection_name;
+    }
+
+    public function ORMDoctrinePopulate($entityName, $number = 1, $customColumnFormatters = array(), $customModifiers = array(), $generateId = false)
+    {
+        $em = $this->doctrine->getManager($this->getOrmDoctrineConnectionName());
+        $populator = new \Faker\ORM\Doctrine\Populator($this, $em);
+        $populator->addEntity($entityName, $number, $customColumnFormatters, $customModifiers, $generateId);
+
+        return $populator->execute();
+    }
+    //it should be easy to prepare this class for
+    // a initOrmPropelFaker
+    // and a initOrmMandangoFaker
+
     //adapted from Faker\Factory.php
     public function create($request_or_locale = self::DEFAULT_LOCALE)
     {
@@ -26,14 +59,6 @@ class Generator extends \Faker\Generator
             $providerClassName = self::getProviderClassname($provider, $locale);
             $this->addProvider(new $providerClassName($this));
         }
-    }
-
-    public function ORMDoctrinePopulate(\Doctrine\ORM\EntityManager $em, $entityName, $number = 1, $customColumnFormatters = array(), $customModifiers = array(), $generateId = false)
-    {
-        $populator = new \Faker\ORM\Doctrine\Populator($this, $em);
-        $populator->addEntity($entityName, $number, $customColumnFormatters, $customModifiers, $generateId);
-
-        return $populator->execute();
     }
 
     //cloned from Faker\Factory.php

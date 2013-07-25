@@ -29,7 +29,7 @@ class IpeExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'ipe_render'     => new \Twig_Function_Method($this, 'ipeRenderFragment', array('is_safe' => array('html'))),
+            'ipe_render'            => new \Twig_Function_Method($this, 'ipeRenderFragment',  array('is_safe' => array('html'))),
         );
     }
 

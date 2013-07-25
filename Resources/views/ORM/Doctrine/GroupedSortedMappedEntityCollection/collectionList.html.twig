@@ -18,7 +18,7 @@
         <a class="btn btn-mini btn-danger" href="javascript:void(0)" data-ipe-action="remove" data-ipe-uid="{{ result.id }}" title="{{ 'collectionList.icon_trash_title' |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}"><i class="icon-trash"></i></a>
         <a class="btn btn-mini"            href="javascript:void(0)" data-ipe-action="add" data-ipe-insert-position="{{ attribute(result, inflected_position_field) + 1 }}" title="{{ 'collectionList.icon_plus_title'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}"><i class="icon-plus"></i></a>
         <a class="btn btn-mini"            href="javascript:void(0)" data-ipe-action="edit" data-ipe-uid="{{ result.id }}" title="{{ 'collectionList.icon_edit_title'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}"><i class="icon-edit"></i></a>
-        {{ has_to_string_method ? attribute(result, params['to_string_method']) : result.id }}
+        {{ has_to_string_method ? attribute(result, params['list_to_string_method']) : result.id }}
       </li>
     {% endfor %}
     </ul>

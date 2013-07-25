@@ -12,5 +12,4 @@ use Doctrine\ORM\EntityRepository;
  */
 class GroupedSortedObjectCollectionRepository extends EntityRepository
 {
-
 }
