@@ -45,27 +45,43 @@ class Generator extends \Faker\Generator
     // and a initOrmMandangoFaker
 /*
     public function ORMDoctrinePopulateGroupedSortedMappedEntity($entityName, $number = 1, $ipe_handler)
-    {   
+    {
         $customColumnFormatters = array('ipe_handler' => $ipe_handler, 'ipe_position' => null);
         return $this->ORMDoctrinePopulate($entityName, $number, $customColumnFormatters);
     }
 */
-    public function findOrFakeGroupedSortedMappedEntity($entityName, $ipe_handler, $number = 1, $ipe_handler_field = 'ipe_handler', $ipe_position_field = 'ipe_position')
+    public function findOrFakeGroupedSortedMappedEntity($entityName, $ipe_handler, $number = 1, $fake_if_empty = false, $ipe_handler_field = 'ipe_handler', $ipe_position_field = 'ipe_position')
     {
-        // next line ipe_position = null to avoid faker to act
-        $find_by = array($ipe_handler_field => $ipe_handler);   
+        $repository = $this->doctrine->getRepository($entityName);
+        $find_by = array($ipe_handler_field => $ipe_handler);
         $order_by = array('ipe_position' => 'ASC');
-        $rs = $this->doctrine->getRepository($entityName)->findBy($find_by, $order_by);
-        if (empty($rs)) {
-            $generator = $this->get('mucho_mas_facil_in_page_edit.doctrine.orm.faker');
+        $rs = $repository->findBy($find_by, $order_by);
+        if (($fake_if_empty) && (empty($rs))) {
             $customColumnFormatters = $find_by;
+            // next line ipe_position = null to avoid faker to act
             $customColumnFormatters['ipe_position'] = null;
-            $generator->ORMDoctrinePopulate('MuchoMasFacilInPageEditDemoBundle:GroupedSortedMappedFoo', $number, $customColumnFormatters);
-
+            $this->ORMDoctrinePopulate('MuchoMasFacilInPageEditDemoBundle:GroupedSortedMappedFoo', $number, $customColumnFormatters);
             $rs = $repository->findBy($find_by, $order_by);
         }
         return $rs;
     }
+
+    public function findOrFakeSingleGroupedMappedEntity($entityName, $ipe_handler, $fake_if_empty = false, $ipe_handler_field = 'ipe_handler', $ipe_position_field = 'ipe_position')
+    {
+        $repository = $this->doctrine->getRepository($entityName);
+        $find_by = array($ipe_handler_field => $ipe_handler);
+        $rs = $repository->findOneBy($find_by);
+        if (($fake_if_empty) && (empty($rs))) {
+            $number = 1;
+            $customColumnFormatters = $find_by;
+            // next line ipe_position = null to avoid faker to act
+            $customColumnFormatters['ipe_position'] = null;
+            $this->ORMDoctrinePopulate('MuchoMasFacilInPageEditDemoBundle:GroupedSortedMappedFoo', $number, $customColumnFormatters);
+            $rs = $repository->findOneBy($find_by);
+        }
+        return $rs;
+    }
+
     //adapted from Faker\Factory.php
     public function create($request_or_locale = self::DEFAULT_LOCALE)
     {

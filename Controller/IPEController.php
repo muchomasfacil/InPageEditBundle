@@ -56,19 +56,16 @@ class IPEController extends ContainerAware
 
 
     //no associated route. Will always be called from twig templates or from ajaxRenderAction
-    public function renderAction($ipe_definition, $object, $render_template, $params = array(), $render_with_container = true)
+    public function renderAction($ipe_definition, $object_or_find_object_params, $render_template, $params = array(), $render_with_container = true)
     {
-        //if not object or empty array of objects give an empty
-        if ((!$object) || (is_array($object) && (count($object) == 0))){
-            return new Response('');
-        }
         $definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
         $this->getIpeLocale(); //init ipe_locale
         $definition = $definitions[$ipe_definition];
         $params = array_merge($definition['params'], $params);
 
+        //render params either for with or without
         $this->render_vars['ipe_definition'] = $ipe_definition;
-        $this->render_vars['object'] = $object;
+        $this->render_vars['object'] = $this->getObject($ipe_definition, $object_or_find_object_params, $render_template, $params , $render_with_container);
         $this->render_vars['params'] = $params;
         $this->render_vars['render_with_container'] = $render_with_container;
 
@@ -83,7 +80,7 @@ class IPEController extends ContainerAware
                 'render_template' => $render_template,
                 'params' => $params,
                 //this should be specific by definition
-                'find_object_params' => $this->getFindObjectParams($ipe_definition, $object, $render_template, $params , $render_with_container)
+                'find_object_params' => $this->getFindObjectParams($ipe_definition, $object_or_object_finder, $render_template, $params , $render_with_container)
             );
             // then those that can be overwritten by params
             foreach(array('editor_roles', 'container_html_tag', 'container_html_attributes') as $key) {
@@ -106,6 +103,15 @@ class IPEController extends ContainerAware
         }
 
         return $this->container->get('templating')->renderResponse($final_render_template , $this->render_vars);
+    }
+
+    public function getObject($ipe_definition, $object_or_find_object_params, $render_template, $params , $render_with_container)
+    {
+        if ($this->isFindObjectParams($object_or_find_object_params)) { //it is find_object_params so get the object
+            return $this->findObject($object_or_find_object_params);
+        }
+
+        return $object_or_find_object_params; //it directly is an object
     }
 
     public function createDataIpeHash($ipe)

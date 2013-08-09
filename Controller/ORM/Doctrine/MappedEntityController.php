@@ -30,10 +30,27 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         return $entity;
     }
 
-    public function getFindObjectParams($ipe_definition, $object, $render_template, $params , $render_with_container)
+    public function getFindObjectParams($ipe_definition, $object_or_find_object_params, $render_template, $params , $render_with_container)
     {
+        if ($this->isFindObjectParams($object_or_find_object_params)) { //it directly is find_object_params
+            return $object_or_find_object_params;
+        }
+        $object = $object_or_find_object_params;
         $find_by = array('id' => $object->getId());
+
         return array('entity_class' => get_class($object), 'find_by' => $find_by);
+    }
+
+    public function isFindObjectParams($object_or_find_object_params)
+    {
+        if (
+            (is_array($object_or_find_object_params))
+            && (isset($object_or_find_object_params['entity_class']))
+            && (isset($object_or_find_object_params['find_by']))
+            ) {
+            return true;
+        }
+        return false;
     }
 
     public function editAction($ipe_hash, Request $request)

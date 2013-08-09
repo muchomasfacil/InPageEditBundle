@@ -34,8 +34,12 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         return $entity;
     }
 
-    public function getFindObjectParams($ipe_definition, $object, $render_template, $params , $render_with_container)
+    public function getFindObjectParams($ipe_definition, $object_or_find_object_params, $render_template, $params , $render_with_container)
     {
+        if ($this->isFindObjectParams($object_or_find_object_params)) { //it directly is find_object_params
+            return $object_or_find_object_params;
+        }
+        $object = $object_or_find_object_params;
         $definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
         $definition = $definitions[$ipe_definition];
         $ipe_handler_field = $definition['params']['collection_ipe_handler_field'];
@@ -55,6 +59,20 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         }
 
         return array('entity_class' => $entity_class, 'find_by' => $find_by, 'order_by' => $order_by, 'is_collection' => $is_collection);
+    }
+
+    public function isFindObjectParams($object_or_find_object_params)
+    {
+        if (
+            (is_array($object_or_find_object_params))
+            && (isset($object_or_find_object_params['entity_class']))
+            && (isset($object_or_find_object_params['find_by']))
+            && (isset($object_or_find_object_params['order_by']))
+            && (isset($object_or_find_object_params['is_collection']))
+            ) {
+            return true;
+        }
+        return false;
     }
 
     public function editAction($ipe_hash, Request $request)
