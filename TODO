@@ -39,7 +39,13 @@ Issues
 Posible solución usar un data-ipe-realod (hash echo a base de class e id)
 
 Working on:
-- check what to do when empty doctrine collections.
+Change on clicks to data-mah-
+    Resources/View/_navbar.html.twig
+    Resources/View/collectionList.html.twig
+    todas dentro de ORM/Doctrine
+Move InPageEditDemoBundle to src an create in-page-edit-demo-bundle-sandbox
+
+- check what to do when empty doctrine collections. Make pass fake_them_all as request parameter to fake in controller
 -- Option 1: If empty show always an edit icon and may be request as required entity_class, ipe_handler_field_value, is_collection params
 -- Option 2: Force to always have some content...
 -- Option 3: param 2 in

@@ -18,39 +18,39 @@ class MappedEntityController extends IPEController implements IPEControllerInter
 
     }
 
-    public function findObject($find_object_params)
+    public function getObject($ipe_definition, $find_params, $params)
     {
-        $entity = $this->container->get('doctrine')
-            ->getRepository($find_object_params['entity_class'])
-            ->findOneBy($find_object_params['find_by']);
+        if ($this->isFindParams($ipe_definition, $find_params, $params)) { //it is find_params so get the object
+            $object = $this->container->get('doctrine')
+                ->getRepository($find_params['entity_class'])
+                ->findOneBy($find_params['find_by']);
+            if (!$object) {
+                throw new \Exception($this->trans('controller.not_found_exception', array('%find_params%' => print_r($find_params, true))));
+            }
 
-        if (!$entity) {
-            throw new \Exception($this->trans('controller.not_found_exception', array('%find_object_params%' => print_r($find_object_params, true))));
+            return $object;
         }
-        return $entity;
+        $object = $find_params;
+        return $find_params; //it directly is an object
     }
 
-    public function getFindObjectParams($ipe_definition, $object_or_find_object_params, $render_template, $params , $render_with_container)
+    public function getFindParams($ipe_definition, $find_params, $params)
     {
-        if ($this->isFindObjectParams($object_or_find_object_params)) { //it directly is find_object_params
-            return $object_or_find_object_params;
+        # in this definition normally, you pass an entity rather than find by params to $find_params
+        # this allow to skip remake multiple queries when in your controller you use a collection of entities
+        # Internally the MappedEntityController turns it into
+        # {'entity_class': 'your_bundle:your_entity_class' 'find_by': {'id': entity_id } }
+        if (!$this->isFindParams($ipe_definition, $find_params, $params)) { //what comes in $find_params is an object
+            //let us get find_params
+            $object = $find_params;
+            $find_by = array('id' => $object->getId());
+            $find_params = array('entity_class' => get_class($object), 'find_by' => $find_by);
         }
-        $object = $object_or_find_object_params;
-        $find_by = array('id' => $object->getId());
-
-        return array('entity_class' => get_class($object), 'find_by' => $find_by);
-    }
-
-    public function isFindObjectParams($object_or_find_object_params)
-    {
-        if (
-            (is_array($object_or_find_object_params))
-            && (isset($object_or_find_object_params['entity_class']))
-            && (isset($object_or_find_object_params['find_by']))
-            ) {
-            return true;
+        if (!$this->checkFindObjectParams($ipe_definition, $find_params, $params)) {
+            throw new \Exception($this->trans('controller.missing_find_by_param', array('%find_params%' => print_r($find_params, true))));
         }
-        return false;
+
+        return $find_params;
     }
 
     public function editAction($ipe_hash, Request $request)
@@ -64,9 +64,8 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         $em = $this->container->get('doctrine')->getManager();
 
         //the entry MUST alredy exist let us get it ////////////////////////////
-        $entity = $this->findObject($ipe['find_object_params']);
-
-        $form_type_class = (isset($params['form_type_class']))? $params['form_type_class']: $this->guessFormTypeClass($entity);
+        $entity = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);
+        $form_type_class = (isset($params['form_type_class']))? $params['form_type_class']: $this->guessFormTypeClass(get_class($entity));
         $form = $this->container->get('form.factory')->create(new $form_type_class(), $entity);
 
         $form->handleRequest($request);
@@ -117,7 +116,7 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         $em = $this->container->get('doctrine')->getManager();
 
         //the entry MUST alredy exist let us get it ////////////////////////////
-        $entity = $this->findObject($ipe['find_object_params']);
+        $entity = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);
 
         $em->remove($entity);
         $em->flush();
@@ -135,6 +134,18 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_closeDialog.html.twig';
 
         return $this->container->get('templating')->renderResponse($close_template, $this->render_vars);
+    }
+
+    private function isFindParams($ipe_definition, $find_params, $params)
+    {
+        if (
+            (is_array($find_params))
+            && (isset($find_params['entity_class']))
+            && (isset($find_params['find_by']))
+            ) {
+            return true;
+        }
+        return false;
     }
 
 }

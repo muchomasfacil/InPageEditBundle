@@ -15,75 +15,60 @@ use MuchoMasFacil\InPageEditBundle\Controller\IPEControllerInterface;
 class GroupedSortedMappedEntityCollectionController extends IPEController implements IPEControllerInterface
 {
 
-    function __construct()
+     function __construct()
     {
         parent::__construct();
 
     }
 
-    public function findObject($find_object_params)
+    public function getObject($ipe_definition, $find_params, $params)
     {
-        $finder = ($find_object_params['is_collection'])? 'findBy' : 'findOneBy';
+        $find_params = $this->getFindParams($ipe_definition, $find_params, $params);
+        $finder = ($find_params['is_collection'])? 'findBy' : 'findOneBy';
         $entity = $this->container->get('doctrine')
-            ->getRepository($find_object_params['entity_class'])
-            ->$finder($find_object_params['find_by'], $find_object_params['order_by']);
+            ->getRepository($find_params['entity_class'])
+            ->$finder($find_params['find_by'], $find_params['order_by']);
 
         //if (!$entity) {
-        //    throw new \Exception($this->trans('controller.not_found_exception', array('%find_object_params%' => print_r($find_object_params, true))));
+        //    throw new \Exception($this->trans('controller.not_found_exception', array('%find_params%' => print_r($find_params, true))));
         //}
         return $entity;
     }
 
-    public function getFindObjectParams($ipe_definition, $object_or_find_object_params, $render_template, $params , $render_with_container)
+    public function getFindParams($ipe_definition, $find_params, $params)
     {
-        if ($this->isFindObjectParams($object_or_find_object_params)) { //it directly is find_object_params
-            return $object_or_find_object_params;
-        }
-        $object = $object_or_find_object_params;
         $definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
         $definition = $definitions[$ipe_definition];
-        $ipe_handler_field = $definition['params']['collection_ipe_handler_field'];
-        $getter = 'get'.ucwords(Inflector::camelize($ipe_handler_field));
 
-        if (is_array($object)) {
-            $entity_class = get_class($object[0]);
-            $find_by = array($ipe_handler_field => $object[0]->$getter());
-            $order_by = array($definition['params']['collection_ipe_position_field'] => 'ASC');
-            $is_collection = true;
-        }
-        else {
-            $entity_class = get_class($object);
-            $find_by = array($ipe_handler_field => $object->$getter());
-            $order_by = array();
-            $is_collection = false;
-        }
+        return array_merge($definition['find_params'], $find_params);
+        // $ipe_handler_field = $definition['params']['collection_ipe_handler_field'];
+        // $getter = 'get'.ucwords(Inflector::camelize($ipe_handler_field));
 
-        return array('entity_class' => $entity_class, 'find_by' => $find_by, 'order_by' => $order_by, 'is_collection' => $is_collection);
-    }
+        // if (is_array($object)) {
+        //     $entity_class = get_class($object[0]);
+        //     $find_by = array($ipe_handler_field => $object[0]->$getter());
+        //     $order_by = array($definition['params']['collection_ipe_position_field'] => 'ASC');
+        //     $is_collection = true;
+        // }
+        // else {
+        //     $entity_class = get_class($object);
+        //     $find_by = array($ipe_handler_field => $object->$getter());
+        //     $order_by = array();
+        //     $is_collection = false;
+        // }
 
-    public function isFindObjectParams($object_or_find_object_params)
-    {
-        if (
-            (is_array($object_or_find_object_params))
-            && (isset($object_or_find_object_params['entity_class']))
-            && (isset($object_or_find_object_params['find_by']))
-            && (isset($object_or_find_object_params['order_by']))
-            && (isset($object_or_find_object_params['is_collection']))
-            ) {
-            return true;
-        }
-        return false;
+        // return array('entity_class' => $entity_class, 'find_by' => $find_by, 'order_by' => $order_by, 'is_collection' => $is_collection);
     }
 
     public function editAction($ipe_hash, Request $request)
     {
         $ipe = $this->getIpe($ipe_hash);
-        if ($ipe['find_object_params']['is_collection']) {
+        if ($ipe['find_params']['is_collection']) {
 
             return $this->collectionListAction($ipe_hash, $request);
         }
         else {
-            $object = $this->findObject($ipe['find_object_params']);
+            $object = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);
             $request->query->set('id', $object->getId());
 
             return $this->collectionEditItemAction($ipe_hash, $request);
@@ -103,23 +88,25 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         //we are editing a single entity, so let us get it by id
         if ($id) {
             //editing entity
-            $entity = $em->getRepository($ipe['find_object_params']['entity_class'])->find($id);
+            $entity = $em->getRepository($ipe['find_params']['entity_class'])->find($id);
         }
         else {
             //creating new entry
-            $entity = new $ipe['find_object_params']['entity_class']();
+            $class = $this->container->get('doctrine')->getManager()->getClassMetadata($ipe['find_params']['entity_class'])->getName();
+            $entity = new $class();
+
             $position = $request->query->get('position');
             if ($position != null) {
                 $position_setter = 'set'.Inflector::classify($params['collection_ipe_position_field']);
                 $entity->$position_setter($position);
 
                 $handler_setter = 'set'.Inflector::classify($params['collection_ipe_handler_field']);
-                $handler_value = $ipe['find_object_params']['find_by'][$params['collection_ipe_handler_field']];
+                $handler_value = $ipe['find_params']['find_by'][$params['collection_ipe_handler_field']];
                 $entity->$handler_setter($handler_value);
             }
         }
 
-        $form_type_class = (isset($params['form_type_class']))? $params['form_type_class']: $this->guessFormTypeClass($entity);
+        $form_type_class = (isset($params['form_type_class']))? $params['form_type_class']: $this->guessFormTypeClass(get_class($entity));
         $form = $this->container->get('form.factory')->create(new $form_type_class(), $entity);
 
         $form->handleRequest($request);
@@ -153,7 +140,7 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         if (!isset($this->render_vars['reload_content'])) {
             $this->render_vars['reload_content'] = false;
         }
-        $this->render_vars['is_collection'] = $ipe['find_object_params']['is_collection'];
+        $this->render_vars['is_collection'] = $ipe['find_params']['is_collection'];
         $this->render_vars['entity'] = $entity;
         $this->render_vars['form'] = $form->createView();
         $this->render_vars['data_ipe_hash'] = $ipe_hash;
@@ -167,12 +154,16 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         //let us get ipe params from ipe_hash session
         $ipe = $this->getIpe($ipe_hash);
         $this->checkRoles($ipe['editor_roles']);
-        $params = $ipe['params'];
         //the entry MUST alredy exist let us get it ////////////////////////////
-        $list = $this->findObject($ipe['find_object_params']);
-        $entity_class = $ipe['find_object_params']['entity_class'];
+        $list = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);
+
+        $params = $ipe['params'];
+        $entity_class = $ipe['find_params']['entity_class'];
+
+        $class = $this->container->get('doctrine')->getManager()->getClassMetadata($entity_class)->getName();
+
         $list_to_string_method = (isset($params['list_to_string_method']))? $params['list_to_string_method'] : '__toString';
-        $this->render_vars['has_to_string_method'] = (method_exists(new $entity_class(), $list_to_string_method))? true : false;
+        $this->render_vars['has_to_string_method'] = (method_exists(new $class(), $list_to_string_method))? true : false;
         if (!$this->render_vars['has_to_string_method']) {
             $this->render_vars['flashes'][] = array('type' => 'warning', 'message' => $this->trans('controller.collectionListAction.list_to_string_method_not_defined', array('%entity_class%' => $entity_class)), 'close' => true, 'use_raw' => false);
         }
@@ -195,7 +186,7 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         $this->checkRoles($ipe['editor_roles']);
         $params = $ipe['params'];
         $em = $this->container->get('doctrine')->getManager();
-        $entity_class = $ipe['find_object_params']['entity_class'];
+        $entity_class = $ipe['find_params']['entity_class'];
         $entity = $em->getRepository($entity_class)->find($id);
         if (!$entity) {
             throw new \Exception($this->trans('controller.not_found_exception', array('%entity_class%' => $entity_class ,'%find_by%' => 'id='.$id )));
@@ -217,7 +208,7 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         $this->checkRoles($ipe['editor_roles']);
         $params = $ipe['params'];
         $em = $this->container->get('doctrine')->getManager();
-        $entity_class = $ipe['find_object_params']['entity_class'];
+        $entity_class = $ipe['find_params']['entity_class'];
         $entity = $em->getRepository($entity_class)->find($id);
         if (!$entity) {
             throw new \Exception($this->trans('controller.not_found_exception', array('%entity_class%' => $entity_class ,'%find_by%' => 'id='.$id )));
@@ -226,7 +217,7 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         $em->flush();
         $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionRemoveItemAction.item_removed'), 'close' => true, 'use_raw' => true);
 
-        if (!$ipe['find_object_params']['is_collection']) {
+        if (!$ipe['find_params']['is_collection']) {
             $this->render_vars['reload_content'] = true;
             $this->render_vars['data_ipe_hash'] = $ipe_hash;
             $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_closeDialog.html.twig';
@@ -241,8 +232,8 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
     {
         $ipe = $this->getIpe($ipe_hash);
         $this->checkRoles($ipe['editor_roles']);
+        $list = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);
         $params = $ipe['params'];
-        $list = $this->findObject($ipe['find_object_params']);
         if (($params['max_collection_length']) && (count($list) >= $params['max_collection_length'])) {
             $this->render_vars['flashes'][] = array('type' => 'error', 'message' => $this->trans('controller.collectionAddItemAction.max_collection_length_error', array('%max_collection_length%' => $params['max_collection_length'])), 'close' => true, 'use_raw' => true);
             return $this->collectionListAction($ipe_hash, $request, false);

@@ -16,7 +16,8 @@ controller:
         item_added: The item was properly <strong>ADDED</strong>
         max_collection_length_error: Maximum collection length is %max_collection_length%
     #now shared messages
-    not_found_exception: Nothing found searching by %find_object_params%
+    not_found_exception: Nothing found searching by %find_params%
+    missing_find_by_param: Some find_param is missing. %find_params%
     editor_roles_error: editor_roles must be either null or an array of roles
 collectionList:
     modal_title: Editing collection

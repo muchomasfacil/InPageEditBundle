@@ -38,25 +38,23 @@ class IPEController extends ContainerAware
     public function ipeSetLocaleAction($locale = null)
     {
         return new Response('Ipe locale changed to '. $this->setIpeLocale($locale));
+
     }
 
     //this should always by called for IPEController:ajaxIpeRenderAction
     public function ajaxRenderAction($ipe, $ipe_hash)
     {
-        $object = $this->findObject($ipe['find_object_params']);
-
         return $this->forward($this->render_vars['bundle_name'] . ':'.$this->render_vars['controller_name'].':render', array(
             'ipe_definition'  => $ipe['ipe_definition'],
-            'object'  => $object,
+            'find_params'  => $ipe['find_params'],
             'render_template' => $ipe['render_template'],
             'params' => $ipe['params'],
             'render_with_container' => false
         ));
     }
 
-
     //no associated route. Will always be called from twig templates or from ajaxRenderAction
-    public function renderAction($ipe_definition, $object_or_find_object_params, $render_template, $params = array(), $render_with_container = true)
+    public function renderAction($ipe_definition, $find_params, $render_template, $params = array(), $render_with_container = true)
     {
         $definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
         $this->getIpeLocale(); //init ipe_locale
@@ -65,7 +63,7 @@ class IPEController extends ContainerAware
 
         //render params either for with or without
         $this->render_vars['ipe_definition'] = $ipe_definition;
-        $this->render_vars['object'] = $this->getObject($ipe_definition, $object_or_find_object_params, $render_template, $params , $render_with_container);
+        $this->render_vars['object'] = $this->getObject($ipe_definition, $find_params, $params);
         $this->render_vars['params'] = $params;
         $this->render_vars['render_with_container'] = $render_with_container;
 
@@ -80,7 +78,7 @@ class IPEController extends ContainerAware
                 'render_template' => $render_template,
                 'params' => $params,
                 //this should be specific by definition
-                'find_object_params' => $this->getFindObjectParams($ipe_definition, $object_or_object_finder, $render_template, $params , $render_with_container)
+                'find_params' => $this->getFindParams($ipe_definition, $find_params, $params)
             );
             // then those that can be overwritten by params
             foreach(array('editor_roles', 'container_html_tag', 'container_html_attributes') as $key) {
@@ -105,13 +103,17 @@ class IPEController extends ContainerAware
         return $this->container->get('templating')->renderResponse($final_render_template , $this->render_vars);
     }
 
-    public function getObject($ipe_definition, $object_or_find_object_params, $render_template, $params , $render_with_container)
+    public function checkFindObjectParams($ipe_definition, $find_params, $params)
     {
-        if ($this->isFindObjectParams($object_or_find_object_params)) { //it is find_object_params so get the object
-            return $this->findObject($object_or_find_object_params);
+        $definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
+        $definition = $definitions[$ipe_definition];
+        //die(print_r($definition['find_params']));
+        foreach ($definition['find_params'] as $key => $value) {
+            if (!isset($find_params[$key])) {
+                return false;
+            }
         }
-
-        return $object_or_find_object_params; //it directly is an object
+        return true;
     }
 
     public function createDataIpeHash($ipe)
@@ -135,10 +137,9 @@ class IPEController extends ContainerAware
         return array($bundle_name, $controller_name);
     }
 
-    protected function guessFormTypeClass($entity)
+    protected function guessFormTypeClass($entity_class_name)
     {
-        $entity_class = get_class($entity);
-        return  str_replace('\\Entity\\', '\\Form\\', $entity_class).'Type';
+        return  str_replace('\\Entity\\', '\\Form\\', $entity_class_name).'Type';
     }
 
     protected function checkRoles($roles)

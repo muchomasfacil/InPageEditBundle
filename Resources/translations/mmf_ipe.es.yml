@@ -16,7 +16,8 @@ controller:
         item_added: Se ha añadido una <strong>NUEVA</strong> entrada
         max_collection_length_error: El tamaño máximo de la colección es %max_collection_length%
     #now shared messages
-    not_found_exception: No se ha encontrado nada buscando por %find_object_params%
+    not_found_exception: No se ha encontrado nada buscando por %find_params%
+    missing_find_by_param: Falta algúna entrada en find_params . %find_params%
     editor_roles_error: editor_roles debe ser null o un array de roles
 collectionList:
     modal_title: Editando collección
