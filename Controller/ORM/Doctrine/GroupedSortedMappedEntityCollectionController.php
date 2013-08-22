@@ -10,8 +10,6 @@ use Doctrine\Common\Util\Inflector;
 use MuchoMasFacil\InPageEditBundle\Controller\IPEController;
 use MuchoMasFacil\InPageEditBundle\Controller\IPEControllerInterface;
 
-
-
 class GroupedSortedMappedEntityCollectionController extends IPEController implements IPEControllerInterface
 {
 

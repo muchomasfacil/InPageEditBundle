@@ -43,8 +43,12 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         if (!$this->isFindParams($ipe_definition, $find_params, $params)) { //what comes in $find_params is an object
             //let us get find_params
             $object = $find_params;
-            $find_by = array('id' => $object->getId());
-            $find_params = array('entity_class' => get_class($object), 'find_by' => $find_by);
+            if (is_object($object)) {
+                if (method_exists($object, 'getId')) {
+                    $find_by = array('id' => $object->getId());
+                }
+                $find_params = array('entity_class' => get_class($object), 'find_by' => $find_by);
+            }                
         }
         if (!$this->checkFindObjectParams($ipe_definition, $find_params, $params)) {
             throw new \Exception($this->trans('controller.missing_find_by_param', array('%find_params%' => print_r($find_params, true))));
