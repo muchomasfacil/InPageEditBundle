@@ -15,7 +15,7 @@
         "fzaninotto/faker": "~1"
     },
     "suggest": {
-        "stof/doctrine-extensions-bundle": "~1.1@dev Sortable, Uploadable may be useful"
+        "stof/doctrine-extensions-bundle": "~1.1@dev"
     },
     "autoload": {
         "psr-0": { "MuchoMasFacil\\InPageEditBundle": "" }
