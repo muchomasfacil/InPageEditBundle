@@ -3,8 +3,8 @@ document.body.insertBefore( prettyPrint( ui ), document.body.firstChild );
 
 app/console doctrine:database:create
 
-app/console doctrine:generate:entities MuchoMasFacilInPageEditDemoBundle --no-backup
-app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle --no-backup
+app/console doctrine:generate:entities AcmeDemoBundle 
+app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle 
 app/console doctrine:schema:drop --force
 app/console doctrine:schema:create
 
@@ -24,15 +24,15 @@ ipe_navbar(template, locale)
 -- comentar en la documentación los css y js que se necesitan para que los cargue sólo en caso de ipeisgranted
 -- lo mismo para el navbar
 
-
 - hacer que funcione con distintos entity manager
 
 - try to avoid this configuration, passing this to the twig template
 -- documentar $builder->setAttribute('show_legend', true); cuando se creen los posibles entities
+
 mopa_bootstrap:
     form:
         show_legend: false # default is true
-check if mopa_bootstrap is compulsori
+check if mopa_bootstrap is compulsory or if we can custom form theme 
 
 Issues
 - cuando modificas una entidad que se muestra más de una vez en la misma página solo recargará la del ipe-hash que se modifica, aunque al recargar la página completa esté todo correcto.
@@ -43,7 +43,6 @@ Change on clicks to data-mah-
     Resources/View/_navbar.html.twig
     Resources/View/collectionList.html.twig
     todas dentro de ORM/Doctrine
-Move InPageEditDemoBundle to src an create in-page-edit-demo-bundle-sandbox
 
 - check what to do when empty doctrine collections. Make pass fake_them_all as request parameter to fake in controller
 -- Option 1: If empty show always an edit icon and may be request as required entity_class, ipe_handler_field_value, is_collection params

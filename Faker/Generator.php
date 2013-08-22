@@ -60,7 +60,7 @@ class Generator extends \Faker\Generator
             $customColumnFormatters = $find_by;
             // next line ipe_position = null to avoid faker to act
             $customColumnFormatters['ipe_position'] = null;
-            $this->ORMDoctrinePopulate('MuchoMasFacilInPageEditDemoBundle:GroupedSortedMappedFoo', $number, $customColumnFormatters);
+            $this->ORMDoctrinePopulate($entityName, $number, $customColumnFormatters);
             $rs = $repository->findBy($find_by, $order_by);
         }
         return $rs;
@@ -76,7 +76,7 @@ class Generator extends \Faker\Generator
             $customColumnFormatters = $find_by;
             // next line ipe_position = null to avoid faker to act
             $customColumnFormatters['ipe_position'] = null;
-            $this->ORMDoctrinePopulate('MuchoMasFacilInPageEditDemoBundle:GroupedSortedMappedFoo', $number, $customColumnFormatters);
+            $this->ORMDoctrinePopulate($entityName, $number, $customColumnFormatters);
             $rs = $repository->findOneBy($find_by);
         }
         return $rs;

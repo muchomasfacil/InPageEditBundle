@@ -39,7 +39,6 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
     {
         $definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
         $definition = $definitions[$ipe_definition];
-
         return array_merge($definition['find_params'], $find_params);
         // $ipe_handler_field = $definition['params']['collection_ipe_handler_field'];
         // $getter = 'get'.ucwords(Inflector::camelize($ipe_handler_field));
