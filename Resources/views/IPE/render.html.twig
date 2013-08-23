@@ -1,4 +1,4 @@
-<{{ container_html_tag }}  {{ container_html_attributes | raw }}{% if show_data_ipe_hash %} data-ipe-hash="{{ data_ipe_hash }}"{% endif %}>
+<{{ container_html_tag }}  {{ container_html_attributes | raw }}{% if show_data_ipe_hash %} data-ipe-hash="{{ data_ipe_hash }}" data-hah-action="load-modal" data-hah-url="{{ path('_ipe_action', {'action': 'edit', 'ipe_hash': data_ipe_hash}) }}" data-hah-id-selector="#hah-modal"{% endif %}>
 
   {{ include(render_template) }}
 

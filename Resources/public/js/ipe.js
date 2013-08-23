@@ -1,20 +1,21 @@
-function ipe_reload(ipe_hash)
+function ipe_reload(ipe_hash, block_id_selector)
 {
     var selector = "[data-ipe-hash='" + ipe_hash + "']";
-    mmf_load(selector, Routing.generate('_ipe_action', {'action': 'ajax-render','ipe_hash': ipe_hash}));
+    var element = $(selector);
+    if (!block_id_selector) {
+        block_id_selector = selector;
+    }
+    $.hahLoad(id_selector, element.attr('data-hah-url'), element.attr('data-hah-data'), block_id_selector);
 }
 
 function ipe_remove(ipe_hash)
 {
-    var selector = "[data-ipe-hash='" + ipe_hash + "']";
-    $(selector).remove();
+    $("[data-ipe-hash='" + ipe_hash + "']").remove();
 }
 
-var ipe_target_id = 'ipe_dialog';
+//var ipe_target_id = 'ipe_dialog';
 
-$(function() {
-    $( "[data-ipe-hash]" ).dblclick(function() {
-        mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'edit', 'ipe_hash': $(this).attr('data-ipe-hash')}));
-    });
-
+$(function() {   
+    $.htmlAjaxHelper('dblclick', '[data-ipe-hash]');        
+    $.htmlAjaxHelper('click', 'a[data-hah-action], button[data-hah-action]');            
 });

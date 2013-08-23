@@ -1,6 +1,4 @@
 ## FAST ACCESS
-document.body.insertBefore( prettyPrint( ui ), document.body.firstChild );
-
 app/console doctrine:database:create
 
 app/console doctrine:generate:entities AcmeDemoBundle 
