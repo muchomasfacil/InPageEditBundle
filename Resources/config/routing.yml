@@ -1,15 +1,6 @@
 _ipe_action:
     pattern:  /ipe/{action}/{ipe_hash}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:IPE:ipe}
-    options:
-        expose: true
-
-_ipe_mmf_ajax_modal_helper:
-    path: /ipe_mmf_ajax_modal_helper.js
-    defaults:
-        _controller: FrameworkBundle:Template:template
-        _format: js
-        template: 'MuchoMasFacilInPageEditBundle:IPE:mmfAjaxModalHelpers.js.twig'
 
 _ipe_locale:
     pattern:  /ipe_locale/{locale}

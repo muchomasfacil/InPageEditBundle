@@ -117,7 +117,7 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
                     $this->render_vars['reload_content'] = true;
                     if ($action_on_success == 'close') {
                         $this->render_vars['data_ipe_hash'] = $ipe_hash;
-                        $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_closeDialog.html.twig';
+                        $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':closeDialog.html.twig';
                         return $this->container->get('templating')->renderResponse($close_template, $this->render_vars);
                     }
                     if ($action_on_success == 'list') {
@@ -217,7 +217,7 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
         if (!$ipe['find_params']['is_collection']) {
             $this->render_vars['reload_content'] = true;
             $this->render_vars['data_ipe_hash'] = $ipe_hash;
-            $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_closeDialog.html.twig';
+            $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':closeDialog.html.twig';
 
             return $this->container->get('templating')->renderResponse($close_template, $this->render_vars);
         }

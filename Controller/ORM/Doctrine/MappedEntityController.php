@@ -48,7 +48,7 @@ class MappedEntityController extends IPEController implements IPEControllerInter
                     $find_by = array('id' => $object->getId());
                 }
                 $find_params = array('entity_class' => get_class($object), 'find_by' => $find_by);
-            }                
+            }
         }
         if (!$this->checkFindObjectParams($ipe_definition, $find_params, $params)) {
             throw new \Exception($this->trans('controller.missing_find_by_param', array('%find_params%' => print_r($find_params, true))));
@@ -83,7 +83,7 @@ class MappedEntityController extends IPEController implements IPEControllerInter
                     $this->render_vars['reload_content'] = true;
                     if ($action_on_success == 'close') {
                         $this->render_vars['data_ipe_hash'] = $ipe_hash;
-                        $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_closeDialog.html.twig';
+                        $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':closeDialog.html.twig';
                         return $this->container->get('templating')->renderResponse($close_template, $this->render_vars);
                     }
                 }
@@ -129,13 +129,13 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         if ($action_on_success == 'close') {
             $this->render_vars['data_ipe_hash'] = $ipe_hash;
             $this->render_vars['remove_content_container'] = true;
-            $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_closeDialog.html.twig';
+            $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':closeDialog.html.twig';
             return $this->container->get('templating')->renderResponse($close_template, $this->render_vars);
         }
         //////////////////////pendiente
         $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionDeleteItemAction.entry_deleted'), 'close' => true, 'use_raw' => true);
 
-        $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_closeDialog.html.twig';
+        $final_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':closeDialog.html.twig';
 
         return $this->container->get('templating')->renderResponse($close_template, $this->render_vars);
     }

@@ -19,6 +19,7 @@ controller:
     not_found_exception: Nothing found searching by %find_params%
     missing_find_by_param: Some find_param are missing. find_params = '%find_params%'
     editor_roles_error: editor_roles must be either null or an array of roles
+    ajax_loading: Please wait ...
 collectionList:
     modal_title: Editing collection
     icon_move_title: Drag to move item
@@ -41,3 +42,4 @@ navbar:
 shared:
     delete_confirmation: Are you sure you want to delete this item?
     ajax_error: Sorry but there was an error
+

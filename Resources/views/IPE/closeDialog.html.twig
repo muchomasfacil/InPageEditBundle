@@ -1,0 +1,11 @@
+<script>
+    $('#hah-modal').modal('hide');
+
+{% if remove_content_container is defined %}
+    $("[data-ipe-hash='{{ data_ipe_hash }}']").remove();
+{% endif %}
+</script>
+
+{% if reload_content is defined %}
+    {{ include(parent_bundle_name ~ ':IPE:' ~ '_reload.html.twig', {'data_ipe_hash': data_ipe_hash})|raw }}
+{% endif %}

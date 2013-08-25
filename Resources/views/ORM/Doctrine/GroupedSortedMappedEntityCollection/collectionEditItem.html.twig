@@ -1,69 +1,36 @@
 {% extends parent_bundle_name ~ '::modal_layout.html.twig' %}
 
+{% set form_id_selector = 'ipe-form' %}
+{% set ipe_uid = form.vars.value.id %}
+
+
 {% block modal_header_label %}{{ 'edit.modal_title' |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}{% endblock modal_header_label %}
 
 {% block modal_body %}
-{{ include(bundle_name ~ ':IPE:_flashCollection.html.twig') }}
+{{ include(parent_bundle_name ~ ':IPE:_flashCollection.html.twig') }}
 
-{{ form_start(form, {'attr': {'class': 'well', 'id': 'ipe_form'}}) }}
+{{ form_start(form, {'attr': {'class': 'well', 'id': form_id_selector}}) }}
     {{ form_widget(form) }}
 {{ form_end(form) }}
 
-<script>
-$(function() {
-
-    var ipe_uid = '{{ form.vars.value.id }}';
-    var ipe_form = 'ipe_form';
-
-    $( "[data-ipe-action]" ).click(function() {
-        switch($(this).attr('data-ipe-action'))
-        {
-            case 'delete':
-                if (confirm('{{ 'shared.delete_confirmation'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}')) {
-                    mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-remove-item', 'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid, 'action_on_success': 'list'}));
-                }
-                break;
-            case 'list':
-                mmf_load_in_dialog (ipe_target_id, Routing.generate('_ipe_action', {'action': 'collection-list', 'ipe_hash': '{{ data_ipe_hash }}'}));
-                break;
-            case 'save':
-                mmf_form_submit('#' + ipe_form, ipe_target_id, '_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid});
-                break;
-            case 'save_and_list':
-                mmf_form_submit('#' + ipe_form, ipe_target_id, '_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid, 'action_on_success': 'list'});
-                break;
-            case 'save_and_close':
-                mmf_form_submit('#' + ipe_form, ipe_target_id, '_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': '{{ data_ipe_hash }}', 'id': ipe_uid, 'action_on_success': 'close'});
-                break;
-            case 'reset':
-                mmf_form_reset('#' + ipe_form );
-                break;
-            default:
-        }
-    });
-
 {% if reload_content %}
-    ipe_reload('{{ data_ipe_hash }}');
+    {{ include(parent_bundle_name ~ ':IPE:' ~ '_reload.html.twig', {'data_ipe_hash': data_ipe_hash})|raw }}
 {% endif %}
 
-});
-</script>
 {% endblock modal_body %}
 
+
 {% block modal_footer %}
-{% if form.vars.value.id %}
-        <button type="button" class="btn btn-danger"  data-ipe-action="delete">{{ 'edit.button_delete'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+{% if ipe_uid is defined %}
+        <button type="button" class="pull-left btn btn-danger"  data-hah-action="load" data-hah-confirm-message="{{ 'shared.delete_confirmation'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-remove-item', 'ipe_hash':  data_ipe_hash , 'id': ipe_uid, 'action_on_success': 'list'}) }}">{{ 'edit.button_delete'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
 {% endif %}
-        <button type="button" class="btn"             data-ipe-action="reset">{{ 'edit.button_reset'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="pull-left btn"             data-hah-action="form-reset"  data-hah-form-id-selector="#{{ form_id_selector }}">{{ 'edit.button_reset'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
         {% if is_collection %}
-        <button type="button" class="btn btn-success" data-ipe-action="list">{{ 'edit.button_list'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="pull-left btn btn-success"    data-hah-action="load" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-list', 'ipe_hash': data_ipe_hash}) }}">{{ 'edit.button_list'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
         {% endif %}
-        <button type="button" class="btn btn-info"    data-ipe-action="save">{{ 'edit.button_save'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="btn btn-info"    data-hah-action="form-submit" data-hah-form-id-selector="#{{ form_id_selector }}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': data_ipe_hash, 'id': ipe_uid}) }}">{{ 'edit.button_save'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
         {% if is_collection %}
-        <button type="button" class="btn btn-success" data-ipe-action="save_and_list">{{ 'edit.button_save_and_list'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="btn btn-success"    data-hah-action="form-submit" data-hah-form-id-selector="#{{ form_id_selector }}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': data_ipe_hash, 'id': ipe_uid, 'action_on_success': 'list'}) }}">{{ 'edit.button_save_and_list'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
         {% endif %}
-        <button type="button" class="btn btn-primary" data-ipe-action="save_and_close">{{ 'edit.button_save_and_close'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="btn btn-primary"    data-hah-action="form-submit" data-hah-form-id-selector="#{{ form_id_selector }}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': data_ipe_hash, 'id': ipe_uid, 'action_on_success': 'close'}) }}">{{ 'edit.button_save_and_close'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
 {% endblock modal_footer %}
-
-
-
