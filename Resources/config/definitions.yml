@@ -4,7 +4,7 @@ parameters:
         orm_doctrine_mapped_entity:
             alias: odme
             ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/MappedEntity
-            editor_roles: [] # ROLE_IPE_EDITOR # optional
+            editor_roles: [ROLE_IPE_EDITOR] # if you switch this to null anybody, logged or not is allowed to edit
             find_params:
                 # in this definition normally, you pass an entity rather than find by params to $find_params
                 # this allows to skip remake multiple queries when in your controller you use a collection of entities
@@ -25,7 +25,7 @@ parameters:
             # {'entity_class': 'your_bundle:your_entity_class' 'find_by': {'id': entity_id } }
             alias: odgsmec
             ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/GroupedSortedMappedEntityCollection
-            editor_roles: [] # ROLE_IPE_EDITOR # optional
+            editor_roles: [ROLE_IPE_EDITOR] # ROLE_IPE_EDITOR # optional
             find_params:
                 # in this definition normally, you will  pass find_params
                 entity_class: ~ # required YourCustomBundle:YourEntity
@@ -44,7 +44,7 @@ parameters:
         orm_doctrine_grouped_sorted_object_collection:
             alias: odgsoc
             ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/GroupedSortedObjectCollection
-            editor_roles: [] # ROLE_IPE_EDITOR # optional
+            editor_roles: [ROLE_IPE_EDITOR] # ROLE_IPE_EDITOR # optional
             find_params:
                 # in this definition normally, you will propable pass find_params rather than an object or array collection of objects
                 - entity_class: ~ # required YourCustomBundle:YourEntity

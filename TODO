@@ -1,12 +1,14 @@
 ## FAST ACCESS
 app/console doctrine:database:create
 
-app/console doctrine:generate:entities AcmeDemoBundle 
-app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle 
+app/console doctrine:generate:entities AcmeDemoBundle
+app/console doctrine:generate:entities MuchoMasFacilInPageEditBundle
 app/console doctrine:schema:drop --force
 app/console doctrine:schema:create
 
 ## TODO
+- show graphically editable entries...
+
 - NAVBAR
 ipe_navbar(template, locale)
 -- change ipe locale (cuando se cambie el ipe_locale recargar página)
@@ -18,36 +20,29 @@ ipe_navbar(template, locale)
 - uploads seleccionar un tipo de file input y programarlo https://github.com/neutron-project/form-bundle
 - make use of http://fortawesome.github.io/Font-Awesome/ ??
 
+- check if mopa_bootstrap is compulsory or if we can custom form theme
+    - try to avoid this configuration, passing this to the twig template
+    mopa_bootstrap:
+        form:
+            show_legend: false # default is true
+            #documentar $builder->setAttribute('show_legend', true); cuando se creen los posibles entities
+
+- begin working on GroupedSortedObjectCollectionController
+
+- ipe_fake as an small form in render with_container...
+
 - documentation
 -- comentar en la documentación los css y js que se necesitan para que los cargue sólo en caso de ipeisgranted
 -- lo mismo para el navbar
 
 - hacer que funcione con distintos entity manager
 
-- try to avoid this configuration, passing this to the twig template
--- documentar $builder->setAttribute('show_legend', true); cuando se creen los posibles entities
 
-mopa_bootstrap:
-    form:
-        show_legend: false # default is true
-check if mopa_bootstrap is compulsory or if we can custom form theme 
 
 Issues
 - cuando modificas una entidad que se muestra más de una vez en la misma página solo recargará la del ipe-hash que se modifica, aunque al recargar la página completa esté todo correcto.
 Posible solución usar un data-ipe-realod (hash echo a base de class e id)
+    -- solución hacer una plantilla reload configurable...
 
 Working on:
-Change on clicks to data-mah-
-    Resources/View/_navbar.html.twig
-    Resources/View/collectionList.html.twig
-    todas dentro de ORM/Doctrine
-
-- check what to do when empty doctrine collections. Make pass fake_them_all as request parameter to fake in controller
--- Option 1: If empty show always an edit icon and may be request as required entity_class, ipe_handler_field_value, is_collection params
--- Option 2: Force to always have some content...
--- Option 3: param 2 in
-{{ ipe_render('odgsmec', foos_c_2, 'MuchoMasFacilInPageEditDemoBundle:Default:_foos_c_2.html.twig') }}
-can be an entity, an entity collection or a find_by_params array... entity_class_or_definition
-array('entity_class' => $entity_class, 'find_by' => $find_by, 'order_by' => $order_by, 'is_collection' => $is_collection);
-
-- begin working on GroupedSortedObjectCollectionController
+-

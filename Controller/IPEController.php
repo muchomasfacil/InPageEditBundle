@@ -95,9 +95,7 @@ class IPEController extends ContainerAware
             $this->render_vars['container_html_tag'] = $ipe['container_html_tag'];
             $this->render_vars['container_html_attributes'] = $ipe['container_html_attributes'];
             $this->render_vars['render_template'] = $ipe['render_template'];
-
             $this->render_vars['data_ipe_hash'] = $ipe_hash;
-            $this->render_vars['show_data_ipe_hash'] = $this->ipeIsGranted($ipe['editor_roles']);
             $final_render_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':render.html.twig';
         }
 
@@ -145,16 +143,16 @@ class IPEController extends ContainerAware
 
     protected function checkRoles($roles)
     {
-        if (!$this->ipeIsGranted($roles)) {
+        if ((!empty($roles)) && (false === $this->container->get('security.context')->isGranted($roles))) {
             throw new AccessDeniedException();
         }
     }
 
-    protected function ipeIsGranted($roles)
+    /*protected function ipeIsGranted($roles)
     {
-        if ((!is_array($roles)) && (!is_null($roles))) {
-            throw new \Exception($this->trans('controller.editor_roles_error'));
-        }
+        // if ((!is_array($roles)) && (!is_null($roles))) {
+        //     throw new \Exception($this->trans('controller.editor_roles_error'));
+        // }
         if ((is_array($roles)) && (count($roles) > 0)) {
             if (
                 (is_null($this->container->get('security.context')->getToken()))
@@ -165,7 +163,7 @@ class IPEController extends ContainerAware
         }
 
         return true;
-    }
+    }*/
 
     protected function removeIpe($ipe_hash)
     {
