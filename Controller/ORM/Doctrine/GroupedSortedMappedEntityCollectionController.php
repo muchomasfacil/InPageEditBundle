@@ -65,8 +65,11 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
             return $this->collectionListAction($ipe_hash, $request);
         }
         else {
-            $object = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);
-            $request->query->set('id', $object->getId());
+            $object = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);        
+            if (!empty($object))
+            {
+                $request->query->set('id', $object->getId());
+            }
 
             return $this->collectionEditItemAction($ipe_hash, $request);
         }
@@ -74,6 +77,7 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
 
     public function collectionEditItemAction($ipe_hash, Request $request)
     {
+
         $id = $request->query->get('id');
         $action_on_success = $request->query->get('action_on_success');
         //let us get ipe params from ipe_hash session
@@ -93,14 +97,17 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
             $entity = new $class();
 
             $position = $request->query->get('position');
-            if ($position != null) {
-                $position_setter = 'set'.Inflector::classify($params['collection_ipe_position_field']);
-                $entity->$position_setter($position);
 
-                $handler_setter = 'set'.Inflector::classify($params['collection_ipe_handler_field']);
-                $handler_value = $ipe['find_params']['find_by'][$params['collection_ipe_handler_field']];
-                $entity->$handler_setter($handler_value);
+            if (empty($position)) {
+                $position = 0;
             }
+            $position_setter = 'set'.Inflector::classify($params['collection_ipe_position_field']);
+            $entity->$position_setter($position);
+
+            $handler_setter = 'set'.Inflector::classify($params['collection_ipe_handler_field']);
+
+            $handler_value = $ipe['find_params']['find_by'][$params['collection_ipe_handler_field']];
+            $entity->$handler_setter($handler_value);
         }
 
         $form_type_class = (isset($params['form_type_class']))? $params['form_type_class']: $this->guessFormTypeClass(get_class($entity));
@@ -200,6 +207,7 @@ class GroupedSortedMappedEntityCollectionController extends IPEController implem
     public function collectionRemoveItemAction($ipe_hash, Request $request)
     {
         $id = $request->query->get('id');
+        var_dump($id);
         //let us get ipe params from ipe_hash session
         $ipe = $this->getIpe($ipe_hash);
         $this->checkRoles($ipe['editor_roles']);

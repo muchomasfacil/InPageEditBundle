@@ -19,6 +19,7 @@ controller:
     not_found_exception: No se ha encontrado nada buscando por %find_params%
     missing_find_by_param: Falta algúna entrada en find_params . %find_params%
     editor_roles_error: editor_roles debe ser null o un array de roles
+    ajax_loading: Por favor espere...
 collectionList:
     modal_title: Editando collección
     icon_move_title: Arrastra para mover la entrada
@@ -26,6 +27,7 @@ collectionList:
     icon_plus_title: Añadir entrada justo debajo
     icon_edit_title: Editar entrada
 edit:
+    button: Editar
     modal_title: Editando entrada
     button_reset: Limpiar
     button_save: Salvar

@@ -27,6 +27,7 @@ collectionList:
     icon_plus_title: Add item below
     icon_edit_title: Edit item
 edit:
+    button: Edit
     modal_title: Editing entry
     button_reset: Reset
     button_save: Save

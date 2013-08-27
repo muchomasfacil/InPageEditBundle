@@ -81,7 +81,8 @@ class IPEController extends ContainerAware
                 'find_params' => $this->getFindParams($ipe_definition, $find_params, $params)
             );
             // then those that can be overwritten by params
-
+            //print_r($params);
+            //die();
             foreach(array('editor_roles', 'container_html_tag', 'container_html_attributes') as $key) {
                 $value = (isset($params[$key]))? $params[$key]: $definition[$key];
                 $ipe[$key] = $value;

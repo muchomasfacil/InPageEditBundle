@@ -21,7 +21,7 @@
 
 
 {% block modal_footer %}
-{% if ipe_uid is defined %}
+{% if ipe_uid is not empty %}
         <button type="button" class="pull-left btn btn-danger"  data-hah-action="load" data-hah-confirm-message="{{ 'shared.delete_confirmation'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-remove-item', 'ipe_hash':  data_ipe_hash , 'id': ipe_uid, 'action_on_success': 'list'}) }}">{{ 'edit.button_delete'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
 {% endif %}
         <button type="button" class="pull-left btn"             data-hah-action="form-reset"  data-hah-form-id-selector="#{{ form_id_selector }}">{{ 'edit.button_reset'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
