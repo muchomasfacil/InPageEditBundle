@@ -4,6 +4,8 @@ parameters:
         en: {label: English}
         es: {label: Español}
 
+    mucho_mas_facil_in_page_edit.message_catalog: ipe_messages
+
     mucho_mas_facil_in_page_edit.twig.ipe_extension.class: MuchoMasFacil\InPageEditBundle\Twig\IpeExtension
     mucho_mas_facil_in_page_edit.twig.ipe_extension.doctrine.orm.faker.class: MuchoMasFacil\InPageEditBundle\Twig\IpeExtensionDoctrineOrmFaker
     mucho_mas_facil_in_page_edit.faker.class: MuchoMasFacil\InPageEditBundle\Faker\Generator
@@ -14,7 +16,7 @@ services:
 #        arguments: [@service_id, "plain_value", %parameter%]
     mucho_mas_facil_in_page_edit.twig.ipe_extension:
         class: %mucho_mas_facil_in_page_edit.twig.ipe_extension.class%
-        arguments: [@fragment.handler, %mucho_mas_facil_in_page_edit.definitions%]
+        arguments: [@session, @translator, @fragment.handler, %mucho_mas_facil_in_page_edit.definitions%, %mucho_mas_facil_in_page_edit.message_catalog%]
         tags:
             - {name: twig.extension}
 

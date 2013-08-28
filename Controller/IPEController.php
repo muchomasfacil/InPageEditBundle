@@ -35,12 +35,6 @@ class IPEController extends ContainerAware
         return $this->forward($definition['ipe_controller'].':'.$action, array('ipe_hash'=> $ipe_hash, 'ipe'=>$ipe, 'request' => $request));
     }
 
-    public function ipeSetLocaleAction($locale = null)
-    {
-        return new Response('Ipe locale changed to '. $this->setIpeLocale($locale));
-
-    }
-
     //this should always by called for IPEController:ajaxIpeRenderAction
     public function ajaxRenderAction($ipe, $ipe_hash)
     {
@@ -51,6 +45,25 @@ class IPEController extends ContainerAware
             'params' => $ipe['params'],
             'render_with_container' => false
         ));
+    }
+
+    public function _navbarAction($template = null, $locale = null)
+    {
+        $this->render_vars['available_langs'] = $this->container->getParameter('mucho_mas_facil_in_page_edit.available_langs');
+        if (is_null($locale)) {
+            $this->render_vars['ipe_locale'] = $this->getIpeLocale();
+        }
+        else {
+            $this->render_vars['ipe_locale'] = $this->setIpeLocale($locale);
+        }
+
+        if (is_null($template))
+        {
+            $template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_navbar.html.twig';
+        }
+        $this->render_vars['template'] = $template;
+
+        return $this->container->get('templating')->renderResponse($template , $this->render_vars);
     }
 
     //no associated route. Will always be called from twig templates or from ajaxRenderAction
@@ -148,23 +161,6 @@ class IPEController extends ContainerAware
             throw new AccessDeniedException();
         }
     }
-
-    /*protected function ipeIsGranted($roles)
-    {
-        // if ((!is_array($roles)) && (!is_null($roles))) {
-        //     throw new \Exception($this->trans('controller.editor_roles_error'));
-        // }
-        if ((is_array($roles)) && (count($roles) > 0)) {
-            if (
-                (is_null($this->container->get('security.context')->getToken()))
-                || (false === $this->container->get('security.context')->isGranted($roles))
-                ) {
-                return false;
-            }
-        }
-
-        return true;
-    }*/
 
     protected function removeIpe($ipe_hash)
     {

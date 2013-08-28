@@ -2,7 +2,7 @@
 
 {% set form_id_selector = 'ipe-form' %}
 
-{% block modal_header_label %}{{ 'edit.modal_title' |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}{% endblock modal_header_label %}
+{% block modal_header_label %}{{ 'edit.modal_title' |ipe_trans }}{% endblock modal_header_label %}
 
 {% block modal_body %}
 {{ include(parent_bundle_name ~ ':IPE:_flashCollection.html.twig') }}
@@ -18,8 +18,8 @@
 {% endblock modal_body %}
 
 {% block modal_footer %}
-        <button type="button" class="pull-left btn btn-danger"  data-hah-action="load" data-hah-confirm-message="{{ 'shared.delete_confirmation'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'remove', 'ipe_hash': data_ipe_hash, 'action_on_success': 'close'}) }}">{{ 'edit.button_delete'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
-        <button type="button" class="pull-left btn"             data-hah-action="form-reset"  data-hah-form-id-selector="#{{ form_id_selector }}">{{ 'edit.button_reset'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
-        <button type="button" class="btn btn-info"    data-hah-action="form-submit" data-hah-form-id-selector="#{{ form_id_selector }}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'edit', 'ipe_hash': data_ipe_hash}) }}">{{ 'edit.button_save'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
-        <button type="button" class="btn btn-primary" data-hah-action="form-submit" data-hah-form-id-selector="#{{ form_id_selector }}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'edit', 'ipe_hash': data_ipe_hash, 'action_on_success': 'close'}) }}">{{ 'edit.button_save_and_close'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}</button>
+        <button type="button" class="pull-left btn btn-danger"  data-hah-action="load" data-hah-confirm-message="{{ 'shared.delete_confirmation'  |ipe_trans }}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans  }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'remove', 'ipe_hash': data_ipe_hash, 'action_on_success': 'close'}) }}">{{ 'edit.button_delete'|ipe_trans  }}</button>
+        <button type="button" class="pull-left btn"             data-hah-action="form-reset"  data-hah-form-id-selector="#{{ form_id_selector }}">{{ 'edit.button_reset'|ipe_trans  }}</button>
+        <button type="button" class="btn btn-info"    data-hah-action="form-submit" data-hah-form-id-selector="#{{ form_id_selector }}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans  }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'edit', 'ipe_hash': data_ipe_hash}) }}">{{ 'edit.button_save'|ipe_trans  }}</button>
+        <button type="button" class="btn btn-primary" data-hah-action="form-submit" data-hah-form-id-selector="#{{ form_id_selector }}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans  }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'edit', 'ipe_hash': data_ipe_hash, 'action_on_success': 'close'}) }}">{{ 'edit.button_save_and_close'|ipe_trans  }}</button>
 {% endblock modal_footer %}

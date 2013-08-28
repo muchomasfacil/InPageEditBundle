@@ -1,6 +1,6 @@
 {% extends parent_bundle_name ~ '::modal_layout.html.twig' %}
 
-{% block modal_header_label %}{{ 'collectionList.modal_title' |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}{% endblock modal_header_label %}
+{% block modal_header_label %}{{ 'collectionList.modal_title' |ipe_trans }}{% endblock modal_header_label %}
 
 {% block modal_footer %}{% endblock modal_footer %}
 
@@ -9,15 +9,15 @@
 
 <div class="well">
     <ul class="inline">
-        <li><button class="btn btn-info btn-mini" data-hah-action="load" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-add-item', 'ipe_hash': data_ipe_hash, 'position': 0}) }}" title="{{ 'collectionList.icon_plus_title'  |trans({}, 'mmf_ipe')}}"><i class="icon-plus"></i>&nbsp;{{ 'collectionList.icon_plus_title'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}</button></li>
+        <li><button class="btn btn-info btn-mini" data-hah-action="load" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans  }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-add-item', 'ipe_hash': data_ipe_hash, 'position': 0}) }}" title="{{ 'collectionList.icon_plus_title'  |ipe_trans }}"><i class="icon-plus"></i>&nbsp;{{ 'collectionList.icon_plus_title'  |ipe_trans }}</button></li>
     </ul>
     <ul id="ipe-sortable" class="unstyled" >
     {% for key,result in list %}
       <li class="alert" id="ipe_sortable_uid_{{ result.id }}">
-        <span href="#" class="btn btn-mini move-handle" title="{{ 'collectionList.icon_move_title'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}"><i class="icon-move"></i></span>
-        <button type="button" class="btn btn-mini btn-danger" data-hah-action="load" data-hah-confirm-message="{{ 'shared.delete_confirmation'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-remove-item', 'ipe_hash': data_ipe_hash, 'id': result.id}) }}" title="{{ 'collectionList.icon_trash_title' |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}"><i class="icon-trash"></i></button>
-        <button class="btn btn-info btn-mini" data-hah-action="load" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-add-item', 'ipe_hash': data_ipe_hash, 'position': attribute(result, inflected_position_field) + 1}) }}" title="{{ 'collectionList.icon_plus_title'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}"><i class="icon-plus"></i></button>
-        <button class="btn btn-primary btn-mini" data-hah-action="load" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': data_ipe_hash, 'action_on_success': 'none', 'id': result.id} ) }}" title="{{ 'collectionList.icon_edit_title'  |trans({}, ipe_message_catalog, app.session.get('ipe_locale'))}}"><i class="icon-edit"></i></button>
+        <span href="#" class="btn btn-mini move-handle" title="{{ 'collectionList.icon_move_title'  |ipe_trans  }}"><i class="icon-move"></i></span>
+        <button type="button" class="btn btn-mini btn-danger" data-hah-action="load" data-hah-confirm-message="{{ 'shared.delete_confirmation'  |ipe_trans }}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans  }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-remove-item', 'ipe_hash': data_ipe_hash, 'id': result.id}) }}" title="{{ 'collectionList.icon_trash_title' |ipe_trans }}"><i class="icon-trash"></i></button>
+        <button class="btn btn-info btn-mini" data-hah-action="load" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans  }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-add-item', 'ipe_hash': data_ipe_hash, 'position': attribute(result, inflected_position_field) + 1}) }}" title="{{ 'collectionList.icon_plus_title'  |ipe_trans }}"><i class="icon-plus"></i></button>
+        <button class="btn btn-primary btn-mini" data-hah-action="load" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans  }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': data_ipe_hash, 'action_on_success': 'none', 'id': result.id} ) }}" title="{{ 'collectionList.icon_edit_title'  |ipe_trans }}"><i class="icon-edit"></i></button>
         {{ has_to_string_method ? attribute(result, params['list_to_string_method']) : result.id }}
       </li>
     {% endfor %}
@@ -35,7 +35,7 @@ $(function() {
             var end_pos = $(ui.item).index();
             var uid = $(ui.item).attr('id').replace('ipe_sortable_uid_', '');
             //alert(uid + ' - ' + end_pos);
-            $.hahLoad('#hah-modal', '{{ path('_ipe_action', {'action': 'collection-move-item', 'ipe_hash': data_ipe_hash }) }}?id=' + uid + '&position=' + end_pos, null, '#hah-modal', '{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}');
+            $.hahLoad('#hah-modal', '{{ path('_ipe_action', {'action': 'collection-move-item', 'ipe_hash': data_ipe_hash }) }}?id=' + uid + '&position=' + end_pos, null, '#hah-modal', '{{ 'controller.ajax_loading'|ipe_trans  }}');
         }
     });
 

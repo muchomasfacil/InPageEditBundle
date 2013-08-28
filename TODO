@@ -14,11 +14,15 @@ ipe_navbar(template, locale)
 -- create new entities
 -- ...
 
+ipe_trans filter...
+
 - form theming
 
 - generic twig extensions:
     -- ipe_render_odme($entity, $template, $params, ...)
     -- ipe_render_odgsme($handler, $entity_clas, $is_collection, $template, $params, ...)
+
+- specific extendable layout
 
 - tema de herencia al mapear los odgsme...
 

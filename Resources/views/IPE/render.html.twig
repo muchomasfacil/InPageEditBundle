@@ -1,4 +1,4 @@
-<{{ container_html_tag }}  {{ container_html_attributes | raw }}{% if editor_roles is empty or is_granted(editor_roles)  %} data-ipe-hash="{{ data_ipe_hash }}" data-hah-action="load-modal" data-hah-url="{{ path('_ipe_action', {'action': 'edit', 'ipe_hash': data_ipe_hash}) }}" data-hah-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}"{% endif %}>
+<{{ container_html_tag }}  {{ container_html_attributes | raw }}{% if editor_roles is empty or is_granted(editor_roles)  %} data-ipe-hash="{{ data_ipe_hash }}" data-hah-action="load-modal" data-hah-url="{{ path('_ipe_action', {'action': 'edit', 'ipe_hash': data_ipe_hash}) }}" data-hah-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans }}"{% endif %}>
 
   {{ include(render_template) }}
 

@@ -3,6 +3,8 @@ namespace MuchoMasFacil\InPageEditBundle\Twig;
 
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class IpeExtension extends \Twig_Extension
 {
@@ -11,19 +13,28 @@ class IpeExtension extends \Twig_Extension
      *
      * @var  \Symfony\Component\DependencyInjection\Container
      */
+    private $session;
+
+    private $translator;
+
     private $handler;
 
     private $definitions;
+
+    private $message_catalog;
 
     /**
      * Constructor.
      *
      * @param FragmentHandler $handler A FragmentHandler instance
      */
-    public function __construct(FragmentHandler $handler, $definitions)
+    public function __construct(Session $session, Translator $translator, FragmentHandler $handler, $definitions, $message_catalog)
     {
+        $this->session = $session;
+        $this->translator = $translator;
         $this->handler = $handler;
         $this->definitions = $definitions;
+        $this->message_catalog = $message_catalog;
     }
 
     public function getFunctions()
@@ -31,6 +42,24 @@ class IpeExtension extends \Twig_Extension
         return array(
             'ipe_render'            => new \Twig_Function_Method($this, 'ipeRenderFragment',  array('is_safe' => array('html'))),
         );
+    }
+
+    public function getFilters()
+    {
+        return array(
+            new \Twig_SimpleFilter('ipe_trans', array($this, 'ipe_trans')),
+        );
+    }
+
+    public function ipe_trans($translatable, $params = array(), $message_catalog = null, $ipe_locale = null)
+    {
+        if (empty($message_catalog)) {
+            $message_catalog = $this->message_catalog;
+        }
+        if (empty($ipe_locale)) {
+            $ipe_locale = $this->session->get('ipe_locale');
+        }
+        return $this->translator->trans($translatable, $params, $message_catalog, $ipe_locale);
     }
 
     public function ipeRenderFragment($ipe_definition, $find_params, $render_template, $params = array(), $render_with_container = true)

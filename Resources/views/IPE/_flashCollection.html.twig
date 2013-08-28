@@ -5,9 +5,9 @@
         <a class="close" data-dismiss="alert" href="#">×</a>
     {% endif %}
     {% if use_raw|default(false) %}
-        {{ message|trans({}, domain|default('messages'))|raw }}
+        {{ message|ipe_trans|raw }}
     {% else %}
-        {{ message|trans({}, domain|default('messages')) }}
+        {{ message|ipe_trans }}
     {% endif %}
     </div>
 {% endmacro %}
@@ -24,9 +24,9 @@
     <h4 class="alert-heading">{{ heading }}</h4>
     {% endif %}
     {% if use_raw|default(false) %}
-        {{ message|trans({}, domain|default('messages'))|raw }}
+        {{ message|ipe_trans|raw }}
     {% else %}
-        {{ message|trans({}, domain|default('messages')) }}
+        {{ message|ipe_trans }}
     {% endif %}
     </div>
 {% endmacro %}

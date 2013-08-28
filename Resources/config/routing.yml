@@ -1,11 +1,9 @@
+_ipe_navbar:
+    pattern:  /ipe/navbar/{locale}/{template}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:IPE:_navbar}
+
 _ipe_action:
     pattern:  /ipe/{action}/{ipe_hash}
     defaults: { _controller: MuchoMasFacilInPageEditBundle:IPE:ipe}
 
-_ipe_locale:
-    pattern:  /ipe/locale/{locale}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:IPE:ipeSetLocale}
 
-_ipe_navbar:
-    pattern:  /ipe/navbar/{locale}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/InPageEdit:_navbar}

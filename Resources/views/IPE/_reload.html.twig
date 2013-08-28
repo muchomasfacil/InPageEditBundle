@@ -1,3 +1,3 @@
 <script>
-    $.hahLoad('[data-ipe-hash="{{ data_ipe_hash }}"]', '{{ path('_ipe_action', {'action': 'ajax-render', 'ipe_hash': data_ipe_hash }) }}', null, '[data-ipe-hash="{{ data_ipe_hash }}"]', '{{ 'controller.ajax_loading'|trans({}, ipe_message_catalog, app.session.get('ipe_locale')) }}');
+    $.hahLoad('[data-ipe-hash="{{ data_ipe_hash }}"]', '{{ path('_ipe_action', {'action': 'ajax-render', 'ipe_hash': data_ipe_hash }) }}', null, '[data-ipe-hash="{{ data_ipe_hash }}"]', '{{ 'controller.ajax_loading'|ipe_trans }}');
 </script>
