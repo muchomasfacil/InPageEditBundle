@@ -6,33 +6,34 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class IpeExtension extends \Twig_Extension
-{
+use MuchoMasFacil\InPageEditBundle\Util\IpeTwigExtensionsHelper;
 
+class IpeExtension extends IpeExtensionModel
+{
     /**
      *
      * @var  \Symfony\Component\DependencyInjection\Container
      */
-    private $session;
+    protected $session;
 
-    private $translator;
+    protected $translator;
 
-    private $handler;
+    protected $handler;
 
-    private $definitions;
+    protected $definitions;
 
-    private $message_catalog;
+    protected $message_catalog;
 
     /**
      * Constructor.
      *
      * @param FragmentHandler $handler A FragmentHandler instance
      */
-    public function __construct(Session $session, Translator $translator, FragmentHandler $handler, $definitions, $message_catalog)
+    public function __construct(FragmentHandler $handler, Session $session, Translator $translator, $definitions, $message_catalog)
     {
-        $this->session = $session;
-        $this->translator = $translator;
         $this->handler = $handler;
+        $this->session = $session;
+        $this->translator = $translator;        
         $this->definitions = $definitions;
         $this->message_catalog = $message_catalog;
     }
@@ -40,7 +41,7 @@ class IpeExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'ipe_render'            => new \Twig_Function_Method($this, 'ipeRenderFragment',  array('is_safe' => array('html'))),
+            'ipe_render' => new \Twig_Function_Method($this, 'ipe_render',  array('is_safe' => array('html'))),
         );
     }
 
@@ -62,33 +63,35 @@ class IpeExtension extends \Twig_Extension
         return $this->translator->trans($translatable, $params, $message_catalog, $ipe_locale);
     }
 
-    public function ipeRenderFragment($ipe_definition, $find_params, $render_template, $params = array(), $render_with_container = true)
-    {
-        // let us check we have a valid definition
-        if (!in_array($ipe_definition, array_keys($this->definitions))) {
-            // no definition, let us search for an alias
-            foreach ($this->definitions as $key => $value) {
-                if (isset($value['alias'])) {
-                    $aliases[$key] = $value['alias'];
-                }
-            }
-            if (($key = array_search($ipe_definition, $aliases)) === false) {
-                throw new \Exception ($ipe_definition . ' is not a valid ipe definition or ipe definition alias');
-            }
-            else {
-                $ipe_definition = $key;
-            }
-        }
+    public function ipe_render($ipe_definition, $find_params, $render_template, $params = array(), $render_with_container = true)
+    {        
+        $ipe_definition = $this->getCheckIpeDefinition($ipe_definition, $this->definitions);
         $definition = $this->definitions[$ipe_definition];
+
+        //let us merge definitions params with call custom params
+        $params = array_merge($definition['params'], $params);
+        $find_params = array_merge($definition['find_params'], $find_params);        
+
+        $this->checkFindObjectParams($ipe_definition, $this->definitions, $find_params, $params);
+        //now create the var to store in session
+        $ipe = array(
+                'ipe_definition' => $ipe_definition,
+                'find_params' => $find_params,                    
+                'render_template' => $render_template,                
+                'params' => $params,                
+            );
+
+        //now we create our unique ipe_hash            
+        $ipe_hash = IpeTwigExtensionsHelper::createHashForObject($ipe);
+        //now ipe to session
+        $this->session->set('ipe_' . $ipe_hash, $ipe);                    
         $options = array(
-            'ipe_definition'  => $ipe_definition,
-            'find_params'  => $find_params,
-            'render_template' => $render_template,
-            'params' => $params,
+            'ipe_hash'  => $ipe_hash,
+            'ipe'  => $ipe,
             'render_with_container' => $render_with_container,
             );
 
-        return $this->renderFragment($this->controller($definition['ipe_controller'].':render', $options));
+        return $this->renderFragment($this->handler, $this->controller($definition['ipe_controller'].':render', $options));
     }
 
     public function getName()
@@ -96,16 +99,4 @@ class IpeExtension extends \Twig_Extension
         return 'ipe_extension';
     }
 
-    private function renderFragment($uri, $options = array())
-    {
-        $strategy = isset($options['strategy']) ? $options['strategy'] : 'inline';
-        unset($options['strategy']);
-
-        return $this->handler->render($uri, $strategy, $options);
-    }
-
-    private function controller($controller, $attributes = array(), $query = array())
-    {
-        return new ControllerReference($controller, $attributes, $query);
-    }
 }

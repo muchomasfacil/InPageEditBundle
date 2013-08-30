@@ -1,7 +1,5 @@
 {% extends parent_bundle_name ~ '::modal_layout.html.twig' %}
 
-
-
 {% set form_id_selector = 'ipe-form' %}
 
 {% block modal_header_label %}{{ 'edit.modal_title' |ipe_trans }}{% endblock modal_header_label %}
@@ -11,7 +9,7 @@
 
 {% form_theme form parent_bundle_name ~ ':Form:form_fields.html.twig' %}
 
-{{ form_start(form, {'attr': {'class': 'well', 'id': form_id_selector}}) }}
+{{ form_start(form, {'attr': {'class': 'well form-inline', 'id': form_id_selector}}) }}
     {{ form_widget(form) }}
 {{ form_end(form) }}
 

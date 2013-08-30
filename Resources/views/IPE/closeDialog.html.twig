@@ -8,5 +8,5 @@
 </script>
 
 {% if reload_content is defined %}
-    {{ include(parent_bundle_name ~ ':IPE:' ~ '_reload.html.twig', {'data_ipe_hash': data_ipe_hash})|raw }}
+    {{ include(params['reload_template']) }}
 {% endif %}

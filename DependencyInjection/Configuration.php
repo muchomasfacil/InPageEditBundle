@@ -28,8 +28,15 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('message_catalog')->end()
+            ->end()
+        
+        ;
+
+        $rootNode
+            ->children()
                 ->arrayNode('available_langs')
-                    ->useAttributeAsKey('locale')
+                    ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
                         ->scalarNode('label')->end()
@@ -38,24 +45,20 @@ class Configuration implements ConfigurationInterface
             ->end()
         ;
 
-            $rootNode
+        $rootNode
             ->children()
                 ->arrayNode('definitions')
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                     ->children()
                         ->scalarNode('alias')->end()
-                        ->scalarNode('ipe_controller')->isRequired()->end()
-                        ->arrayNode('editor_roles')
-                            ->prototype('scalar')->end()
-                            ->defaultValue(array('ROLE_IPE_EDITOR'))
-                        ->end()
-                        ->scalarNode('container_html_tag')->defaultValue('div')->end()
-                        ->scalarNode('container_html_attributes')->defaultValue('')->end()
-                        ->arrayNode('params')
+                        ->scalarNode('ipe_controller')->end()
+                        ->arrayNode('params')                            
+                            ->useAttributeAsKey('name')
                             ->prototype('variable')->end()
                         ->end()
-                        ->arrayNode('find_params')
+                        ->arrayNode('find_params')   
+                            ->useAttributeAsKey('name')                         
                             ->prototype('variable')->end()
                         ->end()
                     ->end()

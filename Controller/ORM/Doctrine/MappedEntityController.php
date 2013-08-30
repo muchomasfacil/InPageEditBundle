@@ -34,7 +34,7 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         return $find_params; //it directly is an object
     }
 
-    public function getFindParams($ipe_definition, $find_params, $params)
+    /*public function getFindParams($ipe_definition, $find_params, $params)
     {
         # in this definition normally, you pass an entity rather than find by params to $find_params
         # this allow to skip remake multiple queries when in your controller you use a collection of entities
@@ -55,18 +55,40 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         }
 
         return $find_params;
+    }*/
+
+    public function renderObjectAction($ipe_hash, $ipe, $render_with_container = true, $object)
+    {        
+        $this->getIpeLocale(); //init ipe_locale
+
+        $this->render_vars['data_ipe_hash'] = $ipe_hash;
+        $this->render_vars['ipe_definition'] = $ipe['ipe_definition'];
+        $this->render_vars['find_params'] = $ipe['find_params'];
+        $this->render_vars['render_template'] = $ipe['render_template'];
+        $this->render_vars['params'] = $ipe['params'];        
+
+        $this->render_vars['render_with_container'] = $render_with_container;                                
+        $this->render_vars['object'] = $object;        
+
+        if ($render_with_container) {    
+            $final_render_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':render.html.twig';            
+        }
+        else {
+            $final_render_template = $ipe['render_template'];
+        }
+        
+        return $this->container->get('templating')->renderResponse($final_render_template , $this->render_vars);
     }
 
-    public function editAction($ipe_hash, Request $request)
+    public function editAction($ipe_hash, $ipe, Request $request)
     {
         $action_on_success = $request->query->get('action_on_success');
-        //let us get ipe params from ipe_hash session
-        $ipe = $this->getIpe($ipe_hash);
-        $this->checkRoles($ipe['editor_roles']);
-        $params = $ipe['params'];
+        //let us check roles are correct
+        $this->checkRoles($ipe['params']['editor_roles']);
 
         $em = $this->container->get('doctrine')->getManager();
 
+        $params = $ipe['params'];
         //the entry MUST alredy exist let us get it ////////////////////////////
         $entity = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);
         $form_type_class = (isset($params['form_type_class']))? $params['form_type_class']: $this->guessFormTypeClass(get_class($entity));
@@ -83,6 +105,7 @@ class MappedEntityController extends IPEController implements IPEControllerInter
                     $this->render_vars['reload_content'] = true;
                     if ($action_on_success == 'close') {
                         $this->render_vars['data_ipe_hash'] = $ipe_hash;
+                        $this->render_vars['params'] = $params;
                         $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':closeDialog.html.twig';
                         return $this->container->get('templating')->renderResponse($close_template, $this->render_vars);
                     }
@@ -109,35 +132,27 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         return $this->container->get('templating')->renderResponse($this->render_vars['bundle_name'] . ':' . $this->render_vars['controller_name'] . ':edit.html.twig', $this->render_vars);
     }
 
-    public function removeAction($ipe_hash, Request $request)
+    public function removeAction($ipe_hash, $ipe, Request $request)
     {
+
         $action_on_success = $request->query->get('action_on_success');
-        //let us get ipe params from ipe_hash session
-        $ipe = $this->getIpe($ipe_hash);
-        // let us get definitions
-        $this->checkRoles($ipe['editor_roles']);
+        //let us check roles are correct
+        $this->checkRoles($ipe['params']['editor_roles']);
 
         $em = $this->container->get('doctrine')->getManager();
 
         //the entry MUST alredy exist let us get it ////////////////////////////
-        $entity = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);
-
+        $entity = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);        
         $em->remove($entity);
         $em->flush();
         $session = $this->container->get('request')->getSession();
         $this->removeIpe($ipe_hash);
-        if ($action_on_success == 'close') {
+        //if ($action_on_success == 'close') {
             $this->render_vars['data_ipe_hash'] = $ipe_hash;
             $this->render_vars['remove_content_container'] = true;
             $close_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':closeDialog.html.twig';
             return $this->container->get('templating')->renderResponse($close_template, $this->render_vars);
-        }
-        //////////////////////pendiente
-        $this->render_vars['flashes'][] = array('type' => 'success', 'message' => $this->trans('controller.collectionDeleteItemAction.entry_deleted'), 'close' => true, 'use_raw' => true);
-
-        $final_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':closeDialog.html.twig';
-
-        return $this->container->get('templating')->renderResponse($close_template, $this->render_vars);
+        //}
     }
 
     private function isFindParams($ipe_definition, $find_params, $params)

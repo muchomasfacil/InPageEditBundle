@@ -13,6 +13,8 @@ ipe_navbar(template, locale)
 -- create new entities
 -- ...
 
+- arreglar cambio de idioma en navbar, falta el root_request
+
 - generic twig extensions:
     -- ipe_render_odme($entity, $template, $params, ...)
     -- ipe_render_odgsme($handler, $entity_clas, $is_collection, $template, $params, ...)
@@ -20,6 +22,8 @@ ipe_navbar(template, locale)
 - integrar ckeditor o tinymce y elfinder https://github.com/neutron-project/form-bundle
 
 - uploads seleccionar un tipo de file input y programarlo https://github.com/neutron-project/form-bundle
+
+- los date inputs salen sin traducir
 
 - begin working on GroupedSortedObjectCollectionController
 

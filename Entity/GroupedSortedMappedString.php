@@ -5,9 +5,9 @@ namespace MuchoMasFacil\InPageEditBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GroupedSortedObjectCollection
+ * GroupedSortedMappedString
  */
-class GroupedSortedObjectCollection
+class GroupedSortedMappedString
 {
     /**
      * @var integer
@@ -15,9 +15,9 @@ class GroupedSortedObjectCollection
     private $id;
 
     /**
-     * @var \stdClass
+     * @var string
      */
-    private $object;
+    private $string;
 
     /**
      * @var string
@@ -41,33 +41,33 @@ class GroupedSortedObjectCollection
     }
 
     /**
-     * Set object
+     * Set string
      *
-     * @param \stdClass $object
-     * @return GroupedSortedObjectCollection
+     * @param string $string
+     * @return GroupedSortedMappedString
      */
-    public function setObject($object)
+    public function setString($string)
     {
-        $this->object = $object;
+        $this->string = $string;
     
         return $this;
     }
 
     /**
-     * Get object
+     * Get string
      *
-     * @return \stdClass 
+     * @return string 
      */
-    public function getObject()
+    public function getString()
     {
-        return $this->object;
+        return $this->string;
     }
 
     /**
      * Set ipe_handler
      *
      * @param string $ipeHandler
-     * @return GroupedSortedObjectCollection
+     * @return GroupedSortedMappedString
      */
     public function setIpeHandler($ipeHandler)
     {
@@ -90,7 +90,7 @@ class GroupedSortedObjectCollection
      * Set ipe_position
      *
      * @param integer $ipePosition
-     * @return GroupedSortedObjectCollection
+     * @return GroupedSortedMappedString
      */
     public function setIpePosition($ipePosition)
     {

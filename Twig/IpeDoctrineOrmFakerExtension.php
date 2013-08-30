@@ -4,7 +4,7 @@ namespace MuchoMasFacil\InPageEditBundle\Twig;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
-class IpeExtensionDoctrineOrmFaker extends \Twig_Extension
+class IpeDoctrineOrmFakerExtension extends \Twig_Extension
 {
 
     /**

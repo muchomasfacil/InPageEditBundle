@@ -14,7 +14,7 @@
     <ul id="ipe-sortable" class="unstyled" >
     {% for key,result in list %}
       <li class="alert" id="ipe_sortable_uid_{{ result.id }}">
-        <span href="#" class="btn btn-mini move-handle" title="{{ 'collectionList.icon_move_title'  |ipe_trans  }}"><i class="icon-move"></i></span>
+        <span href="#" class="btn btn-mini move-handle" title="{{ 'collectionList.icon_move_title'  |ipe_trans  }}"><i class="icon-move"></i>{#{ result.id }#}</span>
         <button type="button" class="btn btn-mini btn-danger" data-hah-action="load" data-hah-confirm-message="{{ 'shared.delete_confirmation'  |ipe_trans }}" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans  }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-remove-item', 'ipe_hash': data_ipe_hash, 'id': result.id}) }}" title="{{ 'collectionList.icon_trash_title' |ipe_trans }}"><i class="icon-trash"></i></button>
         <button class="btn btn-info btn-mini" data-hah-action="load" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans  }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-add-item', 'ipe_hash': data_ipe_hash, 'position': attribute(result, inflected_position_field) + 1}) }}" title="{{ 'collectionList.icon_plus_title'  |ipe_trans }}"><i class="icon-plus"></i></button>
         <button class="btn btn-primary btn-mini" data-hah-action="load" data-hah-block-id-selector="#hah-modal" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans  }}" data-hah-id-selector="#hah-modal" data-hah-url="{{ path('_ipe_action', {'action': 'collection-edit-item', 'ipe_hash': data_ipe_hash, 'action_on_success': 'none', 'id': result.id} ) }}" title="{{ 'collectionList.icon_edit_title'  |ipe_trans }}"><i class="icon-edit"></i></button>
@@ -32,7 +32,7 @@ $(function() {
         handle: '.move-handle',
         cursor: 'move',
         update : function (event, ui) {
-            var end_pos = $(ui.item).index();
+            var end_pos = $(ui.item).index() + 1;
             var uid = $(ui.item).attr('id').replace('ipe_sortable_uid_', '');
             //alert(uid + ' - ' + end_pos);
             $.hahLoad('#hah-modal', '{{ path('_ipe_action', {'action': 'collection-move-item', 'ipe_hash': data_ipe_hash }) }}?id=' + uid + '&position=' + end_pos, null, '#hah-modal', '{{ 'controller.ajax_loading'|ipe_trans  }}');
@@ -43,7 +43,7 @@ $(function() {
 </script>
 
 {% if reload_content %}
-    {{ include(parent_bundle_name ~ ':IPE:' ~ '_reload.html.twig', {'data_ipe_hash': data_ipe_hash})|raw }}
+    {{ include(params['reload_template']) }}
 {% endif %}
 
 {% endblock modal_body %}
