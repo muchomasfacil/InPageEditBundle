@@ -1,11 +1,15 @@
 {% extends parent_bundle_name ~ '::modal_layout.html.twig' %}
 
+
+
 {% set form_id_selector = 'ipe-form' %}
 
 {% block modal_header_label %}{{ 'edit.modal_title' |ipe_trans }}{% endblock modal_header_label %}
 
 {% block modal_body %}
 {{ include(parent_bundle_name ~ ':IPE:_flashCollection.html.twig') }}
+
+{% form_theme form parent_bundle_name ~ ':Form:form_fields.html.twig' %}
 
 {{ form_start(form, {'attr': {'class': 'well', 'id': form_id_selector}}) }}
     {{ form_widget(form) }}

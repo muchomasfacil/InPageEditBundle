@@ -9,39 +9,24 @@ app/console doctrine:schema:create
 ## TODO
 - NAVBAR
 ipe_navbar(template, locale)
--- change ipe locale (cuando se cambie el ipe_locale recargar página)
 -- title y metas
 -- create new entities
 -- ...
-
-ipe_trans filter...
-
-- form theming
 
 - generic twig extensions:
     -- ipe_render_odme($entity, $template, $params, ...)
     -- ipe_render_odgsme($handler, $entity_clas, $is_collection, $template, $params, ...)
 
-- specific extendable layout
-
-- tema de herencia al mapear los odgsme...
-
 - integrar ckeditor o tinymce y elfinder https://github.com/neutron-project/form-bundle
+
 - uploads seleccionar un tipo de file input y programarlo https://github.com/neutron-project/form-bundle
-- make use of http://fortawesome.github.io/Font-Awesome/ ??
-
-
-
-- check if mopa_bootstrap is compulsory or if we can custom form theme
-    - try to avoid this configuration, passing this to the twig template
-    mopa_bootstrap:
-        form:
-            show_legend: false # default is true
-            #documentar $builder->setAttribute('show_legend', true); cuando se creen los posibles entities
 
 - begin working on GroupedSortedObjectCollectionController
 
 - ipe_fake as an small form in render with_container...
+
+
+- make use of http://fortawesome.github.io/Font-Awesome/ ??
 
 - documentation
 -- comentar en la documentación los css y js que se necesitan para que los cargue sólo en caso de ipeisgranted

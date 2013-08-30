@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+{#
+    this template based on https://github.com/phiamo/MopaBootstrapBundle/blob/master/Resources/views/base.html.twig
+#}
+
+{% block html_tag %}
+<html>
+{% endblock html_tag %}
+
+{% block head %}
+<head>
+    <meta charset="UTF-8" />
+    {% block head_style %}
+
+    {# Override this block to add your own files! #}
+    {% stylesheets
+    %}
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+    {% if is_granted('ROLE_IPE_EDITOR') %}
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" type="text/css" rel="stylesheet" media="screen" />
+        <link rel="stylesheet" href="{{ asset('bundles/muchomasfacilinpageedit/css/ipe.css') }}" />
+    {% endif %}
+
+    {% endblock head_style %}
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% block head_script %}
+    {# Overwrite this block to add your own js here, to get them generated into final files #}
+    {% endblock head_script %}
+
+    <title>{% block title %}InPageEditDemoBundle{% endblock title %}</title>
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+    {% block head_bottom %}
+    {% endblock head_bottom %}
+</head>
+{% endblock head %}
+
+{% block body_tag %}
+<body>
+{% endblock body_tag %}
+
+{% block body_start %}
+{% endblock body_start %}
+
+
+{% block body %}
+    {% block navbar %}
+
+        {% if is_granted('ROLE_IPE_EDITOR') %}
+        <div id="ipe-navbar">
+            {# render(controller('MuchoMasFacilInPageEditBundle:IPE:_navbar', {'locale': my_custom_ipe_locale, 'template': my_custom_navbar_template})) #}
+            {{ render(controller('MuchoMasFacilInPageEditBundle:IPE:_navbar', {})) }}
+        </div>
+        {% endif %}
+
+    {% endblock navbar %}
+
+    {% block container %}
+        <div class="container-fluid">
+        {% block header %}
+        {% endblock header %}
+
+        {% block content_wrap %}
+        <div class="content">
+            {% block page_header %}
+            <div class="page-header">
+                  <h1>{% block headline %}MuchoMasFacilInPageEditDemoBundle{% endblock headline %}</h1>
+            </div>
+            {% endblock page_header %}
+
+            {% block content_row %}
+            <div class="row-fluid">
+                {% block content %}
+                <div class="span9">
+                    {% block content_content %}
+                    <strong>Put your content here ... </strong>
+                    {% endblock content_content %}
+                </div>
+                <div class="span3">
+                    {% block content_sidebar %}
+                    <h2>Sidebar</h2>
+                    {% endblock content_sidebar %}
+                </div>
+                {% endblock content %}
+            </div>
+            {% endblock content_row %}
+        </div><!--.content-->
+        {% endblock content_wrap %}
+
+        {% block footer_wrap %}
+        <footer>
+            {% block footer %}
+            <p>&copy; <a href="http://www.muchomasfacil.com" target="_blank">muchomasfacil.com</a> 2007-{{ 'now'|date('Y') }}</p>
+            {% endblock footer %}
+        </footer>
+        {% endblock footer_wrap %}
+    </div><!-- /container -->
+    {% endblock container %}
+
+
+    {% block foot_script %}
+
+        {% if is_granted('ROLE_IPE_EDITOR') %}
+            {# it is not required the use of assetic but as we get a bunch of external libraries... #}
+            {% javascripts
+                'http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js'
+                'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.core.js'
+                'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.widget.js'
+                'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.mouse.js'
+                'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.sortable.js'
+                'http://rawgithub.com/malsup/form/master/jquery.form.js'
+                'http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'
+                'http://rawgithub.com/malsup/blockui/master/jquery.blockUI.js'
+            %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            <script type="text/javascript" src="{{ asset('bundles/muchomasfacilinpageedit/js/jquery.htmlAjaxHelper.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/muchomasfacilinpageedit/js/ipe.js') }}"></script>
+        {% endif %}
+
+    {% endblock foot_script %}
+
+    {% block foot_script_additional %}
+    <script type="text/javascript">
+        $(document).ready( function () {
+
+        });
+    </script>
+    {% endblock foot_script_additional %}
+
+{% endblock body %}
+</body>
+</html>
