@@ -27,13 +27,25 @@ class IpeDoctrineOrmExtension extends IpeExtension
             'ipe_render_odme'    => new \Twig_Function_Method($this, 'ipe_render_odme',  array('is_safe' => array('html'))),
             'ipe_render_odgsme'  => new \Twig_Function_Method($this, 'ipe_render_odgsme',  array('is_safe' => array('html'))),
             'ipe_render_odgsme_collection'  => new \Twig_Function_Method($this, 'ipe_render_odgsme_collection',  array('is_safe' => array('html'))),
-            'ipe_od_title_tag'   => new \Twig_Function_Method($this, 'ipeTitleTag',  array('is_safe' => array('html'))),
-            'ipe_od_meta_tag'    => new \Twig_Function_Method($this, 'ipeMetaTags',  array('is_safe' => array('html'))),
+            'ipe_title_tag_od'   => new \Twig_Function_Method($this, 'ipe_title_tag_odgsme',  array('is_safe' => array('html'))),
+            'ipe_meta_tags_od'    => new \Twig_Function_Method($this, 'ipe_meta_tags_odgsme',  array('is_safe' => array('html'))),
         );
-    }    
+    }
 
     public function ipe_render_odme($object, $render_template, $params = array(), $render_with_container = true)
     {
+
+
+
+
+
+
+
+
+
+
+
+
         $ipe_definition = 'orm_doctrine_mapped_entity';
         $definition = $this->definitions[$ipe_definition];
         //let us merge definitions params with call custom params
@@ -46,24 +58,24 @@ class IpeDoctrineOrmExtension extends IpeExtension
         }
         $ipe = array(
                 'ipe_definition' => $ipe_definition,
-                'find_params' => $find_params,                    
-                'render_template' => $render_template,                
-                'params' => $params,                
+                'find_params' => $find_params,
+                'render_template' => $render_template,
+                'params' => $params,
             );
 
-        //now we create our unique ipe_hash            
+        //now we create our unique ipe_hash
         $ipe_hash = IpeTwigExtensionsHelper::createHashForObject($ipe);
         //now ipe to session
         $this->session->set('ipe_' . $ipe_hash, $ipe);
-        
+
         $options = array(
             'ipe_hash'  => $ipe_hash,
             'ipe'  => $ipe,
             'render_with_container' => $render_with_container,
             'object' => $object,
-            );     
+            );
 
-        return $this->renderFragment($this->handler, $this->controller($definition['ipe_controller'].':renderObject', $options));        
+        return IpeTwigExtensionsHelper::renderFragment($this->handler, IpeTwigExtensionsHelper::controller($definition['ipe_controller'].':renderObject', $options));
     }
 
     public function ipe_render_odgsme($ipe_handler, $entity_class, $render_template, $params = array(), $render_with_container = true)
@@ -82,7 +94,7 @@ class IpeDoctrineOrmExtension extends IpeExtension
     {
         $ipe_definition = 'orm_doctrine_grouped_sorted_mapped_entity_collection';
         $definition = $this->definitions[$ipe_definition];
-        
+
         $find_params['entity_class'] = $entity_class;
         $find_params['find_by'] = array($definition['params']['collection_ipe_handler_field']=> $ipe_handler);
         $find_params['is_collection'] = true;
@@ -90,30 +102,40 @@ class IpeDoctrineOrmExtension extends IpeExtension
         return $this->ipe_render($ipe_definition, $find_params, $render_template, $params = array(), $render_with_container);
     }
 
-    public function ipeTitleTag($request, $params = array())
-    {   
-        return 'falta el título';
-        /*$find_params = IpeTwigExtensionsHelper::getTitleFindParams($request->getRequestUri(), $request->getBaseUrl());
+    public function ipe_title_tag_odgsme($request, $params = array())
+    {
+        $ipe_definition = 'orm_doctrine_grouped_sorted_mapped_entity_collection';
+
+        $definition = $this->definitions[$ipe_definition];
+        $find_params = IpeTwigExtensionsHelper::getTitleFindParams($request->getRequestUri(), $request->getBaseUrl(), $definition['params']['collection_ipe_handler_field']);
+
+        $render_template = 'MuchoMasFacilInPageEditBundle:ORM:Doctrine/TitleMetaTags/_renderTitleTag.html.twig';
+
         if (!isset($params['form_type_class'])) {
             $params['form_type_class'] = 'MuchoMasFacilInPageEditBundle\\Form\\Type\\TitleTagType';
         }
         if (!isset($params['reload_template'])) {
-            //$params['reload_template'] = '';
+            $params['reload_template'] = 'MuchoMasFacilInPageEditBundle:ORM:Doctrine/TitleMetaTags/_reloadTitleTag.html.twig';
         }
+
+        //create var to store in session
+        $ipe = IpeTwigExtensionsHelper::createIpe($ipe_definition, $this->definitions, $find_params, $render_template, $params);
+
+        //now we create our unique ipe_hash BASED on that var
+        $ipe_hash = IpeTwigExtensionsHelper::createHashForObject($ipe);
+        //now ipe to session
+        $this->session->set('ipe_' . $ipe_hash, $ipe);
         $options = array(
-            'ipe_definition'  => 'orm_doctrine_grouped_sorted_mapped_entity_collection',
-            'find_params'  => $find_params,
-            'render_template' => 'MuchoMasFacilInPageEditBundle:ORM:Doctrine/TitleMetaTags/_renderTitleTag.html.twig',
-            'params' => $params,
-            'render_with_container' => false,
+            'ipe_hash'  => $ipe_hash,
+            'ipe'  => $ipe,
+            'render_with_container' => false, //important in this case
             );
 
-        return $this->renderFragment($this->handler, $this->controller('MuchoMasFacilInPageEditBundle:ORM/Doctrine/GroupedSortedMappedEntityCollection:render', $options));
-        */
+        return IpeTwigExtensionsHelper::renderFragment($this->handler, IpeTwigExtensionsHelper::controller($definition['ipe_controller'].':render', $options));
     }
 
-    public function ipeMetaTags($route_name, $params = array())
-    {        
+    public function ipe_meta_tags_odgsme($route_name, $params = array())
+    {
         $find_params = array(
                 'entity_class' => 'MuchoMasFacilInPageEditBundle:String',
                 'find_by' =>  array('ipe_handler' => $route_name . '__metas'),
@@ -139,7 +161,7 @@ class IpeDoctrineOrmExtension extends IpeExtension
 
     public function getName()
     {
-        return 'ipe_doctrine_orm_extension';
+        return 'ipe_orm_doctrine_extension';
     }
 
 }

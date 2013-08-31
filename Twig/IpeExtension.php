@@ -8,22 +8,21 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 use MuchoMasFacil\InPageEditBundle\Util\IpeTwigExtensionsHelper;
 
-class IpeExtension extends IpeExtensionModel
+class IpeExtension extends \Twig_Extension
 {
     /**
      *
      * @var  \Symfony\Component\DependencyInjection\Container
      */
+    protected $handler;
+
     protected $session;
 
     protected $translator;
 
-    protected $handler;
-
     protected $definitions;
 
     protected $message_catalog;
-
     /**
      * Constructor.
      *
@@ -33,7 +32,7 @@ class IpeExtension extends IpeExtensionModel
     {
         $this->handler = $handler;
         $this->session = $session;
-        $this->translator = $translator;        
+        $this->translator = $translator;
         $this->definitions = $definitions;
         $this->message_catalog = $message_catalog;
     }
@@ -64,34 +63,20 @@ class IpeExtension extends IpeExtensionModel
     }
 
     public function ipe_render($ipe_definition, $find_params, $render_template, $params = array(), $render_with_container = true)
-    {        
-        $ipe_definition = $this->getCheckIpeDefinition($ipe_definition, $this->definitions);
-        $definition = $this->definitions[$ipe_definition];
-
-        //let us merge definitions params with call custom params
-        $params = array_merge($definition['params'], $params);
-        $find_params = array_merge($definition['find_params'], $find_params);        
-
-        $this->checkFindObjectParams($ipe_definition, $this->definitions, $find_params, $params);
-        //now create the var to store in session
-        $ipe = array(
-                'ipe_definition' => $ipe_definition,
-                'find_params' => $find_params,                    
-                'render_template' => $render_template,                
-                'params' => $params,                
-            );
-
-        //now we create our unique ipe_hash            
+    {
+        //create var to store in session
+        $ipe = IpeTwigExtensionsHelper::createIpe($ipe_definition, $this->definitions, $find_params, $render_template, $params);
+        //now we create our unique ipe_hash BASED on that var
         $ipe_hash = IpeTwigExtensionsHelper::createHashForObject($ipe);
         //now ipe to session
-        $this->session->set('ipe_' . $ipe_hash, $ipe);                    
+        $this->session->set('ipe_' . $ipe_hash, $ipe);
         $options = array(
             'ipe_hash'  => $ipe_hash,
             'ipe'  => $ipe,
             'render_with_container' => $render_with_container,
             );
 
-        return $this->renderFragment($this->handler, $this->controller($definition['ipe_controller'].':render', $options));
+        return IpeTwigExtensionsHelper::renderFragment($this->handler, IpeTwigExtensionsHelper::controller($definition['ipe_controller'].':render', $options));
     }
 
     public function getName()
