@@ -1,10 +1,12 @@
 <?php
 namespace MuchoMasFacil\InPageEditBundle\Twig;
 
+use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 
 use MuchoMasFacil\InPageEditBundle\Util\IpeTwigExtensionsHelper;
 
@@ -14,6 +16,8 @@ class IpeExtension extends \Twig_Extension
      *
      * @var  \Symfony\Component\DependencyInjection\Container
      */
+    protected $security_context;
+
     protected $handler;
 
     protected $session;
@@ -28,8 +32,9 @@ class IpeExtension extends \Twig_Extension
      *
      * @param FragmentHandler $handler A FragmentHandler instance
      */
-    public function __construct(FragmentHandler $handler, Session $session, Translator $translator, $definitions, $message_catalog)
+    public function __construct(SecurityContext $security_context, FragmentHandler $handler, Session $session, Translator $translator, $definitions, $message_catalog)
     {
+        $this->security_context = $security_context;
         $this->handler = $handler;
         $this->session = $session;
         $this->translator = $translator;
@@ -69,14 +74,21 @@ class IpeExtension extends \Twig_Extension
         //now we create our unique ipe_hash BASED on that var
         $ipe_hash = IpeTwigExtensionsHelper::createHashForObject($ipe);
         //now ipe to session
-        $this->session->set('ipe_' . $ipe_hash, $ipe);
+        if ((empty($ipe['params']['editor_roles'])) || ($this->security_context->isGranted($ipe['params']['editor_roles']))) {
+            IpeTwigExtensionsHelper::setIpe($this->session, $ipe_hash, $ipe);
+        }
+
         $options = array(
             'ipe_hash'  => $ipe_hash,
             'ipe'  => $ipe,
             'render_with_container' => $render_with_container,
             );
+        $ipe_definition = $ipe['ipe_definition'];
+        $controller = $this->definitions[$ipe_definition]['ipe_controller'].':render';
 
-        return IpeTwigExtensionsHelper::renderFragment($this->handler, IpeTwigExtensionsHelper::controller($definition['ipe_controller'].':render', $options));
+        //echo IpeTwigExtensionsHelper::renderFragment($this->handler, IpeTwigExtensionsHelper::controller($controller, $options));
+
+        return IpeTwigExtensionsHelper::renderFragment($this->handler, IpeTwigExtensionsHelper::controller($controller, $options));
     }
 
     public function getName()

@@ -46,6 +46,21 @@
     });
 
 
+    $.extend({
+        hahGet: function (url, data, block_id_selector, block_message, funcOnSuccess) {
+            $.hahBlock(block_id_selector, block_message); //this one blocks
+            //var result = null;
+            $.get(url, data, function(response, status, xhr) {
+                if (status == "error") {
+                    var msg = "Sorry but there was an error: ";
+                    alert(msg + xhr.status + " " + xhr.statusText);
+                }
+                $.hahUnblock(block_id_selector); //this one blocks
+                funcOnSuccess(response, status, xhr);
+            });
+        }
+    });
+
     //add_class used to, for example add span8
     $.extend({
         hahLoad: function (id_selector, url, data, block_id_selector, block_message) {

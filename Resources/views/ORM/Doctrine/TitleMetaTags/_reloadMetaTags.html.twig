@@ -1,0 +1,11 @@
+<script>
+    // a little tricky but it works!!!!
+    $('meta[class=ipe-editable-meta-tag]').remove();
+
+    var $first_ipe_editable_meta_tag = $('.first-ipe-editable-meta-tag');
+    var funcOnSuccess = function (response, status, xhr) {
+        $first_ipe_editable_meta_tag.after(response);
+        $first_ipe_editable_meta_tag.remove();
+    };
+    $.hahGet('{{ path('_ipe_action', {'action': 'ajax-render', 'ipe_hash': data_ipe_hash }) }}', null, '[data-ipe-hash="{{ data_ipe_hash }}"]', '{{ 'controller.ajax_loading'|ipe_trans }}', funcOnSuccess);
+</script>

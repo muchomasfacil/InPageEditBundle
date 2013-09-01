@@ -7,6 +7,21 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 class IpeTwigExtensionsHelper
 {
 
+    public static function setIpe($session, $ipe_hash, $ipe)
+    {
+        $session->set('ipe_' . $ipe_hash, $ipe);
+    }
+
+    public static function getIpe($session, $ipe_hash)
+    {
+        $ipe = $session->get('ipe_'.$ipe_hash, null);
+        if (is_null($ipe)) {
+            throw new \Exception('No ipe entry found for hash: '. $ipe_hash);
+        }
+
+        return $ipe;
+    }
+
     public static function createIpe($ipe_definition, $definitions, $find_params, $render_template, $params = array())
     {
         //check we have a valid definition or alias
@@ -77,25 +92,15 @@ class IpeTwigExtensionsHelper
         return new ControllerReference($controller, $attributes, $query);
     }
 
-        public static function  getTitleHandler($requestUri, $baseUrl)
+    public static function getHashForRoute($request, $add_query_params = false)
     {
-        echo '---'. md5(str_replace($baseUrl, '', $requestUri)) . '__title_tag';
-        return md5(str_replace($baseUrl, '', $requestUri)) . '__title_tag';
+        $handler['route'] = $request->attributes->get('_route');
+        $handler['route_params'] = $request->attributes->get('_route_params');
+        if ($add_query_params) {
+            $handler['query'] = $request->query->all();
+        }
 
-    }
-
-    public static function  getTitleFindByParams($requestUri, $baseUrl, $collection_ipe_handler_field = 'ipe_handler')
-    {
-        return  array($collection_ipe_handler_field => self::getTitleHandler($requestUri, $baseUrl));
-    }
-
-    public static function  getTitleFindParams($requestUri, $baseUrl, $collection_ipe_handler_field = 'ipe_handler')
-    {
-        return array(
-                'entity_class' => 'MuchoMasFacilInPageEditBundle:GroupedSortedMappedString',
-                'find_by' =>  self::getTitleFindByParams($requestUri, $baseUrl, $collection_ipe_handler_field),
-                'is_collection' => false ,
-            );
+        return self::createHashForObject($handler);
     }
 
 }

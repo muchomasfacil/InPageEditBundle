@@ -1,0 +1,8 @@
+{% if params.editor_roles is empty or is_granted(params.editor_roles) %}
+    <meta class="first-ipe-editable-meta-tag">
+{% endif %}
+{% for entry in object %}
+
+<meta{% if params.editor_roles is empty or is_granted(params.editor_roles) %} class="ipe-editable-meta-tag"{%endif%} {{ entry.string|raw }}>
+
+{% endfor %}

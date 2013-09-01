@@ -7,22 +7,22 @@ parameters:
     mucho_mas_facil_in_page_edit.message_catalog: ipe_messages
 
     mucho_mas_facil_in_page_edit.twig.ipe_extension.class: MuchoMasFacil\InPageEditBundle\Twig\IpeExtension
-    mucho_mas_facil_in_page_edit.twig.ipe_extension.doctrine_orm.class: MuchoMasFacil\InPageEditBundle\Twig\IpeDoctrineOrmExtension
-    mucho_mas_facil_in_page_edit.twig.ipe_extension.doctrine.orm.faker.class: MuchoMasFacil\InPageEditBundle\Twig\IpeDoctrineOrmFakerExtension
+    mucho_mas_facil_in_page_edit.twig.ipe_extension.doctrine_orm.class: MuchoMasFacil\InPageEditBundle\Twig\IpeOrmDoctrineExtension
+    mucho_mas_facil_in_page_edit.twig.ipe_extension.doctrine.orm.faker.class: MuchoMasFacil\InPageEditBundle\Twig\IpeOrmDoctrineFakerExtension
     mucho_mas_facil_in_page_edit.faker.class: MuchoMasFacil\InPageEditBundle\Faker\Generator
 
 services:
     mucho_mas_facil_in_page_edit.twig.ipe_extension:
         class: %mucho_mas_facil_in_page_edit.twig.ipe_extension.class%
-        arguments: [@fragment.handler, @session, @translator, %mucho_mas_facil_in_page_edit.definitions%, %mucho_mas_facil_in_page_edit.message_catalog%]
+        arguments: [@security.context, @fragment.handler, @session, @translator, %mucho_mas_facil_in_page_edit.definitions%, %mucho_mas_facil_in_page_edit.message_catalog%]
         tags:
             - {name: twig.extension}
-    
+
     mucho_mas_facil_in_page_edit.twig.ipe_doctrine_orm_extension:
         class: %mucho_mas_facil_in_page_edit.twig.ipe_extension.doctrine_orm.class%
-        arguments: [@fragment.handler, @session, @translator, %mucho_mas_facil_in_page_edit.definitions%, %mucho_mas_facil_in_page_edit.message_catalog%]
+        arguments: [@security.context, @fragment.handler, @session, @translator, %mucho_mas_facil_in_page_edit.definitions%, %mucho_mas_facil_in_page_edit.message_catalog%]
         tags:
-            - {name: twig.extension}            
+            - {name: twig.extension}
 
     mucho_mas_facil_in_page_edit.twig.ipe_doctrine_orm_faker_extension_:
         class: %mucho_mas_facil_in_page_edit.twig.ipe_extension.doctrine.orm.faker.class%

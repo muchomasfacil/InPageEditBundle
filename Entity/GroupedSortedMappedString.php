@@ -29,11 +29,15 @@ class GroupedSortedMappedString
      */
     private $ipe_position;
 
+    public function __toString()
+    {
+        return $this->getString();
+    }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -49,14 +53,14 @@ class GroupedSortedMappedString
     public function setString($string)
     {
         $this->string = $string;
-    
+
         return $this;
     }
 
     /**
      * Get string
      *
-     * @return string 
+     * @return string
      */
     public function getString()
     {
@@ -72,14 +76,14 @@ class GroupedSortedMappedString
     public function setIpeHandler($ipeHandler)
     {
         $this->ipe_handler = $ipeHandler;
-    
+
         return $this;
     }
 
     /**
      * Get ipe_handler
      *
-     * @return string 
+     * @return string
      */
     public function getIpeHandler()
     {
@@ -95,14 +99,14 @@ class GroupedSortedMappedString
     public function setIpePosition($ipePosition)
     {
         $this->ipe_position = $ipePosition;
-    
+
         return $this;
     }
 
     /**
      * Get ipe_position
      *
-     * @return integer 
+     * @return integer
      */
     public function getIpePosition()
     {

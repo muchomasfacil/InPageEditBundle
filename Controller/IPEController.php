@@ -28,20 +28,20 @@ class IPEController extends ContainerAware
 
     public function ipeAction($ipe_hash, $action, Request $request)
     {
-        $ipe = $this->getIpe($ipe_hash);
+        $ipe = IpeTwigExtensionsHelper::getIpe($this->container->get('request')->getSession(), $ipe_hash);
         $definitions = $this->container->getParameter('mucho_mas_facil_in_page_edit.definitions');
         $definition = $definitions[$ipe['ipe_definition']];
         $action = Inflector::camelize($action);
 
         return $this->forward($definition['ipe_controller'].':'.$action, array(
             'ipe_hash'=> $ipe_hash,
-            'ipe'=>$ipe, 
+            'ipe'=>$ipe,
             'request' => $request,
             ));
-    }    
+    }
 
     public function _navbarAction($root_request, $template = null, $locale = null)
-    {   
+    {
         $this->render_vars['available_langs'] = $this->container->getParameter('mucho_mas_facil_in_page_edit.available_langs');
         if (is_null($locale)) {
             $this->render_vars['ipe_locale'] = $this->getIpeLocale();
@@ -49,18 +49,18 @@ class IPEController extends ContainerAware
         else {
             $this->render_vars['ipe_locale'] = $this->setIpeLocale($locale);
         }
-        
+
         if (is_null($template))
         {
             $template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_navbar.html.twig';
         }
 
         $session = $this->container->get('session');
-        $request = $this->container->get('request');        
+        $request = $this->container->get('request');
 
         $ipe_handler ='el_que_sea';// IpeTwigExtensionsHelper::getTitleHandler($root_request->getRequestUri(), $root_request->getBaseUrl());
-        
-        //some magic to 
+
+        //some magic to
         $this->render_vars['title_data_ipe_hash'] = 'elquesea';
         $this->render_vars['template'] = $template;
 
@@ -84,27 +84,29 @@ class IPEController extends ContainerAware
 
     //no associated route. Will always be called from twig templates or from ajaxRenderAction
     public function renderAction($ipe_hash, $ipe, $render_with_container = true)
-    {        
-        $this->getIpeLocale(); //init ipe_locale
+    {
+        if ($render_with_container) {
+            $this->getIpeLocale(); //init ipe_locale
+        }
 
         $this->render_vars['data_ipe_hash'] = $ipe_hash;
         $this->render_vars['ipe_definition'] = $ipe['ipe_definition'];
         $this->render_vars['find_params'] = $ipe['find_params'];
         $this->render_vars['render_template'] = $ipe['render_template'];
-        $this->render_vars['params'] = $ipe['params'];        
+        $this->render_vars['params'] = $ipe['params'];
 
-        $this->render_vars['render_with_container'] = $render_with_container;                                
-        $this->render_vars['object'] = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);        
+        $this->render_vars['render_with_container'] = $render_with_container;
+        $this->render_vars['object'] = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);
 
-        if ($render_with_container) {    
-            $final_render_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':render.html.twig';            
+        if ($render_with_container) {
+            $final_render_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':render.html.twig';
         }
         else {
             $final_render_template = $ipe['render_template'];
         }
-        
+
         return $this->container->get('templating')->renderResponse($final_render_template , $this->render_vars);
-    }    
+    }
 
     protected function guessBundleAndControllerName($bundle_class_name)
     {
@@ -139,23 +141,6 @@ class IPEController extends ContainerAware
     {
         $session = $this->container->get('request')->getSession();
         $session->remove('ipe_' . $ipe_hash);
-    }
-/*
-    protected function setIpe($ipe_hash, $ipe)
-    {
-        $session = $this->container->get('request')->getSession();
-        $session->set('ipe_' . $ipe_hash, $ipe);            
-    }
-*/
-    protected function getIpe($ipe_hash)
-    {
-        $session = $this->container->get('request')->getSession();
-        $ipe = $session->get('ipe_'.$ipe_hash, null);
-        if (is_null($ipe)) {
-            throw new \Exception('No ipe entry found for hash: '. $ipe_hash);
-        }
-
-        return $ipe;
     }
 
     protected function setIpeLocale($locale = null)
