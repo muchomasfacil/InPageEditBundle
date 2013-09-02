@@ -29,7 +29,7 @@ class MuchoMasFacilInPageEditExtension extends Extension
         $parameter_configs[] = array(
             'definitions'  => $container->getParameter('mucho_mas_facil_in_page_edit.definitions'),
             'message_catalog'  => $container->getParameter('mucho_mas_facil_in_page_edit.message_catalog'),
-            'firewall_logout_route'  => $container->getParameter('mucho_mas_facil_in_page_edit.firewall_logout_route'),
+            'default_ipe_locale'  => $container->getParameter('mucho_mas_facil_in_page_edit.default_ipe_locale'),
             'available_langs'  => $container->getParameter('mucho_mas_facil_in_page_edit.available_langs'),
             );
 
@@ -43,7 +43,7 @@ class MuchoMasFacilInPageEditExtension extends Extension
 
         $container->setParameter('mucho_mas_facil_in_page_edit.definitions', $final_config['definitions']);
         $container->setParameter('mucho_mas_facil_in_page_edit.message_catalog', $final_config['message_catalog']);
-        $container->setParameter('mucho_mas_facil_in_page_edit.firewall_logout_route', $final_config['firewall_logout_route']);
+        $container->setParameter('mucho_mas_facil_in_page_edit.default_ipe_locale', $final_config['default_ipe_locale']);
         $container->setParameter('mucho_mas_facil_in_page_edit.available_langs', $final_config['available_langs']);
     }
 }

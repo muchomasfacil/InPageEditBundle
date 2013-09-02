@@ -11,11 +11,6 @@ app/console doctrine:schema:create
 ipe_navbar(template, locale)
 -- parametrizar create new entities o custom actions... block en el navbar...
 
-
-- ipe logout redirigiendo al active firewall logout path borrar session on logout
-
-- default ipe_locale como parámetro en la configuración
-
 - integrar ckeditor o tinymce y elfinder https://github.com/neutron-project/form-bundle
 
 - uploads seleccionar un tipo de file input y programarlo https://github.com/neutron-project/form-bundle
@@ -24,7 +19,7 @@ ipe_navbar(template, locale)
 
 - begin working on GroupedSortedObjectCollectionController
 
-- ipe_fake as an small form in render with_container...
+- ipe_fake as an small form with fake button in render with_container...
 
 - make use of http://fortawesome.github.io/Font-Awesome/ ??
 

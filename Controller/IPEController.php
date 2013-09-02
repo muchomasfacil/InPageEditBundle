@@ -29,12 +29,11 @@ class IPEController extends ContainerAware
 
     public function logoutAction()
     {
-        IpeTwigExtensionsHelper::cleanAllIpe($this->container->get('request')->getSession());
+        //IpeTwigExtensionsHelper::cleanAllIpe($this->container->get('request')->getSession());
         $final_url = "/";
         if (is_object($this->container->get('security.context')->getToken())) {
              $provider_key = $this->container->get('security.context')->getToken()->getProviderKey();
-
-             $final_url = $this->container->get('router')->generate('_demo_logout');
+             $final_url = $this->container->get('templating.helper.logout_url')->getLogoutPath($provider_key);             
         }
 
         return new RedirectResponse($final_url);
@@ -76,6 +75,12 @@ class IPEController extends ContainerAware
         {
             $template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_navbar.html.twig';
         }
+
+        if (is_object($this->container->get('security.context')->getToken())) {
+             $provider_key = $this->container->get('security.context')->getToken()->getProviderKey();
+             $this->render_vars['logout_path'] = $this->container->get('templating.helper.logout_url')->getLogoutPath($provider_key);             
+        }
+
 
         //some magic to
         $this->render_vars['root_request'] = $root_request;
@@ -153,7 +158,8 @@ class IPEController extends ContainerAware
     protected function setIpeLocale($locale = null)
     {
         if (!$locale) {
-            $locale = $this->container->get('request')->getLocale();
+            //$locale = $this->container->get('request')->getLocale();
+            $locale = $this->container->getParameter('mucho_mas_facil_in_page_edit.default_ipe_locale');
         }
         $this->container->get('request')->getSession()->set('ipe_locale', $locale);
         return $locale;

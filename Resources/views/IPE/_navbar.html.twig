@@ -44,13 +44,15 @@
                             {% endfor %}
                         </ul>
                     </li>
+                    {% if logout_path is defined %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" ><i class="icon-cog"></i><b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <!--<li class="divider"></li>-->
-                            <li><a href="{{ path('_ipe_logout') }}">{{ 'navbar.logout'|ipe_trans }}</a></li>
+                            <li><a href="{{ logout_path }}">{{ 'navbar.logout'|ipe_trans }}</a></li>
                         </ul>
                     </li>
+                    {% endif %}
                 </ul>
                 {% endblock nav_collapse %}
             </div>

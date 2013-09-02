@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('firewall_logout_route')->end()
+                ->scalarNode('default_ipe_locale')->end()
             ->end()
         ;
 

@@ -1,5 +1,7 @@
 parameters:
 
+    mucho_mas_facil_in_page_edit.default_ipe_locale: %locale%
+
     mucho_mas_facil_in_page_edit.available_langs:
         en: {label: English}
         es: {label: Español}
