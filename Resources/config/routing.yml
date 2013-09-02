@@ -1,6 +1,10 @@
-_ipe_navbar:
-    pattern:  /ipe/navbar/{locale}/{template}
-    defaults: { _controller: MuchoMasFacilInPageEditBundle:IPE:_navbar}
+_ipe_logout:
+    pattern:  /ipe/logout
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:IPE:logout}
+
+_ipe_change_ipe_locale:
+    pattern:  /ipe/change_ipe_locale/{locale}
+    defaults: { _controller: MuchoMasFacilInPageEditBundle:IPE:_setIpeLocale}
 
 _ipe_action:
     pattern:  /ipe/{action}/{ipe_hash}

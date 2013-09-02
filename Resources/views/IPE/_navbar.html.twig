@@ -40,7 +40,7 @@
                         <a href="#" class="dropdown-toggle" title="{{ app.user ? app.user.username : 'anonymous'|ipe_trans }}" data-toggle="dropdown" >{{ ipe_locale|upper }}</i><b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             {% for key, lang in available_langs %}
-                            <li><a href="{{ path('_ipe_navbar' ,{'locale': key, 'template': template }) }}" data-hah-action="load" data-hah-id-selector="#ipe-navbar" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans }}">{{ lang.label }}</a></li>
+                            <li><a href="{{ path('_ipe_change_ipe_locale' ,{'locale': key}) }}" data-hah-action="load" data-hah-id-selector="#ipe-navbar" data-hah-block-message="{{ 'controller.ajax_loading'|ipe_trans }}">{{ lang.label }}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
@@ -48,7 +48,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" ><i class="icon-cog"></i><b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <!--<li class="divider"></li>-->
-                            <li><a href="{{ path('_demo_logout') }}">{{ 'navbar.logout'|ipe_trans }}</a></li>
+                            <li><a href="{{ path('_ipe_logout') }}">{{ 'navbar.logout'|ipe_trans }}</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -60,5 +60,5 @@
 </div>
 
 {# this one is to allow title tag editing #}
-{{ ipe_title_tag_od(app.request, (add_query_params is defined)? add_query_params: false, {'container_html_attributes': 'id="title_tag_container" style="display: none"'}, true) }}
-{{ ipe_meta_tags_od(app.request, (add_query_params is defined)? add_query_params: false, {'container_html_attributes': 'id="meta_tags_container" style="display: none"'}, true) }}
+{{ ipe_title_tag_od(root_request, (add_query_params is defined)? add_query_params: false, {'container_html_attributes': 'id="title_tag_container" style="display: none"'}, true) }}
+{{ ipe_meta_tags_od(root_request, (add_query_params is defined)? add_query_params: false, {'container_html_attributes': 'id="meta_tags_container" style="display: none"'}, true) }}

@@ -1,0 +1,5 @@
+{% form_theme form parent_bundle_name ~ ':Form:form_fields.html.twig' %}
+
+{{ form_start(form, {'attr': {'class': 'well form-inline', 'id': form_id_selector}}) }}
+    {{ form_widget(form) }}
+{{ form_end(form) }}

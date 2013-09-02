@@ -6,6 +6,8 @@ parameters:
 
     mucho_mas_facil_in_page_edit.message_catalog: ipe_messages
 
+    mucho_mas_facil_in_page_edit.firewall_logout_route: logout
+
     mucho_mas_facil_in_page_edit.twig.ipe_extension.class: MuchoMasFacil\InPageEditBundle\Twig\IpeExtension
     mucho_mas_facil_in_page_edit.twig.ipe_extension.doctrine_orm.class: MuchoMasFacil\InPageEditBundle\Twig\IpeOrmDoctrineExtension
     mucho_mas_facil_in_page_edit.twig.ipe_extension.doctrine.orm.faker.class: MuchoMasFacil\InPageEditBundle\Twig\IpeOrmDoctrineFakerExtension

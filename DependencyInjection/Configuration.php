@@ -30,7 +30,12 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('message_catalog')->end()
             ->end()
-        
+        ;
+
+        $rootNode
+            ->children()
+                ->scalarNode('firewall_logout_route')->end()
+            ->end()
         ;
 
         $rootNode
@@ -53,12 +58,12 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('alias')->end()
                         ->scalarNode('ipe_controller')->end()
-                        ->arrayNode('params')                            
+                        ->arrayNode('params')
                             ->useAttributeAsKey('name')
                             ->prototype('variable')->end()
                         ->end()
-                        ->arrayNode('find_params')   
-                            ->useAttributeAsKey('name')                         
+                        ->arrayNode('find_params')
+                            ->useAttributeAsKey('name')
                             ->prototype('variable')->end()
                         ->end()
                     ->end()

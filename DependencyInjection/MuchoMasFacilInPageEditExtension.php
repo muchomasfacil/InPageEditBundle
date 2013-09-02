@@ -27,12 +27,13 @@ class MuchoMasFacilInPageEditExtension extends Extension
         //with definitios we make a mergue
         //and add them to our list
         $parameter_configs[] = array(
-            'definitions'  => $container->getParameter('mucho_mas_facil_in_page_edit.definitions'),            
+            'definitions'  => $container->getParameter('mucho_mas_facil_in_page_edit.definitions'),
             'message_catalog'  => $container->getParameter('mucho_mas_facil_in_page_edit.message_catalog'),
+            'firewall_logout_route'  => $container->getParameter('mucho_mas_facil_in_page_edit.firewall_logout_route'),
             'available_langs'  => $container->getParameter('mucho_mas_facil_in_page_edit.available_langs'),
             );
 
-        $configuration = new Configuration();        
+        $configuration = new Configuration();
         $final_config = $this->processConfiguration($configuration, array_merge($parameter_configs, $configs));
         // as we want the available_langs to overwrite and not to merge what comes in parameter_configs
         // (and the sintax has alredy been checked )
@@ -40,8 +41,9 @@ class MuchoMasFacilInPageEditExtension extends Extension
             $final_config['available_langs'] = $configs[0]['available_langs'];
         }
 
-        $container->setParameter('mucho_mas_facil_in_page_edit.definitions', $final_config['definitions']);        
+        $container->setParameter('mucho_mas_facil_in_page_edit.definitions', $final_config['definitions']);
         $container->setParameter('mucho_mas_facil_in_page_edit.message_catalog', $final_config['message_catalog']);
+        $container->setParameter('mucho_mas_facil_in_page_edit.firewall_logout_route', $final_config['firewall_logout_route']);
         $container->setParameter('mucho_mas_facil_in_page_edit.available_langs', $final_config['available_langs']);
-    }        
+    }
 }

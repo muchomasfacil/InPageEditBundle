@@ -7,19 +7,56 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 class IpeTwigExtensionsHelper
 {
 
-    public static function setIpe($session, $ipe_hash, $ipe)
-    {
-        $session->set('ipe_' . $ipe_hash, $ipe);
-    }
+    // public static function setIpe($session, $ipe_hash, $ipe)
+    // {
+    //     $session->set('ipe_' . $ipe_hash, $ipe);
+    // }
+
+    // public static function getIpe($session, $ipe_hash)
+    // {
+    //     $ipe = $session->get('ipe_'.$ipe_hash, null);
+    //     if (is_null($ipe)) {
+    //         throw new \Exception('No ipe entry found for hash: '. $ipe_hash);
+    //     }
+
+    //     return $ipe;
+    // }
+
+    // protected function removeIpe($ipe_hash)
+    // {
+    //     $session = $this->container->get('request')->getSession();
+    //     $session->remove('ipe_' . $ipe_hash);
+    // }
 
     public static function getIpe($session, $ipe_hash)
     {
-        $ipe = $session->get('ipe_'.$ipe_hash, null);
-        if (is_null($ipe)) {
-            throw new \Exception('No ipe entry found for hash: '. $ipe_hash);
+        $ipe_session = $session->get('ipe');
+        if (!isset($ipe_session[$ipe_hash])) {
+            throw new \Exception('No ipe session entry found for hash: '. $ipe_hash);
         }
 
-        return $ipe;
+        return $ipe_session[$ipe_hash];
+    }
+
+    public static function setIpe($session, $ipe_hash, $ipe)
+    {
+        $ipe_session = $session->get('ipe');
+        $ipe_session[$ipe_hash] = $ipe;
+        $session->set('ipe', $ipe_session);
+    }
+
+    public static function removeIpe($session, $ipe_hash)
+    {
+        $ipe_session = $session->get('ipe');
+        if (isset($ipe_session[$ipe_hash])) {
+            unset($ipe_session[$ipe_hash]);
+        }
+        $session->set('ipe', $ipe_session);
+    }
+
+    public static function cleanAllIpe($session)
+    {
+        $session->remove('ipe');
     }
 
     public static function createIpe($ipe_definition, $definitions, $find_params, $render_template, $params = array())
@@ -96,6 +133,7 @@ class IpeTwigExtensionsHelper
     {
         $handler['route'] = $request->attributes->get('_route');
         $handler['route_params'] = $request->attributes->get('_route_params');
+        $handler['locale'] = $request->getLocale();
         if ($add_query_params) {
             $handler['query'] = $request->query->all();
         }

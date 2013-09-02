@@ -58,25 +58,25 @@ class MappedEntityController extends IPEController implements IPEControllerInter
     }*/
 
     public function renderObjectAction($ipe_hash, $ipe, $render_with_container = true, $object)
-    {        
+    {
         $this->getIpeLocale(); //init ipe_locale
 
         $this->render_vars['data_ipe_hash'] = $ipe_hash;
         $this->render_vars['ipe_definition'] = $ipe['ipe_definition'];
         $this->render_vars['find_params'] = $ipe['find_params'];
         $this->render_vars['render_template'] = $ipe['render_template'];
-        $this->render_vars['params'] = $ipe['params'];        
+        $this->render_vars['params'] = $ipe['params'];
 
-        $this->render_vars['render_with_container'] = $render_with_container;                                
-        $this->render_vars['object'] = $object;        
+        $this->render_vars['render_with_container'] = $render_with_container;
+        $this->render_vars['object'] = $object;
 
-        if ($render_with_container) {    
-            $final_render_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':render.html.twig';            
+        if ($render_with_container) {
+            $final_render_template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':render.html.twig';
         }
         else {
             $final_render_template = $ipe['render_template'];
         }
-        
+
         return $this->container->get('templating')->renderResponse($final_render_template , $this->render_vars);
     }
 
@@ -142,7 +142,7 @@ class MappedEntityController extends IPEController implements IPEControllerInter
         $em = $this->container->get('doctrine')->getManager();
 
         //the entry MUST alredy exist let us get it ////////////////////////////
-        $entity = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);        
+        $entity = $this->getObject($ipe['ipe_definition'], $ipe['find_params'], $ipe['params']);
         $em->remove($entity);
         $em->flush();
         $session = $this->container->get('request')->getSession();

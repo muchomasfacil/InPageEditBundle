@@ -3,7 +3,7 @@ parameters:
 
         orm_doctrine_mapped_entity:
             alias: odme
-            ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/MappedEntity            
+            ipe_controller: MuchoMasFacilInPageEditBundle:ORM/Doctrine/MappedEntity
             find_params:
                 # in this definition normally, you pass an entity rather than find by params to $find_params
                 # this allows to skip remake multiple queries when in your controller you use a collection of entities
@@ -15,8 +15,9 @@ parameters:
                 editor_roles: [ROLE_IPE_EDITOR] # if you switch this to null anybody, logged or not is allowed to edit
                 reload_template: MuchoMasFacilInPageEditBundle:IPE:_reload.html.twig
                 form_type_class: ~ # if not set will be guessed from entity_class
+                form_render_template: MuchoMasFacilInPageEditBundle:IPE:_form_render_template.html.twig
                 container_html_tag: div # optional
-                container_html_attributes: '' # optional                               
+                container_html_attributes: '' # optional
 
         orm_doctrine_grouped_sorted_mapped_entity_collection:
             # in this definition normally, you pass find by params to $object_or_find_object_params
@@ -34,8 +35,9 @@ parameters:
                 editor_roles: [ROLE_IPE_EDITOR] # if you switch this to null anybody, logged or not is allowed to edit
                 reload_template: MuchoMasFacilInPageEditBundle:IPE:_reload.html.twig
                 form_type_class: ~ # if not set will be guessed from entity_class
+                form_render_template: MuchoMasFacilInPageEditBundle:IPE:_form_render_template.html.twig
                 container_html_tag: div # optional
-                container_html_attributes: '' # optional                               
+                container_html_attributes: '' # optional
                 list_to_string_method: __toString
                 max_collection_length: ~
                 collection_ipe_handler_field: ipe_handler

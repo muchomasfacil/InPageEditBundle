@@ -1,0 +1,1 @@
+Diferences between symfony locale and ipe_locale

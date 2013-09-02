@@ -5,6 +5,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Doctrine\Common\Util\Inflector;
@@ -26,6 +27,19 @@ class IPEController extends ContainerAware
         $this->render_vars['parent_controller_name'] = $parent_controller_name;
     }
 
+    public function logoutAction()
+    {
+        IpeTwigExtensionsHelper::cleanAllIpe($this->container->get('request')->getSession());
+        $final_url = "/";
+        if (is_object($this->container->get('security.context')->getToken())) {
+             $provider_key = $this->container->get('security.context')->getToken()->getProviderKey();
+
+             $final_url = $this->container->get('router')->generate('_demo_logout');
+        }
+
+        return new RedirectResponse($final_url);
+    }
+
     public function ipeAction($ipe_hash, $action, Request $request)
     {
         $ipe = IpeTwigExtensionsHelper::getIpe($this->container->get('request')->getSession(), $ipe_hash);
@@ -40,33 +54,33 @@ class IPEController extends ContainerAware
             ));
     }
 
-    public function _navbarAction($root_request, $template = null, $locale = null)
+    public function _setIpeLocaleAction($locale = null)
     {
-        $this->render_vars['available_langs'] = $this->container->getParameter('mucho_mas_facil_in_page_edit.available_langs');
         if (is_null($locale)) {
-            $this->render_vars['ipe_locale'] = $this->getIpeLocale();
+            $this->getIpeLocale();
         }
         else {
-            $this->render_vars['ipe_locale'] = $this->setIpeLocale($locale);
+            $this->setIpeLocale($locale);
         }
+
+        return new Response('<script>
+    location.reload();
+                            </script>');
+    }
+
+    public function _navbarAction($root_request, $template = null)
+    {
+        $this->render_vars['available_langs'] = $this->container->getParameter('mucho_mas_facil_in_page_edit.available_langs');
 
         if (is_null($template))
         {
             $template = $this->render_vars['parent_bundle_name'] . ':' . $this->render_vars['parent_controller_name'] . ':_navbar.html.twig';
         }
 
-        $session = $this->container->get('session');
-        $request = $this->container->get('request');
-
-        $ipe_handler ='el_que_sea';// IpeTwigExtensionsHelper::getTitleHandler($root_request->getRequestUri(), $root_request->getBaseUrl());
-
         //some magic to
-        $this->render_vars['title_data_ipe_hash'] = 'elquesea';
+        $this->render_vars['root_request'] = $root_request;
         $this->render_vars['template'] = $template;
-
-        /*echo '---';
-        var_dump($this->render_vars['title_data_ipe_hash']);
-        var_dump($session->all());*/
+        $this->render_vars['ipe_locale'] = $this->getIpeLocale();
 
         return $this->container->get('templating')->renderResponse($template , $this->render_vars);
     }
@@ -134,13 +148,6 @@ class IPEController extends ContainerAware
         if ((!empty($roles)) && (false === $this->container->get('security.context')->isGranted($roles))) {
             throw new AccessDeniedException();
         }
-    }
-
-
-    protected function removeIpe($ipe_hash)
-    {
-        $session = $this->container->get('request')->getSession();
-        $session->remove('ipe_' . $ipe_hash);
     }
 
     protected function setIpeLocale($locale = null)

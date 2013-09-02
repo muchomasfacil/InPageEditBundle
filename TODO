@@ -9,25 +9,18 @@ app/console doctrine:schema:create
 ## TODO
 - NAVBAR
 ipe_navbar(template, locale)
--- title y metas
--- create new entities
--- ...
+-- parametrizar create new entities o custom actions... block en el navbar...
 
-- añadir parámetro opcional form_render_template
 
-- variable de session en vez de como ipe_, mejor como ipe[]
+- ipe logout redirigiendo al active firewall logout path borrar session on logout
 
-- default ipe_locale
-
-- arreglar cambio de idioma en navbar, falta el root_request
+- default ipe_locale como parámetro en la configuración
 
 - integrar ckeditor o tinymce y elfinder https://github.com/neutron-project/form-bundle
 
 - uploads seleccionar un tipo de file input y programarlo https://github.com/neutron-project/form-bundle
 
 - los date inputs salen sin traducir
-
-- borrar session on logout
 
 - begin working on GroupedSortedObjectCollectionController
 
@@ -47,6 +40,12 @@ Issues
 - cuando modificas una entidad que se muestra más de una vez en la misma página solo recargará la del ipe-hash que se modifica, aunque al recargar la página completa esté todo correcto.
 Solución a medias implementada: una plantilla reload configurable... RESUELTO !! HAY QUE PROBAR QUE FUNCIONA...
 Nota SE PODRÍA HACER MEJOR: data-ipe-hash (sin los find-params) y data-find-params-hash asi se podría hacer las recargas múltiples
+
+- prevent default en los formularios para evitar submit on enter
+
+- al ordernar al último o desde el último falla
+
+
 
 Working on:
 -
