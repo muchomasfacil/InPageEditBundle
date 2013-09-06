@@ -30,7 +30,6 @@ ipe_navbar(template, locale)
 - hacer que funcione con distintos entity manager
 
 
-
 Issues
 - cuando modificas una entidad que se muestra más de una vez en la misma página solo recargará la del ipe-hash que se modifica, aunque al recargar la página completa esté todo correcto.
 Solución a medias implementada: una plantilla reload configurable... RESUELTO !! HAY QUE PROBAR QUE FUNCIONA...
