@@ -1,4 +1,5 @@
 parameters:
+    
     mucho_mas_facil_in_page_edit.definitions:
 
         orm_doctrine_mapped_entity:
