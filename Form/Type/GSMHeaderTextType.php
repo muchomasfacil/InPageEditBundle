@@ -6,12 +6,21 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class GroupedSortedMappedStringType extends AbstractType
+use Symfony\Component\Validator\Constraints\NotBlank;
+
+class GSMHeaderTextType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('string')
+            ->add('string', 'text', array(
+                'label' => 'label.header',
+                'constraints' => new NotBlank(),
+            ))
+            ->add('text', 'textarea', array(
+                'label' => 'label.text',
+                'constraints' => new NotBlank(),
+            ))
         ;
     }
 
@@ -24,7 +33,7 @@ class GroupedSortedMappedStringType extends AbstractType
 
     public function getName()
     {
-        return 'gsm_string';
+        return 'gsm_header_text';
     }
 
 }

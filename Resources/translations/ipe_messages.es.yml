@@ -43,3 +43,8 @@ navbar:
 shared:
     delete_confirmation: ¿Estás seguro que quieres eliminar?
     ajax_error: Lo sentimos se produjo un error
+label:
+    string: Contenido
+    text: Contenido 
+    header: Cabecera
+    image: Imagen    

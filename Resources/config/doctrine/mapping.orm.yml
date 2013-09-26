@@ -1,4 +1,4 @@
-MuchoMasFacil\InPageEditBundle\Entity\GroupedSortedMappedString:
+MuchoMasFacil\InPageEditBundle\Entity\GroupedSortedMappedHeaderTextImage:
     type: entity
     table: null
     fields:
@@ -7,11 +7,10 @@ MuchoMasFacil\InPageEditBundle\Entity\GroupedSortedMappedString:
             id: true
             generator:
                 strategy: AUTO
-        string:
-            type: string
-            length: 255
-
+        string: { type: string, required: false }
+        text: { type: text, required: false }
+        image: { type: image, required: false }
         #next fields are what makes a grouped, sorted, mapped entity
         ipe_handler: {type: string, length: 255, gedmo: ['sortableGroup']}
         ipe_position: {type: integer, gedmo: ['sortablePosition']}
-    lifecycleCallbacks: {  }
+    lifecycleCallbacks: {  }    

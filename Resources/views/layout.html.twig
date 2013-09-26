@@ -27,11 +27,14 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    {% block metas %}{{ ipe_meta_tags_od(app.request, (add_query_params is defined)? add_query_params: false, {}, false) }}{% endblock metas %}
+
     {% block head_script %}
     {# Overwrite this block to add your own js here, to get them generated into final files #}
     {% endblock head_script %}
 
-    <title>{% block title %}InPageEditDemoBundle{% endblock title %}</title>
+    {% block title %}{{ ipe_title_tag_od(app.request, (add_query_params is defined)? add_query_params: false, {}, false) }}{% endblock title %}
+
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
     {% block head_bottom %}
     {% endblock head_bottom %}
@@ -51,8 +54,7 @@
 
         {% if is_granted('ROLE_IPE_EDITOR') %}
         <div id="ipe-navbar">
-            {# render(controller('MuchoMasFacilInPageEditBundle:IPE:_navbar', {'locale': my_custom_ipe_locale, 'template': my_custom_navbar_template})) #}
-            {{ render(controller('MuchoMasFacilInPageEditBundle:IPE:_navbar', {})) }}
+            {{ render(controller('MuchoMasFacilInPageEditBundle:IPE:_navbar', {'root_request': app.request})) }}
         </div>
         {% endif %}
 
@@ -103,30 +105,42 @@
 
     {% block foot_script %}
 
-        {% if is_granted('ROLE_IPE_EDITOR') %}
-            {# it is not required the use of assetic but as we get a bunch of external libraries... #}
-            {% javascripts
-                'http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js'
-                'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.core.js'
-                'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.widget.js'
-                'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.mouse.js'
-                'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.sortable.js'
-                'http://rawgithub.com/malsup/form/master/jquery.form.js'
-                'http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'
-                'http://rawgithub.com/malsup/blockui/master/jquery.blockUI.js'
-            %}
-                <script type="text/javascript" src="{{ asset_url }}"></script>
-            {% endjavascripts %}
-            <script type="text/javascript" src="{{ asset('bundles/muchomasfacilinpageedit/js/jquery.htmlAjaxHelper.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/muchomasfacilinpageedit/js/ipe.js') }}"></script>
-        {% endif %}
+{% if is_granted('ROLE_IPE_EDITOR') %}
+{# it is not required the use of assetic but as we get a bunch of external libraries... #}
+    {% javascripts
+        'http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js'
+        'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.core.js'
+        'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.widget.js'
+        'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.mouse.js'
+        'http://rawgithub.com/jquery/jquery-ui/1.10.2/ui/jquery.ui.sortable.js'
+        'http://rawgithub.com/malsup/form/master/jquery.form.js'
+        'http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'
+        'http://rawgithub.com/malsup/blockui/master/jquery.blockUI.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/ckeditor.js"></script>
+    <script src="{{ asset('http://rawgithub.com/ckeditor/ckeditor-releases/stable/standard/adapters/jquery.js')}}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/muchomasfacilinpageedit/js/jquery.htmlAjaxHelper.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/muchomasfacilinpageedit/js/ipe.js') }}"></script>
+<script>
+{% endif %}
 
     {% endblock foot_script %}
 
     {% block foot_script_additional %}
     <script type="text/javascript">
         $(document).ready( function () {
-
+{% if is_granted('ROLE_IPE_EDITOR') %}
+    $('[data-w-flavor]').each(function () {
+        var selector = '[name=' + $(this).attr('name') + ']';
+        var flavor = $(this).attr('data-w-flavor');
+        $.getScript(Routing.generate('_wysiwyg', {'selector': selector, 'flavor_key': flavor, 'loquesea': 'mas parametros'}));
+    });
+{% endif %}
         });
     </script>
     {% endblock foot_script_additional %}
